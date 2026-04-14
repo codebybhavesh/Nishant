@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Booking Details – Nishant Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <style>
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.7rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+
+    .detail-row .lbl {
+      color: var(--text-muted);
+    }
+
+    .detail-row .val {
+      font-weight: 600;
+      max-width: 60%;
+      text-align: right;
+    }
+
+    .action-bar {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+    }
+
+    .btn-approve {
+      background: var(--success);
+      color: #fff;
+      border: none;
+    }
+
+    .btn-approve:hover {
+      background: #166534;
+    }
+
+    .btn-reject {
+      background: var(--danger);
+      color: #fff;
+      border: none;
+    }
+
+    .btn-reject:hover {
+      background: #991b1b;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="admin-shell">
+
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <img src="../assets/logo.svg" alt="Nishant Logo" style="height:48px; filter:brightness(0) invert(1);">
+        <small>Admin Panel</small>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="admin-dashboard.html"><svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+          </svg> Dashboard</a>
+        <a href="admin-bookings.html" class="active"><svg class="icon" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+          </svg> Bookings</a>
+        <a href="custom-menu-requests.html"><svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+          </svg> Custom Requests</a>
+        <a href="manage-packages.html"><svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+          </svg> Packages</a>
+        <a href="admin-invoice.html"><svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg> Invoices</a>
+        <a href="reports.html"><svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg> Reports</a>
+        <a href="admin-contacts.html"><svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+          </svg> Contacts</a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="#" onclick="event.preventDefault(); window.adminLogout();"><svg class="icon" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg> Logout</a>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <div class="admin-topbar">
+        <h1 id="pageTitle">Booking Details</h1>
+        <a href="admin-bookings.html" class="btn btn-outline btn-sm">← All Bookings</a>
+      </div>
+
+      <div class="admin-content">
+        <div id="notFound" style="display:none" class="empty-state">
+          <div class="icon">❌</div>
+          <p>Booking not found.</p>
+          <a href="admin-bookings.html" class="btn btn-outline" style="margin-top:1rem">Back to Bookings</a>
+        </div>
+
+        <div id="detailWrap" style="display:none">
+          <div style="display:grid;grid-template-columns:1fr 340px;gap:1.5rem;align-items:start">
+
+            <!-- Details Card -->
+            <div class="card card-pad">
+              <div
+                style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border)">
+                <div>
+                  <div
+                    style="font-size:0.72rem;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:0.3rem">
+                    Booking ID</div>
+                  <div style="font-family:var(--font-head);font-size:1.4rem;font-weight:700" id="dId">—</div>
+                </div>
+                <div id="dStatusBadge"></div>
+              </div>
+
+              <h4
+                style="font-size:0.72rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:1rem">
+                Client Information</h4>
+              <div class="detail-row"><span class="lbl">Full Name</span><span class="val" id="dName">—</span></div>
+              <div class="detail-row"><span class="lbl">Phone</span><span class="val" id="dPhone">—</span></div>
+              <div class="detail-row"><span class="lbl">Email</span><span class="val" id="dEmail">—</span></div>
+
+              <h4
+                style="font-size:0.72rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:1rem;margin-top:1.5rem">
+                Event Information</h4>
+              <div class="detail-row"><span class="lbl">Event Type</span><span class="val" id="dType">—</span></div>
+              <div class="detail-row"><span class="lbl">Event Date</span><span class="val" id="dDate">—</span></div>
+              <div class="detail-row"><span class="lbl">Preferred Time</span><span class="val" id="dTime">—</span></div>
+              <div class="detail-row"><span class="lbl">Venue / Address</span><span class="val" id="dVenue">—</span>
+              </div>
+              <div class="detail-row"><span class="lbl">Package</span><span class="val" id="dPkg">—</span></div>
+              <div class="detail-row"><span class="lbl">Guests</span><span class="val" id="dGuests">—</span></div>
+              <div class="detail-row"><span class="lbl">Special Req.</span><span class="val" id="dSpecial">—</span>
+              </div>
+              <div class="detail-row"><span class="lbl">Booked On</span><span class="val" id="dCreated">—</span></div>
+
+              <!-- Selected Menu -->
+              <div id="menuWrap" style="display:none;margin-top:1.5rem">
+                <h4
+                  style="font-size:0.72rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:1rem">
+                  Selected Menu</h4>
+                <div id="dMenu"></div>
+              </div>
+            </div>
+
+            <!-- Action Sidebar -->
+            <div style="display:flex;flex-direction:column;gap:1.2rem">
+
+              <!-- Pricing -->
+              <div class="card card-pad">
+                <h3 style="font-size:1rem;margin-bottom:1.2rem">💰 Pricing</h3>
+                <div class="detail-row"><span class="lbl">Rate / plate</span><span class="val" id="aRate">—</span></div>
+                <div class="detail-row"><span class="lbl">Subtotal</span><span class="val" id="aSub">—</span></div>
+                <div class="detail-row"><span class="lbl">GST (18%)</span><span class="val" id="aTax">—</span></div>
+                <div
+                  style="background:var(--primary-light);border-radius:var(--r-md);padding:0.9rem 1rem;display:flex;justify-content:space-between;align-items:center;margin-top:0.5rem">
+                  <span style="font-weight:600;font-size:0.9rem" id="totalLabel">Est. Total</span>
+                  <span style="font-family:var(--font-head);font-size:1.4rem;color:var(--primary);font-weight:700"
+                    id="aGrand">—</span>
+                </div>
+                <p id="pricingNote" style="font-size:0.75rem;color:var(--text-muted);margin-top:0.5rem">Estimated figure
+                  — will be finalised on approval.</p>
+              </div>
+
+              <!-- Actions -->
+              <div class="card card-pad" id="actionCard">
+                <h3 style="font-size:1rem;margin-bottom:1.2rem">📌 Actions</h3>
+                <div id="actionMsg" style="display:none"></div>
+                <div class="action-bar" id="actionBtns"></div>
+                <div id="invoiceLink" style="display:none;margin-top:1rem">
+                  <a href="admin-invoice.html" class="btn btn-outline btn-block" id="invLink">View Invoice →</a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">
+    import { initAuthListener, logoutUser } from '../js/auth.js';
+    import { fetchBookings, updateBookingStatus } from '../js/database.js';
+
+    initAuthListener({ requireAuth: true, requireAdmin: true });
+    window.adminLogout = async function () { await logoutUser(); };
+
+    const urlParams = new URLSearchParams(location.search);
+    const id = urlParams.get('id');
+    let booking = null;
+
+    async function init() {
+      if (!id) {
+        document.getElementById('notFound').style.display = 'block';
+        return;
+      }
+
+      const { bookings, error } = await fetchBookings();
+      if (!error && bookings) {
+        booking = bookings.find(b => b.id === id);
+      }
+
+      if (!booking) {
+        document.getElementById('notFound').style.display = 'block';
+      } else {
+        document.getElementById('detailWrap').style.display = 'block';
+        document.getElementById('pageTitle').textContent = 'Booking: ' + booking.id.substring(0, 8);
+        window.render(booking);
+      }
+    }
+
+    const EVENT_LABELS = { wedding: '💍 Wedding', reception: '🎊 Reception', engagement: '💝 Engagement', birthday: '🎂 Birthday', corporate: '💼 Corporate', pooja: '🪔 Pooja / Religious Function', anniversary: '🥂 Anniversary', other: '📅 Other' };
+    const TIME_LABELS = { morning: '🌅 Morning (7 AM – 12 PM)', afternoon: '☀️ Afternoon (12 PM – 5 PM)', evening: '🌇 Evening (5 PM – 10 PM)', fullday: '🗓️ Full Day' };
+    const MENU_CAT_LABELS = { drink: 'Welcome Drink', starters: 'Starters', vegetables: 'Vegetable Dishes', dal: 'Dal', rice: 'Rice', bread: 'Bread', sweet: 'Sweets', dessert: 'Dessert', extras: 'Extras' };
+
+    window.render = function (b) {
+      const fmt = n => n ? '₹' + Number(n).toLocaleString('en-IN') : '—';
+      document.getElementById('dId').textContent = b.id;
+      // Use correct field names saved by final-booking.html
+      document.getElementById('dName').textContent = b.userName || b.name || '—';
+      document.getElementById('dPhone').textContent = b.phone || '—';
+      document.getElementById('dEmail').textContent = b.email || '—';
+      document.getElementById('dType').textContent = EVENT_LABELS[b.eventType] || b.eventType || '—';
+      document.getElementById('dDate').textContent = b.eventDate || b.date || '—';
+      document.getElementById('dTime').textContent = TIME_LABELS[b.eventTime || b.time] || b.eventTime || b.time || '—';
+      // Address: stored as {street, city, state, pincode} object
+      const addr = b.address;
+      document.getElementById('dVenue').textContent = addr
+        ? [addr.street, addr.city, addr.state, addr.pincode].filter(Boolean).join(', ')
+        : (b.venue || 'Not specified');
+      document.getElementById('dPkg').textContent = b.pkgName || b.pkg || '—';
+      document.getElementById('dGuests').textContent = (b.guestCount || b.guests || '—') + ' guests';
+      document.getElementById('dSpecial').textContent = b.specialReq || 'None';
+      document.getElementById('dCreated').textContent = b.createdAt ? new Date(b.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—';
+
+      // Show selected menu items
+      const menu = b.selectedMenu || {};
+      const menuEntries = Object.entries(menu).filter(([k, v]) => Array.isArray(v) ? v.length > 0 : v);
+      if (menuEntries.length > 0) {
+        document.getElementById('menuWrap').style.display = 'block';
+        document.getElementById('dMenu').innerHTML = menuEntries.map(([key, val]) => {
+          const label = MENU_CAT_LABELS[key] || key;
+          const items = Array.isArray(val) ? val : [val];
+          return `<div style="margin-bottom:0.6rem"><span style="font-size:0.78rem;font-weight:700;color:var(--primary)">${label}:</span> <span style="font-size:0.88rem">${items.join(', ')}</span></div>`;
+        }).join('');
+      }
+
+      // Pricing: show approved price if available, else estimated
+      const isApproved = b.status === 'approved';
+      document.getElementById('aRate').textContent = fmt(b.pricePerPlate);
+      document.getElementById('aSub').textContent = fmt(isApproved ? b.subtotal : b.estimatedSubtotal);
+      document.getElementById('aTax').textContent = fmt(isApproved ? b.tax : b.estimatedTax);
+      document.getElementById('aGrand').textContent = fmt(isApproved ? b.grandTotal : b.estimatedTotal);
+      document.getElementById('totalLabel').textContent = isApproved ? 'Grand Total' : 'Est. Total';
+      const noteEl = document.getElementById('pricingNote');
+      if (noteEl) noteEl.style.display = isApproved ? 'none' : 'block';
+
+      const statusMap = { pending: '⏳ Pending', approved: '✅ Approved', rejected: '❌ Rejected' };
+      const statusCls = { pending: 'badge-pending', approved: 'badge-approved', rejected: 'badge-rejected' };
+      document.getElementById('dStatusBadge').innerHTML = `<span class="badge ${statusCls[b.status || 'pending']}" style="font-size:0.9rem;padding:0.5rem 1.2rem">${statusMap[b.status || 'pending']}</span>`;
+
+      // Actions
+      const btns = document.getElementById('actionBtns');
+      if (b.status === 'pending') {
+        btns.innerHTML = `
+        <button class="btn btn-approve btn-lg" style="flex:1" onclick="window.setStatus('approved')">✅ Approve</button>
+        <button class="btn btn-reject btn-lg"  style="flex:1" onclick="window.setStatus('rejected')">❌ Reject</button>`;
+      } else {
+        btns.innerHTML = `<p style="color:var(--text-muted);font-size:0.88rem">This booking has been <strong>${b.status}</strong>.</p>`;
+        if (b.status === 'rejected') {
+          btns.innerHTML += `<button class="btn btn-approve" style="width:100%;margin-top:0.75rem" onclick="window.setStatus('approved')">Re-approve</button>`;
+        }
+      }
+
+      if (b.status === 'approved') {
+        document.getElementById('invoiceLink').style.display = 'block';
+        document.getElementById('invLink').href = `admin-invoice.html?id=${b.id}`;
+      }
+    };
+
+    window.setStatus = async function (status) {
+      const btns = document.getElementById('actionBtns');
+      btns.style.opacity = '0.5';
+      btns.style.pointerEvents = 'none';
+
+      await updateBookingStatus(id, status);
+      booking.status = status;
+
+      if (status === 'approved') {
+        booking.approvedAt = new Date().toISOString();
+        booking.invoiceId = `INV-${id.substring(0, 8).toUpperCase()}`;
+      }
+
+      // Show toast
+      const msg = document.getElementById('actionMsg');
+      msg.className = status === 'approved' ? 'alert alert-success' : 'alert alert-danger';
+      msg.textContent = status === 'approved' ? '✅ Booking approved! Invoice generated.' : '❌ Booking rejected.';
+      msg.style.display = 'block';
+
+      btns.style.opacity = '1';
+      btns.style.pointerEvents = 'auto';
+
+      window.render(booking);
+      setTimeout(() => { msg.style.display = 'none'; }, 3000);
+    };
+
+    init();
+  </script>
+</body>
+
+</html>

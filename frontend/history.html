@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Bookings – Nishant Events & Catering</title>
+  <meta name="description" content="View all your past and upcoming catering event bookings with Nishant." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    body {
+      background: var(--light-gray);
+    }
+
+    .history-header {
+      padding-top: 8rem;
+      padding-bottom: 3rem;
+      background: linear-gradient(135deg, #fff5f0, #fce4dd);
+      border-bottom: 1px solid rgba(242, 74, 13, 0.1);
+    }
+
+    .history-header h1 {
+      margin-bottom: 0.5rem;
+    }
+
+    .history-header p {
+      color: var(--text-gray);
+    }
+
+    .history-main {
+      padding: 3rem 0 5rem;
+    }
+
+    /* Summary Cards */
+    .history-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .h-stat-card {
+      background: white;
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .h-stat-card .h-stat-num {
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      font-weight: 700;
+      display: block;
+    }
+
+    .h-stat-card .h-stat-num.primary {
+      color: var(--primary);
+    }
+
+    .h-stat-card .h-stat-num.accent {
+      color: var(--accent);
+    }
+
+    .h-stat-card .h-stat-num.success {
+      color: var(--success);
+    }
+
+    .h-stat-card .h-stat-num.warning {
+      color: var(--warning);
+    }
+
+    .h-stat-card p {
+      color: var(--text-gray);
+      font-size: 0.85rem;
+      margin-top: 0.25rem;
+    }
+
+    /* Search + Filter Row */
+    .filter-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 200px;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 0.7rem 1rem 0.7rem 2.8rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-full);
+      font-size: 0.95rem;
+      background: white;
+      transition: var(--transition);
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-light);
+    }
+
+    .search-box .search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-gray);
+    }
+
+    .status-filter {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .sf-btn {
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-color);
+      background: white;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: var(--transition);
+      font-weight: 500;
+    }
+
+    .sf-btn:hover,
+    .sf-btn.active {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+
+    /* Booking Card Layout */
+    .bookings-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .booking-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      padding: 1.5rem 2rem;
+      display: grid;
+      grid-template-columns: auto 1fr auto auto;
+      gap: 1.5rem;
+      align-items: center;
+      transition: var(--transition);
+      border-left: 5px solid transparent;
+    }
+
+    .booking-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateX(4px);
+    }
+
+    .booking-card.approved {
+      border-left-color: var(--success);
+    }
+
+    .booking-card.pending {
+      border-left-color: var(--warning);
+    }
+
+    .booking-card.rejected {
+      border-left-color: var(--danger);
+    }
+
+    .bc-icon {
+      width: 55px;
+      height: 55px;
+      border-radius: var(--radius-md);
+      background: var(--primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+    }
+
+    .bc-info h4 {
+      font-size: 1.1rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .bc-meta {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .bc-meta span {
+      font-size: 0.85rem;
+      color: var(--text-gray);
+    }
+
+    .bc-meta span::before {
+      margin-right: 3px;
+    }
+
+    .bc-amount {
+      text-align: right;
+    }
+
+    .bc-amount strong {
+      display: block;
+      font-size: 1.2rem;
+      font-family: var(--font-heading);
+      color: var(--text-dark);
+    }
+
+    .bc-amount small {
+      font-size: 0.8rem;
+      color: var(--text-gray);
+    }
+
+    .bc-status-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.6rem;
+    }
+
+    .btn-sm-outline {
+      padding: 0.35rem 0.8rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      cursor: pointer;
+      background: white;
+      transition: var(--transition);
+    }
+
+    .btn-sm-outline:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 5rem 2rem;
+      color: var(--text-gray);
+    }
+
+    .empty-state .empty-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    .empty-state h3 {
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .booking-card {
+        grid-template-columns: auto 1fr;
+        grid-template-rows: auto auto;
+      }
+
+      .bc-amount,
+      .bc-status-wrap {
+        grid-column: 1 / -1;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="index.html" class="nav-logo">
+        <img src="assets/logo.svg" alt="Nishant Logo">
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <button class="nav-close-btn" id="navCloseBtn" aria-label="Close menu">&times;</button>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#packages">Packages</a></li>
+        <li><a href="booking.html">Book Now</a></li>
+        <li><a href="history.html" class="active">My Bookings</a></li>
+        <li><a href="admin/admin-dashboard.html">Admin</a></li>
+        <li><a href="login.html" class="btn btn-accent">Sign In</a></li>
+      </ul>
+      <button class="nav-toggle" id="navToggle">☰</button>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <section class="history-header">
+    <div class="container">
+      <h1>My <span class="text-accent">Bookings</span></h1>
+      <p>Track all your catering event bookings and their current status.</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <div class="history-main">
+    <div class="container">
+
+      <!-- Stats Row -->
+      <div class="history-stats" id="historyStats">
+        <div class="h-stat-card">
+          <span class="h-stat-num primary" id="statTotal">0</span>
+          <p>Total Bookings</p>
+        </div>
+        <div class="h-stat-card">
+          <span class="h-stat-num success" id="statApproved">0</span>
+          <p>Approved</p>
+        </div>
+        <div class="h-stat-card">
+          <span class="h-stat-num warning" id="statPending">0</span>
+          <p>Pending</p>
+        </div>
+        <div class="h-stat-card">
+          <span class="h-stat-num accent" id="statRejected">0</span>
+          <p>Rejected</p>
+        </div>
+      </div>
+
+      <!-- Filter Row -->
+      <div class="filter-row">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput" placeholder="Search by name, ID, or event..." />
+        </div>
+        <div class="status-filter">
+          <button class="sf-btn active" data-status="all">All</button>
+          <button class="sf-btn" data-status="approved">✅ Approved</button>
+          <button class="sf-btn" data-status="pending">⏳ Pending</button>
+          <button class="sf-btn" data-status="rejected">❌ Rejected</button>
+        </div>
+      </div>
+
+      <!-- Bookings List -->
+      <div class="bookings-list" id="bookingsList">
+        <!-- Populated by JS -->
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-bottom">
+        <p>© 2026 Nishant Events & Catering Service's. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="js/auth-ui.js"></script>
+  <script type="module">
+    import { initAuthListener, logoutUser } from './js/auth.js';
+    import { fetchBookings } from './js/database.js';
+
+    // Must be logged in to see history
+    initAuthListener({ requireAuth: true });
+
+    window.userLogout = async function () { await logoutUser(); };
+
+    const eventIcons = { wedding: '💍', corporate: '🏢', birthday: '🎂', graduation: '🎓', festival: '🎊', other: '📅' };
+    const pkgLabels = { veg: '🌿 Veg', nonveg: '🍗 Non-Veg', premium: '👑 Premium' };
+    const eventLabels = { wedding: 'Wedding', corporate: 'Corporate', birthday: 'Birthday', graduation: 'Graduation', festival: 'Festival', other: 'Other' };
+
+    let allBookings = [];
+    let currentFilter = 'all';
+    let currentSearch = '';
+
+    const fmt = n => n ? '₹' + Number(n).toLocaleString('en-IN') : '—';
+
+    async function init() {
+      const { bookings, error } = await fetchBookings();
+      if (error) {
+        console.error(error);
+        allBookings = [];
+      } else {
+        allBookings = bookings;
+      }
+      updateStats();
+      renderBookings();
+    }
+
+    function updateStats() {
+      document.getElementById('statTotal').textContent = allBookings.length;
+      document.getElementById('statApproved').textContent = allBookings.filter(b => b.status === 'approved').length;
+      document.getElementById('statPending').textContent = allBookings.filter(b => b.status === 'pending').length;
+      document.getElementById('statRejected').textContent = allBookings.filter(b => b.status === 'rejected').length;
+    }
+
+    function renderBookings() {
+      const list = document.getElementById('bookingsList');
+      let filtered = allBookings.filter(b => {
+        const matchStatus = currentFilter === 'all' || b.status === currentFilter;
+        const bId = (b.id || b._id || '').toLowerCase();
+        const bName = (b.userName || b.name || '').toLowerCase();
+        const bEv = (eventLabels[b.eventType] || b.eventType || '').toLowerCase();
+
+        const matchSearch = !currentSearch ||
+          bId.includes(currentSearch) ||
+          bName.includes(currentSearch) ||
+          bEv.includes(currentSearch);
+        return matchStatus && matchSearch;
+      });
+
+      if (filtered.length === 0) {
+        list.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">📭</div>
+            <h3>No bookings found</h3>
+            <p>Try changing the filter or <a href="booking.html" style="color:var(--accent);">make a new booking</a>.</p>
+          </div>`;
+        return;
+      }
+
+      list.innerHTML = filtered.map(b => {
+        const id = b.id || b._id;
+        const displayId = id.substring(0, 10).toUpperCase();
+        const date = b.eventDate || b.date || '—';
+        const createdAttr = b.createdAt ? new Date(b.createdAt).toLocaleDateString() : '—';
+        const total = b.grandTotal || b.estimatedTotal || 0;
+
+        return `
+        <div class="booking-card ${b.status}" id="card-${id}">
+          <div class="bc-icon">${eventIcons[b.eventType] || '📅'}</div>
+          <div class="bc-info">
+            <h4>${b.userName || b.name || 'Booking'}</h4>
+            <div class="bc-meta">
+              <span>📅 ${date}</span>
+              <span>👥 ${b.guestCount || b.guests || '—'} guests</span>
+              <span>${pkgLabels[b.pkg] || b.pkgName || b.pkg || 'Custom'}</span>
+              <span style="color:#bbb; font-size:0.8rem;">ID: ${displayId}</span>
+            </div>
+          </div>
+          <div class="bc-amount">
+            <strong>${fmt(total)}</strong>
+            <small>Booked ${createdAttr}</small>
+          </div>
+          <div class="bc-status-wrap">
+            <span class="status ${b.status}">${b.status.charAt(0).toUpperCase() + b.status.slice(1)}</span>
+            <a href="track-booking.html?id=${id}" class="btn-sm-outline">View Tracking</a>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    // Status filter buttons
+    document.querySelectorAll('.sf-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.sf-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.getAttribute('data-status');
+        renderBookings();
+      });
+    });
+
+    // Search input
+    document.getElementById('searchInput').addEventListener('input', function () {
+      currentSearch = this.value.toLowerCase().trim();
+      renderBookings();
+    });
+
+    init();
+  </script>
+</body>
+
+</html>

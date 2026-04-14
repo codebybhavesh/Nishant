@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>All Packages – Nishant Events & Catering</title>
+  <meta name="description"
+    content="Browse all catering packages — Pure Veg, Non-Veg, and Premium. Filter by type and book instantly." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 900;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--surface);
+      border-radius: var(--r-xl);
+      padding: 2rem;
+      width: 100%;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-gray);
+    }
+
+    .pkg-detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 2.5rem;
+      margin-top: 1rem;
+    }
+
+    .pkg-detail-img {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      border-radius: var(--r-md);
+      margin-bottom: 1rem;
+    }
+
+    .menu-cat-block {
+      margin-bottom: 1.2rem;
+    }
+
+    .menu-cat-block h4 {
+      font-size: 0.95rem;
+      color: var(--primary);
+      margin-bottom: 0.3rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.2rem;
+    }
+
+    .menu-cat-block p {
+      font-size: 0.85rem;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .price-block {
+      background: var(--light-gray);
+      padding: 1.5rem;
+      border-radius: var(--r-md);
+      margin-top: 1.5rem;
+      text-align: center;
+    }
+
+    .price-block h2 {
+      color: var(--accent);
+      font-size: 2rem;
+      margin: 0.5rem 0;
+      font-family: var(--font-heading);
+    }
+
+    @media (max-width: 768px) {
+      .pkg-detail-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+    }
+
+    /* Floating Summary Bar */
+    .summary-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--surface);
+      box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+      padding: 1rem 2rem;
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border);
+      animation: slideUp 0.4s ease-out;
+    }
+
+    .summary-bar.show {
+      display: flex;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+      }
+
+      to {
+        transform: translateY(0);
+      }
+    }
+
+    .summary-info h4 {
+      margin: 0;
+      font-size: 1.1rem;
+      color: var(--text);
+    }
+
+    .summary-info p {
+      margin: 0.2rem 0 0;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .package-card.selected {
+      border: 2px solid var(--accent);
+      box-shadow: 0 0 0 3px rgba(190, 24, 93, 0.1);
+    }
+
+    .btn-selected {
+      background: #22c55e !important;
+      color: white !important;
+      border-color: #22c55e !important;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="index.html" class="nav-logo">
+        <img src="assets/logo.svg" alt="Nishant Logo">
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <button class="nav-close-btn" id="navCloseBtn" aria-label="Close menu">&times;</button>
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="services.html" class="nav-link">Services</a></li>
+        <li><a href="packages.html" class="nav-link active">Packages</a></li>
+        <li><a href="custom-menu.html" class="nav-link">Custom Menu</a></li>
+        <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+        <li><a href="track-booking.html" class="nav-link">Track Booking</a></li>
+        <li><a href="index.html#contact-form" class="nav-link">Contact</a></li>
+        <li class="nav-mobile-ctas">
+          <a href="login.html" class="nav-cta mobile-only" id="loginBtnMobile" data-auth="login">Login</a>
+          <button class="nav-cta mobile-only" id="logoutBtnMobile" data-auth="logout" style="display:none"
+            onclick="window.userLogout()">Logout</button>
+          <a href="booking.html" class="nav-cta mobile-only">Book Now</a>
+        </li>
+      </ul>
+      <div class="nav-right">
+        <a href="login.html" id="loginBtn" class="nav-cta">Login</a>
+        <button id="logoutBtn" onclick="window.userLogout()" class="nav-cta" style="display:none;">Logout</button>
+        <a href="booking.html" class="nav-cta">Book Now</a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
+    </div>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a><span class="sep">›</span> Packages
+      </div>
+      <h1>Our Catering <span style="color:var(--accent)">Packages</span></h1>
+      <p>Carefully curated menus for every occasion and budget</p>
+    </div>
+  </div>
+
+  <!-- PACKAGES -->
+  <section class="section">
+    <div class="container">
+
+      <div class="filter-strip">
+        <button class="filter-btn active" data-filter="all">All Packages</button>
+        <button class="filter-btn" data-filter="catering">🥘 Catering</button>
+        <button class="filter-btn" data-filter="event">🎊 Event Management</button>
+      </div>
+
+      <div class="packages-grid" id="pkgGrid">
+        <!-- Injected by JS -->
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Floating Summary Bar -->
+  <div class="summary-bar" id="summaryBar">
+    <div class="summary-info">
+      <h4 id="summaryCount">Selected Packages (0)</h4>
+      <p id="summaryNames">None selected</p>
+    </div>
+    <button class="btn btn-accent btn-lg" onclick="window.continueBooking()">Continue Booking →</button>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer" id="contact">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo">
+            <img src="assets/logo.svg" alt="Nishant Logo">
+          </div>
+          <p>Premium catering services for every occasion. Excellence, elegance, and exceptional taste — guaranteed.</p>
+          <div class="social-links">
+            <a href="#">Fb</a>
+            <a href="#">Ig</a>
+            <a href="#">X</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Navigate</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="packages.html">Packages</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="booking.html">Book Event</a></li>
+            <li><a href="track-booking.html">Track Booking</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Services</h4>
+          <ul>
+            <li><a href="#">Wedding Catering</a></li>
+            <li><a href="#">Corporate Events</a></li>
+            <li><a href="#">Private Dining</a></li>
+            <li><a href="#">Festival Catering</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact Us</h4>
+          <ul class="contact-info">
+            <li><i>📞</i> +91 9970774436</li>
+            <li><i>✉️</i> nishantevents97@gmail.com</li>
+            <li><i>📍</i> Lane No. 3, near Hanuman Temple, Santoshi Nagar, Vilas Nagar, Amravati, Maharashtra 444601
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Nishant Events & Catering Service's. All rights reserved.</span>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="admin/admin-login.html" style="margin-left:auto">Admin Login</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- PACKAGE DETAILS MODAL -->
+  <div class="modal-overlay" id="pkgModal">
+    <div class="modal">
+      <button class="modal-close" onclick="window.closePkgModal()">&times;</button>
+      <div id="pkgModalContent"></div>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script type="module" src="js/auth-ui.js"></script>
+  <script type="module">
+    import { fetchPackages } from './js/packages.js';
+
+    let selectedPkgs = [];
+
+    window.renderPackages = function (filter = 'all') {
+      const grid = document.getElementById('pkgGrid');
+      const pkgs = allPkgs.filter(p => {
+        if (filter === 'all') return true;
+        return (p.category || 'catering') === filter;
+      });
+
+      if (pkgs.length === 0) {
+        grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="icon">🍽️</div><p>No packages in this category.</p></div>`;
+        return;
+      }
+
+      grid.innerHTML = pkgs.map((p, i) => {
+        const isSelected = selectedPkgs.find(s => s.id === p.id);
+        const badgeClass = p.type === 'premium' ? 'premium' : 'veg';
+        const categoryLabel = (p.category || 'catering') === 'catering' ? '🥘 Catering' : '🎊 Event';
+        const price = p.price || p.pricePerPlate || 0;
+        const priceUnit = (p.category || 'catering') === 'catering' ? '/ person' : 'base';
+
+        return `
+          <div class="package-card ${isSelected ? 'selected' : ''}" data-category="${p.category || 'catering'}" style="display:flex;animation:scaleIn 0.4s ease ${i * 0.06}s both">
+            <div class="pkg-img">
+              <img src="${p.imageURL || p.image || 'https://via.placeholder.com/600'}" alt="${p.name}" onerror="this.src='https://placehold.co/600x400?text=Catering'" />
+              <span class="pkg-badge ${badgeClass}">${categoryLabel}</span>
+            </div>
+            <div class="pkg-body">
+              <h3>${p.name}</h3>
+              <p class="pkg-price">₹${price.toLocaleString('en-IN')} <span>${priceUnit}</span></p>
+              <p class="pkg-desc">${p.desc || p.description || ''}</p>
+              <div class="pkg-tags">${(p.features || [`Min. ${p.minGuests} Guests`, `₹${price}/head`]).map(f => `<span class="pkg-tag">${f}</span>`).join('')}</div>
+              <div class="pkg-actions">
+                <button class="btn btn-outline" onclick='window.openPkgModal(${JSON.stringify(p).replace(/'/g, "&apos;")})'>Details</button>
+                <button class="btn ${isSelected ? 'btn-selected' : 'btn-accent'}" onclick='window.toggleSelectPackage(${JSON.stringify(p).replace(/'/g, "&apos;")})'>
+                  ${isSelected ? '✓ Selected' : 'Select Package'}
+                </button>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+    };
+
+    window.toggleSelectPackage = function (p) {
+      const idx = selectedPkgs.findIndex(s => s.id === p.id);
+      if (idx > -1) {
+        selectedPkgs.splice(idx, 1);
+      } else {
+        selectedPkgs.push({
+          id: p.id,
+          name: p.name,
+          category: p.category || 'catering',
+          price: p.price || p.pricePerPlate || 0,
+          pricePerPlate: p.pricePerPlate || 0
+        });
+      }
+      window.renderPackages(document.querySelector('.filter-btn.active').dataset.filter);
+      window.updateSummaryBar();
+    };
+
+    window.updateSummaryBar = function () {
+      const bar = document.getElementById('summaryBar');
+      if (selectedPkgs.length > 0) {
+        bar.classList.add('show');
+        document.getElementById('summaryCount').textContent = `Selected Packages (${selectedPkgs.length})`;
+        document.getElementById('summaryNames').textContent = selectedPkgs.map(s => s.name).join(', ');
+      } else {
+        bar.classList.remove('show');
+      }
+    };
+
+    window.continueBooking = function () {
+      if (selectedPkgs.length === 0) return;
+      localStorage.setItem('selectedPackages', JSON.stringify(selectedPkgs));
+      window.location.href = 'final-booking.html';
+    };
+
+    window.openPkgModal = function (p) {
+      const badgeClass = p.type === 'premium' ? 'premium' : 'veg';
+      const badgeText = p.type === 'premium' ? '👑 Premium' : '🌿 Veg';
+      const price = p.pricePerPlate || p.price || 0;
+
+      let menuHtml = '';
+      const baseCatLabels = {
+        drinks: 'Welcome Drinks',
+        starters: 'Starters',
+        vegetables: 'Vegetable Dishes',
+        dal: 'Dal',
+        rice: 'Rice',
+        breads: 'Breads',
+        sweets: 'Sweets',
+        desserts: 'Desserts',
+        extras: 'Extras'
+      };
+
+      if (p.menu) {
+        Object.keys(p.menu).forEach(key => {
+          const items = p.menu[key];
+          if (items && items.length > 0) {
+            const label = baseCatLabels[key] || (key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' '));
+            const limit = (p.menuLimits && p.menuLimits[key]) ? p.menuLimits[key] : null;
+            const limitText = limit ? ` <span style="font-size:0.75rem;color:var(--text-gray);font-weight:400;float:right;margin-top:2px">(Choose ${limit})</span>` : '';
+
+            menuHtml += `<div class="menu-cat-block">
+                      <h4>${label}${limitText}</h4>
+                      <p>${items.join(', ')}</p>
+                   </div>`;
+          }
+        });
+      } else {
+        menuHtml = '<p style="color:var(--text-gray)">Menu currently being updated.</p>';
+      }
+
+      let tiersHtml = '';
+      if (p.tiers && p.tiers.length > 0) {
+        tiersHtml = `<div style="margin-top:0.8rem;text-align:left;font-size:0.85rem;background:#fff;padding:0.5rem;border-radius:4px;border:1px dashed var(--border)">
+                <strong style="color:var(--text);">Discount Tiers:</strong><br>` +
+          p.tiers.map(t => `${t.min}-${t.max} Guests &nbsp;&nbsp;&nbsp; ₹${t.price}/plate`).join('<br>') +
+          `</div>`;
+      }
+
+      document.getElementById('pkgModalContent').innerHTML = `
+        <div class="pkg-detail-grid">
+            <div>
+               <img src="${p.imageURL || 'https://via.placeholder.com/600'}" class="pkg-detail-img">
+               <h2 style="font-family:var(--font-heading);font-size:1.8rem;margin-bottom:0.2rem">${p.name}</h2>
+               <span class="pkg-badge ${badgeClass}" style="display:inline-block;margin-bottom:1rem">${badgeText}</span>
+               <p style="color:var(--text-gray);font-size:0.95rem;line-height:1.5">${p.description || ''}</p>
+               
+               <div class="price-block">
+                   <h2 style="margin:0.2rem 0">₹${Number(price).toLocaleString('en-IN')} <small style="font-size:1rem;color:var(--text-gray);font-weight:400">/ plate</small></h2>
+                   <p style="font-size:0.85rem;color:var(--text-gray);font-weight:600">Guests: ${p.minGuests} to ${p.maxGuests || 'Any'}</p>
+                   ${tiersHtml}
+                   <a href="booking.html?pkgId=${p.id}" class="btn btn-accent btn-block btn-lg" style="margin-top:1.5rem">Proceed to Book Now</a>
+               </div>
+            </div>
+            <div>
+               <h3 style="margin-bottom:1.5rem;font-size:1.4rem;font-family:var(--font-heading);color:var(--text);border-bottom:2px solid var(--accent);padding-bottom:0.4rem;display:inline-block">Full Menu Assortment</h3>
+               <div style="max-height: 400px; overflow-y: auto; padding-right: 0.5rem;">
+                   ${menuHtml}
+               </div>
+            </div>
+        </div>
+        `;
+      document.getElementById('pkgModal').classList.add('open');
+    }
+
+    window.closePkgModal = function () { document.getElementById('pkgModal').classList.remove('open'); };
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        window.renderPackages(btn.dataset.filter);
+      });
+    });
+
+    let allPkgs = [];
+
+    async function init() {
+      const { packages, error } = await fetchPackages();
+      if (!error && packages) {
+        allPkgs = packages;
+        window.renderPackages();
+      }
+    }
+    init();
+  </script>
+</body>
+
+</html>

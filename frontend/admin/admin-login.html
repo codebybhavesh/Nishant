@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login – Nishant Events & Catering</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <style>
+    :root {
+      --gold-primary: #d4af37;
+      --gold-hover: #f1c40f;
+      --bg-dark: #0f1014;
+      --card-bg: rgba(25, 26, 31, 0.6);
+      --input-bg: rgba(255, 255, 255, 0.04);
+      --text-main: #f8f9fa;
+      --text-muted: #9ba1a6;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--bg-dark);
+      background-image:
+        radial-gradient(circle at 15% 50%, rgba(212, 175, 55, 0.08), transparent 25%),
+        radial-gradient(circle at 85% 30%, rgba(212, 175, 55, 0.06), transparent 25%);
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      color: var(--text-main);
+      overflow: hidden;
+    }
+
+    .login-wrap {
+      width: 100%;
+      max-width: 520px;
+      padding: 2rem;
+      z-index: 10;
+      animation: fadeIn 0.8s ease-out;
+      box-sizing: border-box;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .login-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 3.5rem 3rem;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
+      opacity: 0.7;
+    }
+
+    .login-brand {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .login-brand img {
+      height: 65px;
+      margin-bottom: 1rem;
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+    }
+
+    .login-brand h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      color: #fff;
+      margin: 0 0 0.5rem 0;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .login-brand p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin: 0;
+      font-weight: 300;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .form-group:focus-within label {
+      color: var(--gold-primary);
+    }
+
+    .form-control {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-sizing: border-box;
+    }
+
+    .form-control::placeholder {
+      color: rgba(255, 255, 255, 0.2);
+    }
+
+    .form-control:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--gold-primary);
+      box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1);
+    }
+
+    .btn-login {
+      width: 100%;
+      background: linear-gradient(135deg, var(--gold-primary), #b8860b);
+      color: #000;
+      border: none;
+      border-radius: 12px;
+      padding: 1rem;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 1rem;
+      box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
+    }
+
+    .btn-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 30px rgba(212, 175, 55, 0.3);
+      background: linear-gradient(135deg, var(--gold-hover), var(--gold-primary));
+    }
+
+    .btn-login:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .alert {
+      padding: 0.8rem 1rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      margin-top: 1rem;
+      display: none;
+      text-align: center;
+      animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      25% {
+        transform: translateX(-5px);
+      }
+
+      75% {
+        transform: translateX(5px);
+      }
+    }
+
+    .alert-danger {
+      background: rgba(231, 76, 60, 0.1);
+      color: #e74c3c;
+      border: 1px solid rgba(231, 76, 60, 0.3);
+    }
+
+    .login-footer {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    .login-footer a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .login-footer a:hover {
+      color: var(--gold-primary);
+    }
+
+    /* Ambient background shapes */
+    .blob {
+      position: absolute;
+      filter: blur(80px);
+      z-index: -1;
+      opacity: 0.4;
+    }
+
+    .blob-1 {
+      top: -10%;
+      left: -10%;
+      width: 400px;
+      height: 400px;
+      background: rgba(212, 175, 55, 0.15);
+      border-radius: 50%;
+    }
+
+    .blob-2 {
+      bottom: -10%;
+      right: -10%;
+      width: 500px;
+      height: 500px;
+      background: rgba(142, 68, 173, 0.1);
+      border-radius: 50%;
+    }
+
+    @media (max-width: 480px) {
+      .login-card {
+        padding: 2.5rem 2rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="login-brand">
+        <img src="../assets/logo.svg" alt="Nishant Logo" onerror="this.src='https://placehold.co/200x60?text=Logo'">
+        <h1>Admin Portal</h1>
+        <p>Secure Access Only</p>
+      </div>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="adminUser">Email Address</label>
+          <input type="email" id="adminUser" class="form-control" placeholder="Enter your email" autocomplete="username"
+            required />
+        </div>
+
+        <div class="form-group">
+          <label for="adminPass">Password</label>
+          <input type="password" id="adminPass" class="form-control" placeholder="Enter your password"
+            autocomplete="current-password" required />
+        </div>
+
+        <button type="submit" class="btn-login" id="submitBtn">Sign In</button>
+        <div id="loginErr" class="alert alert-danger">Incorrect email or password.</div>
+      </form>
+
+      <div class="login-footer">
+        <a href="../index.html">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          Back to Main Site
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/data.js"></script>
+  <script type="module">
+    import { loginUser, initAuthListener } from '../js/auth.js';
+
+    // Conditionally redirect if already logged in (will go to dashboard if admin)
+    initAuthListener();
+
+    document.getElementById('loginForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const u = document.getElementById('adminUser').value.trim();
+      const p = document.getElementById('adminPass').value;
+
+      const btn = document.getElementById('submitBtn');
+      const originalText = btn.innerText;
+      btn.innerText = "Verifying...";
+      btn.disabled = true;
+      document.getElementById('loginErr').style.display = 'none';
+
+      const { user, error } = await loginUser(u, p);
+      if (error) {
+        btn.innerText = originalText;
+        btn.disabled = false;
+        document.getElementById('loginErr').style.display = 'block';
+        document.getElementById('loginErr').innerText = error;
+      } else {
+        window.location.href = "admin-dashboard.html";
+      }
+    });
+  </script>
+</body>
+
+</html>

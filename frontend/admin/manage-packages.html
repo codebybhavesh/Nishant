@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Packages – Nishant Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="../css/styles.css" />
+    <style>
+        .pkg-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .pkg-row:last-child {
+            border-bottom: none;
+        }
+
+        .pkg-thumb {
+            width: 80px;
+            height: 60px;
+            border-radius: var(--r-md);
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .pkg-row-info {
+            flex: 1;
+        }
+
+        .pkg-row-info h4 {
+            font-size: 1rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .pkg-row-info p {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 900;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--surface);
+            border-radius: var(--r-xl);
+            padding: 2rem;
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal h3 {
+            margin-bottom: 1.5rem;
+        }
+
+        .menu-builder-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 2rem;
+        }
+
+        .section-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-gray);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            margin-top: 1rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.3rem;
+        }
+
+        .preview-img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+            display: none;
+            background: #eee;
+        }
+
+        .pkg-cfg-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .pkg-cfg-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.4rem 0.6rem;
+            background: var(--light-gray);
+            border-radius: var(--r-sm);
+            margin-bottom: 0.3rem;
+            font-size: 0.85rem;
+        }
+
+        .pkg-cfg-list li button {
+            border: none;
+            background: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .pkg-builder-cat {
+            margin-bottom: 1.2rem;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .input-row input {
+            flex: 1;
+        }
+
+        .upload-status {
+            font-size: 0.8rem;
+            margin-top: 0.4rem;
+            display: none;
+        }
+
+        .upload-status.uploading {
+            color: var(--primary);
+        }
+
+        .upload-status.success {
+            color: #22c55e;
+        }
+
+        .upload-status.error {
+            color: var(--danger);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-shell">
+        <aside class="sidebar">
+            <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close menu">&times;</button>
+            <div class="sidebar-logo">
+                <img src="../assets/logo.svg" alt="Nishant Logo" style="height:48px; filter:brightness(0) invert(1);">
+                <small>Admin Panel</small>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="admin-dashboard.html">Dashboard</a>
+                <a href="admin-bookings.html">Bookings</a>
+                <a href="custom-menu-requests.html">Custom Requests</a>
+                <a href="manage-packages.html" class="active">Packages</a>
+                <a href="manage-menu.html">Menus</a>
+                <a href="admin-invoice.html">Invoices</a>
+                <a href="reports.html">Reports</a>
+                <a href="admin-contacts.html">Contacts</a>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" onclick="event.preventDefault(); window.adminLogout();">Logout</a>
+            </div>
+        </aside>
+
+        <main class="admin-main">
+            <div class="admin-topbar">
+                <button class="admin-menu-toggle" id="adminMenuToggle" aria-label="Toggle menu">☰</button>
+                <h1>Manage Dynamic Packages</h1>
+                <button class="btn btn-accent btn-sm" onclick="window.openModal()">+ Add New Package</button>
+            </div>
+
+            <div class="admin-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 id="pkgCount">Packages</h3>
+                    </div>
+                    <div id="pkgList"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <h3 id="modalTitle">Create Package</h3>
+            <input type="hidden" id="editId" />
+
+            <div class="menu-builder-grid">
+                <div>
+                    <div class="section-label">General Info</div>
+                    <div class="form-group"><label>Package Name *</label><input type="text" id="fName"
+                            class="form-control" placeholder="e.g. Royal Silver Veg" /></div>
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label>Service Category *</label>
+                            <select id="fCategory" class="form-control" onchange="window.toggleCategoryForm()">
+                                <option value="catering">🥘 Catering</option>
+                                <option value="event">🎊 Event Management</option>
+                            </select>
+                        </div>
+                        <div id="cateringTypeGroup" class="form-group">
+                            <label>Package Type *</label>
+                            <select id="fType" class="form-control">
+                                <option value="veg">🌿 Pure Veg</option>
+                                <option value="premium">👑 Premium Veg</option>
+                            </select>
+                        </div>
+                        <div id="eventTypeGroup" class="form-group" style="display:none">
+                            <label>Event Category</label>
+                            <input type="text" id="fEventCat" class="form-control"
+                                placeholder="e.g. Wedding, Birthday" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label id="priceLabel">Base Price Per Plate (₹) *</label>
+                        <input type="number" id="fPrice" class="form-control" placeholder="600" />
+                    </div>
+
+                    <div class="form-group">
+                        <div class="section-label" style="margin-top:0">Pricing Tiers (Optional)</div>
+                        <small style="display:block;margin-bottom:0.5rem;color:var(--text-gray)">If guest count matches
+                            a tier exactly, its price will override the base price.</small>
+                        <div class="input-row">
+                            <input type="number" id="in_tier_min" class="form-control" placeholder="Min (500)">
+                            <input type="number" id="in_tier_max" class="form-control" placeholder="Max (1000)">
+                            <input type="number" id="in_tier_price" class="form-control" placeholder="Price (₹)">
+                            <button class="btn btn-outline" style="padding:0.4rem 1rem"
+                                onclick="window.addPkgTier()">Add</button>
+                        </div>
+                        <ul id="list_tiers" class="pkg-cfg-list"></ul>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="form-group"><label>Min Guests</label><input type="number" id="fMin"
+                                class="form-control" placeholder="50" value="50" /></div>
+                        <div class="form-group"><label>Max Guests</label><input type="number" id="fMax"
+                                class="form-control" placeholder="1000" /></div>
+                    </div>
+                    <div class="form-group"><label>Description</label><textarea id="fDesc" class="form-control"
+                            rows="2"></textarea></div>
+                    <div class="form-group">
+                        <label>Image Upload *</label>
+                        <input type="file" id="fFile" class="form-control" accept="image/*" />
+                        <input type="hidden" id="fImgUrl" />
+                        <div id="imgUploadStatus" class="upload-status"></div>
+                        <img id="fImgPreview" class="preview-img" />
+                    </div>
+                </div>
+
+                <div>
+                    <!-- Catering Menu Builder -->
+                    <div id="cateringForm" style="display:block">
+                        <div class="section-label">Menu Composition</div>
+                        <div id="dynamicMenuBuilder">
+                            <!-- Populated by JS -->
+                        </div>
+                        <div class="section-label" style="margin-top:2rem">Add Custom Section</div>
+                        <div
+                            style="background:var(--light-gray); padding:1rem; border-radius:var(--r-md); margin-top:0.5rem">
+                            <div class="input-row">
+                                <input type="text" id="customSecName" class="form-control"
+                                    placeholder="e.g. Namkeen, Live Counter">
+                                <button class="btn btn-primary" onclick="window.addCustomSection()">Add Section</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Event Services Builder -->
+                    <div id="eventForm" style="display:none">
+                        <div class="section-label">Event Services</div>
+                        <div
+                            style="background:var(--light-gray); padding:1rem; border-radius:var(--r-md); margin-bottom:1rem">
+                            <div class="input-row">
+                                <input type="text" id="in_svc_name" class="form-control"
+                                    placeholder="Service (e.g. DJ)">
+                                <input type="number" id="in_svc_price" class="form-control" placeholder="Price (₹)"
+                                    style="width:100px">
+                                <button class="btn btn-primary" onclick="window.addService()">Add</button>
+                            </div>
+                            <small style="color:var(--text-gray)">Add dynamic services included in this event
+                                package.</small>
+                        </div>
+                        <ul id="list_services" class="pkg-cfg-list"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="modalErr" class="alert alert-danger" style="display:none; margin-top:1rem;"></div>
+            <div style="display:flex;gap:1rem;margin-top:2rem;justify-content:flex-end">
+                <button class="btn btn-outline" onclick="window.closeModal()">Cancel</button>
+                <button class="btn btn-accent px-5" onclick="window.saveItem()">Save Package</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initAuthListener, logoutUser } from '../js/auth.js';
+        import { fetchPackages } from '../js/packages.js';
+        import { addPackage, updatePackage, deletePackage } from '../js/admin-packages.js';
+        import { uploadToCloudinary } from '../js/cloudinary.js';
+
+        initAuthListener({ requireAuth: true, requireAdmin: true });
+        window.adminLogout = async function () { await logoutUser(); };
+
+        const baseCategories = [
+            { id: 'drinks', label: 'Welcome Drink', placeholder: 'e.g. Mango Drink' },
+            { id: 'starters', label: 'Starter', placeholder: 'e.g. Paneer Tikka' },
+            { id: 'vegetables', label: 'Vegetable Dish', placeholder: 'e.g. Mix Veg' },
+            { id: 'dal', label: 'Dal', placeholder: 'e.g. Dal Tadka' },
+            { id: 'rice', label: 'Rice', placeholder: 'e.g. Jeera Rice' },
+            { id: 'breads', label: 'Bread', placeholder: 'e.g. Butter Naan' },
+            { id: 'sweets', label: 'Sweet', placeholder: 'e.g. Gulab Jamun' },
+            { id: 'desserts', label: 'Dessert', placeholder: 'e.g. Ice Cream' },
+            { id: 'extras', label: 'Extras', placeholder: 'e.g. Papad' }
+        ];
+
+        window.localMenuState = {};
+        window.localMenuLimitState = {};
+        window.customCategories = [];
+        window.localServices = [];
+
+        window.toggleCategoryForm = function () {
+            const cat = document.getElementById('fCategory').value;
+            const isCatering = (cat === 'catering');
+            document.getElementById('cateringForm').style.display = isCatering ? 'block' : 'none';
+            document.getElementById('cateringTypeGroup').style.display = isCatering ? 'block' : 'none';
+            document.getElementById('eventForm').style.display = isCatering ? 'none' : 'block';
+            document.getElementById('eventTypeGroup').style.display = isCatering ? 'none' : 'block';
+            document.getElementById('priceLabel').textContent = isCatering ? 'Base Price Per Plate (₹) *' : 'Package Base Price (₹) *';
+        };
+
+        window.addService = function () {
+            const name = document.getElementById('in_svc_name').value.trim();
+            const price = parseInt(document.getElementById('in_svc_price').value);
+            if (!name || isNaN(price)) return;
+            window.localServices.push({ name, price });
+            document.getElementById('in_svc_name').value = '';
+            document.getElementById('in_svc_price').value = '';
+            window.renderServicesList();
+        };
+
+        window.removeService = function (i) {
+            window.localServices.splice(i, 1);
+            window.renderServicesList();
+        };
+
+        window.renderServicesList = function () {
+            const ul = document.getElementById('list_services');
+            ul.innerHTML = window.localServices.map((s, i) => `
+                <li>
+                    <span>${s.name} — ₹${s.price.toLocaleString()}</span>
+                    <button type="button" onclick="window.removeService(${i})">&times;</button>
+                </li>
+            `).join('');
+        };
+
+        function renderCatItemHTML(c) {
+            return `
+                <div class="pkg-builder-cat" id="cat_block_${c.id}">
+                    <label style="display:flex;justify-content:space-between;align-items:center;">
+                        <span>${c.label}</span>
+                        <span style="font-weight:400;font-size:0.8rem;text-transform:none">
+                            Limit: <input type="number" id="limit_${c.id}" value="${window.localMenuLimitState[c.id] || 1}" min="1" max="50" style="width:50px;font-size:0.8rem;padding:0.1rem;border:1px solid #ccc" onchange="window.updateLimit('${c.id}', this.value)">
+                        </span>
+                    </label>
+                    <div class="input-row">
+                        <input type="text" id="in_${c.id}" class="form-control" placeholder="${c.placeholder || 'e.g. Item Name'}">
+                        <button class="btn btn-outline" style="padding:0.4rem 1rem" onclick="window.addItem('${c.id}')">Add Item</button>
+                    </div>
+                    <ul id="list_${c.id}" class="pkg-cfg-list"></ul>
+                </div>
+            `;
+        }
+
+        function initCatBuilder() {
+            const container = document.getElementById('dynamicMenuBuilder');
+            // Ensure all base categories are in state
+            baseCategories.forEach(c => {
+                if (!window.localMenuState[c.id]) window.localMenuState[c.id] = [];
+                if (window.localMenuLimitState[c.id] === undefined) window.localMenuLimitState[c.id] = 1;
+            });
+
+            const allCats = [...baseCategories, ...window.customCategories];
+            container.innerHTML = allCats.map(c => renderCatItemHTML(c)).join('');
+
+            // Re-render lists for each
+            allCats.forEach(c => window.renderCatList(c.id));
+        }
+        // initCatBuilder(); // Moved to end of script
+
+        window.addCustomSection = function () {
+            const name = document.getElementById('customSecName').value.trim();
+            if (!name) return;
+
+            // Avoid duplicates
+            const id = name.toLowerCase().replace(/\s+/g, '_');
+            const exists = baseCategories.find(c => c.id === id) || window.customCategories.find(c => c.id === id);
+            if (exists) return alert("Category already exists!");
+
+            const newCat = { id, label: name, placeholder: `e.g. ${name} Item` };
+            window.customCategories.push(newCat);
+            window.localMenuState[id] = [];
+            window.localMenuLimitState[id] = 1;
+
+            // Update UI
+            const container = document.getElementById('dynamicMenuBuilder');
+            container.insertAdjacentHTML('beforeend', renderCatItemHTML(newCat));
+            document.getElementById('customSecName').value = '';
+        };
+
+        window.updateLimit = function (catId, val) {
+            window.localMenuLimitState[catId] = parseInt(val) || 1;
+        };
+
+        window.addItem = function (catId) {
+            const inp = document.getElementById('in_' + catId);
+            const val = inp.value.trim();
+            if (!val) return;
+            window.localMenuState[catId].push(val);
+            inp.value = '';
+            window.renderCatList(catId);
+        };
+
+        window.removeItem = function (catId, index) {
+            window.localMenuState[catId].splice(index, 1);
+            window.renderCatList(catId);
+        };
+
+        window.renderCatList = function (catId) {
+            const ul = document.getElementById('list_' + catId);
+            ul.innerHTML = window.localMenuState[catId].map((item, i) => `
+                <li>
+                    <span>${item}</span>
+                    <button type="button" onclick="window.removeItem('${catId}', ${i})">&times;</button>
+                </li>
+            `).join('');
+        };
+
+        function resetLocalState(menuObj = {}, limitObj = {}) {
+            // Reset state
+            window.localMenuState = {};
+            window.localMenuLimitState = {};
+            window.customCategories = [];
+
+            // Detect custom categories from menuObj
+            const baseIds = baseCategories.map(b => b.id);
+            Object.keys(menuObj).forEach(key => {
+                if (!baseIds.includes(key)) {
+                    // This is a custom category
+                    // Try to make a nice label from ID (replace underscores with spaces and capitalize)
+                    const label = key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ');
+                    window.customCategories.push({
+                        id: key,
+                        label: label,
+                        placeholder: `e.g. ${label} Item`
+                    });
+                }
+            });
+
+            // Initialize all categories (base + custom)
+            const allCats = [...baseCategories, ...window.customCategories];
+            allCats.forEach(c => {
+                window.localMenuState[c.id] = menuObj[c.id] ? [...menuObj[c.id]] : [];
+                window.localMenuLimitState[c.id] = limitObj[c.id] !== undefined ? limitObj[c.id] : 1;
+            });
+
+            initCatBuilder();
+        }
+
+        window.pkgTiers = [];
+        window.addPkgTier = function () {
+            const min = parseInt(document.getElementById('in_tier_min').value);
+            const max = parseInt(document.getElementById('in_tier_max').value);
+            const price = parseInt(document.getElementById('in_tier_price').value);
+            if (isNaN(min) || isNaN(max) || isNaN(price)) return alert("Please fill all tier fields with numbers.");
+            window.pkgTiers.push({ min, max, price });
+            document.getElementById('in_tier_min').value = '';
+            document.getElementById('in_tier_max').value = '';
+            document.getElementById('in_tier_price').value = '';
+            window.renderPkgTiers();
+        };
+        window.removePkgTier = function (i) {
+            window.pkgTiers.splice(i, 1);
+            window.renderPkgTiers();
+        };
+        window.renderPkgTiers = function () {
+            const ul = document.getElementById('list_tiers');
+            ul.innerHTML = window.pkgTiers.map((t, i) => `
+                <li><span>${t.min}-${t.max} Guests : ₹${t.price} / plate</span> <button type="button" onclick="window.removePkgTier(${i})">&times;</button></li>
+            `).join('');
+        };
+
+        // ── Cloudinary upload on file pick ──
+        document.getElementById('fFile').addEventListener('change', async function (e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const status = document.getElementById('imgUploadStatus');
+            status.className = 'upload-status uploading';
+            status.textContent = 'Uploading image… 0%';
+            status.style.display = 'block';
+            document.getElementById('fImgPreview').style.display = 'none';
+            try {
+                const url = await uploadToCloudinary(file, (pct) => {
+                    status.textContent = `Uploading image… ${pct}%`;
+                });
+                document.getElementById('fImgUrl').value = url;
+                document.getElementById('fImgPreview').src = url;
+                document.getElementById('fImgPreview').style.display = 'block';
+                status.className = 'upload-status success';
+                status.textContent = '✓ Image uploaded successfully';
+            } catch (err) {
+                status.className = 'upload-status error';
+                status.textContent = '✗ Upload failed: ' + err.message;
+            }
+        });
+
+        window.render = async function () {
+            const { packages, error } = await fetchPackages();
+            if (error) return alert("Error fetching packages: " + error);
+
+            document.getElementById('pkgCount').textContent = `${packages.length} Package${packages.length !== 1 ? 's' : ''}`;
+
+            document.getElementById('pkgList').innerHTML = packages.map(p => `
+      <div class="pkg-row">
+        <img class="pkg-thumb" src="${p.imageURL || 'https://via.placeholder.com/120'}" alt="${p.name}" />
+        <div class="pkg-row-info">
+          <h4>${p.name} <span class="badge" style="background:var(--primary-light);color:var(--primary);font-size:0.7rem">${p.category || 'catering'}</span></h4>
+          <p>${p.category === 'event' ? '₹' + Number(p.price).toLocaleString('en-IN') + ' base' : '₹' + Number(p.pricePerPlate).toLocaleString('en-IN') + ' / plate'} · Guests: ${p.minGuests} - ${p.maxGuests || 'Any'}</p>
+        </div>
+        <div style="display:flex;gap:0.5rem;flex-shrink:0">
+          <button class="btn btn-outline btn-sm" onclick='window.editItem(${JSON.stringify(p).replace(/'/g, "&apos;")})'>Edit</button>
+          <button class="btn btn-sm" style="background:var(--danger-bg);color:var(--danger)" onclick="window.deleteItem('${p.id}')">Delete</button>
+        </div>
+      </div>`).join('') || `<div class="empty-state"><p>No packages created yet.</p></div>`;
+        };
+
+        window.openModal = function (item = null) {
+            document.getElementById('modal').classList.add('open');
+            document.getElementById('modalErr').style.display = 'none';
+            if (!item) {
+                document.getElementById('modalTitle').textContent = 'Create Package';
+                document.getElementById('editId').value = '';
+                document.getElementById('fCategory').value = 'catering';
+                document.getElementById('fName').value = '';
+                document.getElementById('fPrice').value = '';
+                document.getElementById('fMin').value = '50';
+                document.getElementById('fMax').value = '';
+                document.getElementById('fDesc').value = '';
+                document.getElementById('fImgUrl').value = '';
+                document.getElementById('fImgPreview').style.display = 'none';
+                document.getElementById('fFile').value = '';
+                document.getElementById('imgUploadStatus').style.display = 'none';
+                window.pkgTiers = [];
+                window.localServices = [];
+                window.renderPkgTiers();
+                window.renderServicesList();
+                resetLocalState();
+                window.toggleCategoryForm();
+            }
+        };
+
+        window.editItem = function (p) {
+            window.openModal(p);
+            document.getElementById('modalTitle').textContent = 'Edit Package';
+            document.getElementById('editId').value = p.id;
+            document.getElementById('fName').value = p.name;
+            document.getElementById('fCategory').value = p.category || 'catering';
+            document.getElementById('fType').value = p.type || 'veg';
+            document.getElementById('fEventCat').value = p.eventType || '';
+            document.getElementById('fPrice').value = p.category === 'event' ? p.price : p.pricePerPlate;
+            document.getElementById('fMin').value = p.minGuests || 50;
+            document.getElementById('fMax').value = p.maxGuests || '';
+            document.getElementById('fDesc').value = p.description || '';
+
+            if (p.imageURL) {
+                document.getElementById('fImgUrl').value = p.imageURL;
+                document.getElementById('fImgPreview').src = p.imageURL;
+                document.getElementById('fImgPreview').style.display = 'block';
+            }
+            document.getElementById('imgUploadStatus').style.display = 'none';
+
+            window.pkgTiers = p.tiers ? [...p.tiers] : [];
+            window.localServices = p.services ? [...p.services] : [];
+            window.renderPkgTiers();
+            window.renderServicesList();
+            resetLocalState(p.menu || {}, p.menuLimits || {});
+            window.toggleCategoryForm();
+        };
+
+        window.closeModal = function () { document.getElementById('modal').classList.remove('open'); };
+
+        window.saveItem = async function () {
+            const name = document.getElementById('fName').value.trim();
+            const price = parseInt(document.getElementById('fPrice').value);
+            const imageURL = document.getElementById('fImgUrl').value;
+
+            if (!name || isNaN(price) || !imageURL) {
+                document.getElementById('modalErr').textContent = 'Name, Price, and Image Upload are required.';
+                document.getElementById('modalErr').style.display = 'block';
+                return;
+            }
+
+            const editId = document.getElementById('editId').value;
+            const category = document.getElementById('fCategory').value;
+            const pkgInfo = {
+                name,
+                category,
+                type: document.getElementById('fType').value,
+                eventType: document.getElementById('fEventCat').value,
+                price: category === 'event' ? price : 0,
+                pricePerPlate: category === 'catering' ? price : 0,
+                minGuests: parseInt(document.getElementById('fMin').value) || 50,
+                maxGuests: parseInt(document.getElementById('fMax').value) || null,
+                description: document.getElementById('fDesc').value.trim(),
+                imageURL: imageURL,
+                tiers: [...window.pkgTiers],
+                services: [...window.localServices],
+                menuLimits: category === 'catering' ? { ...window.localMenuLimitState } : {},
+                menu: category === 'catering' ? { ...window.localMenuState } : {}
+            };
+
+            const btnObj = document.querySelector('#modal .btn-accent');
+            btnObj.textContent = "Saving...";
+
+            if (editId) {
+                await updatePackage(editId, pkgInfo);
+            } else {
+                await addPackage(pkgInfo);
+            }
+
+            btnObj.textContent = "Save Package";
+            window.closeModal();
+            window.render();
+        };
+
+        window.deleteItem = async function (id) {
+            if (!confirm('Are you absolutely sure you want to delete this package?')) return;
+            await deletePackage(id);
+            window.render();
+        };
+        initCatBuilder();
+        window.render();
+    </script>
+    <script src="../js/main.js"></script>
+</body>
+
+</html>

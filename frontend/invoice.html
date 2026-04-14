@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Invoice – Nishant Events & Catering</title>
+  <meta name="description" content="View and print your catering invoice." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    body {
+      background: var(--bg-section);
+    }
+
+    .inv-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      box-shadow: var(--shadow-md);
+    }
+
+    .inv-top {
+      background: linear-gradient(135deg, #18120e, #2d1020);
+      border-radius: var(--r-xl) var(--r-xl) 0 0;
+      padding: 2.5rem;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .inv-logo {
+      font-family: var(--font-head);
+      font-size: 2rem;
+    }
+
+    .inv-logo em {
+      color: var(--primary);
+      font-style: normal;
+    }
+
+    .inv-meta p {
+      font-size: 0.85rem;
+      opacity: 0.6;
+      line-height: 1.8;
+    }
+
+    .inv-meta strong {
+      color: #fff;
+      font-size: 0.95rem;
+    }
+
+    .inv-body {
+      padding: 2.2rem;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    @media(max-width:600px) {
+      .info-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+    }
+
+    .info-block h4 {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .info-block p {
+      font-size: 0.88rem;
+      color: var(--text);
+      line-height: 1.8;
+    }
+
+    .line-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .line-table th {
+      font-size: 0.72rem;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 0.65rem 0.75rem;
+      text-align: left;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .line-table td {
+      padding: 0.8rem 0.75rem;
+      font-size: 0.9rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .line-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .totals-wrap {
+      max-width: 280px;
+      margin-left: auto;
+      margin-top: 1.5rem;
+    }
+
+    .tot-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.88rem;
+      padding: 0.4rem 0;
+      color: var(--text-muted);
+    }
+
+    .tot-row.grand {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--accent);
+      border-top: 2px solid var(--border);
+      padding-top: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .inv-footer-note {
+      border-top: 1px solid var(--border);
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .approved-stamp {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: 2px solid var(--success);
+      color: var(--success);
+      padding: 0.35rem 1rem;
+      border-radius: var(--r-md);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .no-access {
+      max-width: 480px;
+      margin: 6rem auto;
+      text-align: center;
+      padding: 3rem;
+      background: var(--surface);
+      border-radius: var(--r-xl);
+      border: 1px solid var(--border);
+    }
+
+    .print-bar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 0;
+      position: sticky;
+      top: 64px;
+      z-index: 40;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="index.html" class="nav-logo">
+        <img src="assets/logo.svg" alt="Nishant Logo" style="height: 48px; width: auto;">
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <button class="nav-close-btn" id="navCloseBtn" aria-label="Close menu">&times;</button>
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="packages.html" class="nav-link">Packages</a></li>
+        <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+        <li><a href="track-booking.html" class="nav-link">Track Booking</a></li>
+        <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+        <li class="nav-mobile-ctas">
+          <a href="login.html" class="nav-cta mobile-only" id="loginBtnMobile" data-auth="login">Login</a>
+          <button class="nav-cta mobile-only" id="logoutBtnMobile" data-auth="logout" style="display:none"
+            onclick="window.userLogout()">Logout</button>
+          <a href="booking.html" class="nav-cta mobile-only">Book Now</a>
+        </li>
+      </ul>
+      <div class="nav-right" >
+        <a href="login.html" id="loginBtn" class="nav-cta">Login</a>
+        <button id="logoutBtn" onclick="window.userLogout()" class="nav-cta" style="display:none;">Logout</button>
+        <a href="booking.html" class="nav-cta">Book Now</a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
+    </div>
+  </nav>
+
+  <!-- NO ACCESS STATE -->
+  <div class="no-access" id="noAccess" style="display:none">
+    <div style="font-size:3rem;margin-bottom:1rem">🔒</div>
+    <h2 style="font-size:1.4rem;margin-bottom:0.5rem">Invoice Not Available</h2>
+    <p style="color:var(--text-muted);margin-bottom:1.5rem">Invoices are only available for <strong>Approved</strong>
+      bookings. Your booking may still be under review.</p>
+    <a href="track-booking.html" class="btn btn-accent">Track My Booking</a>
+  </div>
+
+  <!-- PRINT BAR -->
+  <div class="print-bar no-print" id="printBar" style="display:none">
+    <div class="container" style="display:flex;justify-content:space-between;align-items:center;">
+      <a href="track-booking.html" style="font-size:0.85rem;color:var(--text-muted)">← Back to Tracking</a>
+      <div style="display:flex;gap:0.75rem;">
+        <button class="btn btn-outline btn-sm" onclick="window.print()">🖨️ Print Invoice</button>
+        <button class="btn btn-accent btn-sm" onclick="downloadInvoice()">⬇️ Download PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- INVOICE -->
+  <div class="invoice-wrap" id="invoiceWrap" style="display:none">
+    <div class="inv-card">
+
+      <!-- Header -->
+      <div class="inv-top">
+        <div>
+          <div class="inv-logo">
+            <img src="assets/logo.svg" alt="Nishant Logo" style="height:45px; filter: brightness(0) invert(1);">
+          </div>
+          <div style="font-size:0.8rem;color:rgba(255,255,255,0.45);margin-top:0.25rem">Premium Event Catering</div>
+          <div style="margin-top:1.5rem;font-size:0.8rem;color:rgba(255,255,255,0.45);line-height:1.8">
+            📞 +91 9970774436<br />✉️ nishantevents97@gmail.com<br />📍 Amravati, Maharashtra 444601
+          </div>
+        </div>
+        <div class="inv-meta" style="text-align:right">
+          <div
+            style="font-size:0.7rem;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:0.5rem">
+            Invoice</div>
+          <div style="font-family:var(--font-head);font-size:1.4rem;font-weight:700;color:#fff" id="invId">
+            INV-NIS-2026-000</div>
+          <div style="margin-top:1rem">
+            <p>Date: <strong id="invDate">—</strong></p>
+            <p>Booking ID: <strong id="invBookingId">—</strong></p>
+          </div>
+          <div style="margin-top:1rem">
+            <span class="approved-stamp">✓ Approved</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div class="inv-body">
+
+        <div class="info-grid">
+          <div class="info-block">
+            <h4>Billed To</h4>
+            <p>
+              <strong id="clientName">—</strong><br />
+              <span id="clientPhone">—</span><br />
+              <span id="clientEmail">—</span>
+            </p>
+          </div>
+          <div class="info-block">
+            <h4>Event Details</h4>
+            <p>
+              <span id="invEventType">—</span><br />
+              📅 <span id="invEventDate">—</span><br />
+              📍 <span id="invVenue">—</span>
+            </p>
+          </div>
+        </div>
+
+        <table class="line-table">
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th>Category</th>
+              <th style="text-align:right">Amount</th>
+            </tr>
+          </thead>
+          <tbody id="invItemsBody">
+            <!-- Injected by JS -->
+          </tbody>
+        </table>
+
+        <div class="totals-wrap">
+          <div class="tot-row"><span>Subtotal</span><span id="totSub">—</span></div>
+          <!-- GST Removed -->
+          <div class="tot-row grand"><span>Total Payable</span><span id="totGrand">—</span></div>
+        </div>
+
+        <div class="inv-footer-note">
+          <p>Thank you for choosing Nishant Events & Catering — where every celebration deserves the finest food.</p>
+          <p style="margin-top:0.4rem">For queries: <a href="mailto:nishantevents97@gmail.com"
+              style="color:var(--accent)">nishantevents97@gmail.com</a> | +91 9970774436</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="height:4rem"></div>
+
+  <footer class="site-footer no-print" id="contact">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo">
+            <img src="assets/logo.svg" alt="Nishant Logo">
+          </div>
+          <p>Premium catering services for every occasion. Excellence, elegance, and exceptional taste — guaranteed.</p>
+          <div class="social-links">
+            <a href="#">Fb</a>
+            <a href="#">Ig</a>
+            <a href="#">X</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Navigate</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="packages.html">Packages</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="booking.html">Book Event</a></li>
+            <li><a href="track-booking.html">Track Booking</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Services</h4>
+          <ul>
+            <li><a href="#">Wedding Catering</a></li>
+            <li><a href="#">Corporate Events</a></li>
+            <li><a href="#">Private Dining</a></li>
+            <li><a href="#">Festival Catering</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact Us</h4>
+          <ul class="contact-info">
+            <li><i>📞</i> +91 9970774436</li>
+            <li><i>✉️</i> nishantevents97@gmail.com</li>
+            <li><i>📍</i> Lane No. 3, near Hanuman Temple, Santoshi Nagar, Vilas Nagar, Amravati, Maharashtra 444601
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Nishant Events & Catering Service's. All rights reserved.</span>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="admin/admin-login.html" style="margin-left:auto">Admin Login</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+  <script type="module" src="js/auth-ui.js"></script>
+  <script>
+    // Load booking — from localStorage (set by track-booking.html when approved)
+    let inv = null;
+    try { inv = JSON.parse(localStorage.getItem('nis_invoice_booking') || 'null'); } catch (e) { }
+
+    if (!inv || inv.status !== 'approved') {
+      document.getElementById('noAccess').style.display = 'block';
+    } else {
+      document.getElementById('invoiceWrap').style.display = 'block';
+      document.getElementById('printBar').style.display = 'block';
+
+      const fmt = n => '₹' + Number(n).toLocaleString('en-IN');
+      const today = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+
+      document.getElementById('invId').textContent = inv.invoiceId || ('INV-' + inv.id.substring(0, 8).toUpperCase());
+      document.getElementById('invDate').textContent = today;
+      document.getElementById('invBookingId').textContent = inv.id;
+      document.getElementById('clientName').textContent = inv.userName || inv.name || '—';
+      document.getElementById('clientPhone').textContent = inv.phone || '—';
+      document.getElementById('clientEmail').textContent = inv.email || '—';
+
+      const eventLabel = (typeof EVENT_LABELS !== 'undefined' && EVENT_LABELS[inv.eventType]) ? EVENT_LABELS[inv.eventType] : (inv.eventType || '—');
+      document.getElementById('invEventType').textContent = eventLabel;
+      document.getElementById('invEventDate').textContent = inv.eventDate || inv.date || '—';
+      document.getElementById('invVenue').textContent = inv.address ? inv.address.city : 'Not specified';
+
+      const tbody = document.getElementById('invItemsBody');
+      let subtotal = 0;
+
+      if (inv.packages && inv.packages.length > 0) {
+        tbody.innerHTML = inv.packages.map(p => {
+          let amt = 0;
+          if (p.category === 'catering') {
+            amt = (p.price || 0) * (inv.guestCount || inv.guests || 0);
+          } else {
+            amt = p.price || 0;
+          }
+          subtotal += amt;
+          return `
+            <tr>
+              <td>${p.name} ${p.category === 'catering' ? `(${fmt(p.price)} × ${inv.guestCount || inv.guests || 0} guests)` : '(Base)'}</td>
+              <td style="text-transform:capitalize">${p.category}</td>
+              <td style="text-align:right">${fmt(amt)}</td>
+            </tr>`;
+        }).join('');
+      } else {
+        subtotal = inv.subtotal || inv.estimatedSubtotal || 0;
+        tbody.innerHTML = `
+          <tr>
+            <td>${inv.pkgName || inv.pkg || 'Catering Services'}</td>
+            <td>Catering</td>
+            <td style="text-align:right">${fmt(subtotal)}</td>
+          </tr>`;
+      }
+
+      document.getElementById('totSub').textContent = fmt(subtotal);
+      document.getElementById('totGrand').textContent = fmt(inv.grandTotal || inv.estimatedTotal || subtotal);
+    }
+
+    function downloadInvoice() { window.print(); }
+  </script>
+</body>
+
+</html>

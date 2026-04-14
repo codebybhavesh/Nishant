@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard – Nishant Events & Catering</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    body {
+      background: var(--light-gray);
+    }
+
+    .dash {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 2rem 1rem;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 720px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.08);
+      padding: 1.8rem;
+    }
+
+    .card h1 {
+      margin: 0 0 0.4rem;
+      font-size: 1.9rem;
+      color: var(--text-dark);
+    }
+
+    .muted {
+      color: var(--text-gray);
+      margin: 0 0 1.2rem;
+    }
+
+    .row {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1.2rem;
+    }
+
+    .kv {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 0.35rem 0.75rem;
+      padding: 0.9rem 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .kv div:nth-child(odd) {
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .kv div:nth-child(even) {
+      color: var(--text);
+      font-size: 0.95rem;
+      word-break: break-word;
+    }
+
+    @media (max-width: 520px) {
+      .kv {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="index.html" class="nav-logo">
+        <img src="assets/logo.svg" alt="Nishant Logo">
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="services.html" class="nav-link">Services</a></li>
+        <li><a href="packages.html" class="nav-link">Packages</a></li>
+        <li><a href="custom-menu.html" class="nav-link">Custom Menu</a></li>
+        <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+        <li><a href="track-booking.html" class="nav-link">Track Booking</a></li>
+        <li class="nav-mobile-ctas">
+          <button class="nav-cta mobile-only" onclick="window.userLogout()">Logout</button>
+          <a href="booking.html" class="nav-cta mobile-only">Book Now</a>
+        </li>
+      </ul>
+      <div class="nav-right" >
+        <button onclick="window.userLogout()" class="nav-cta">Logout</button>
+        <a href="booking.html" class="nav-cta">Book Now</a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
+    </div>
+  </nav>
+  <main class="dash">
+    <section class="card" aria-live="polite">
+      <h1>Dashboard</h1>
+      <p class="muted">You’re signed in. This is a placeholder page to confirm your account is working.</p>
+
+      <div class="kv" id="profileKv" style="display:none">
+        <div>Name</div>
+        <div id="pName">—</div>
+        <div>Phone</div>
+        <div id="pPhone">—</div>
+        <div>Email</div>
+        <div id="pEmail">—</div>
+        <div>UID</div>
+        <div id="pUid">—</div>
+      </div>
+
+      <div class="row">
+        <a class="btn btn-outline btn-sm" href="index.html">← Home</a>
+        <button class="btn btn-accent btn-sm" id="logoutBtn" type="button">Logout</button>
+      </div>
+    </section>
+  </main>
+
+  <script type="module">
+    import { fetchCurrentUser, logoutUser } from './js/auth.js';
+
+    const logoutBtn = document.getElementById('logoutBtn');
+    const profileKv = document.getElementById('profileKv');
+    const pName = document.getElementById('pName');
+    const pPhone = document.getElementById('pPhone');
+    const pEmail = document.getElementById('pEmail');
+    const pUid = document.getElementById('pUid');
+
+    window.userLogout = async () => {
+      await logoutUser();
+    };
+
+    logoutBtn.addEventListener('click', window.userLogout);
+
+    async function init() {
+      const user = await fetchCurrentUser();
+      if (!user) {
+        window.location.href = `login.html?redirect=${encodeURIComponent('dashboard.html')}`;
+        return;
+      }
+
+      pUid.textContent = user.id || user._id;
+      pEmail.textContent = user.email || '—';
+      pName.textContent = user.name || '—';
+      pPhone.textContent = user.phone || '—';
+
+      profileKv.style.display = 'grid';
+    }
+
+    init();
+  </script>
+</body>
+
+</html>

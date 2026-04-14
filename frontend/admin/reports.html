@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reports – Nishant Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <style>
+    .bar-chart {
+      margin-top: 1rem;
+    }
+
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .bar-row .lbl {
+      width: 110px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .bar-row .track {
+      flex: 1;
+      height: 12px;
+      background: var(--bg-section);
+      border-radius: var(--r-full);
+    }
+
+    .bar-row .fill {
+      height: 100%;
+      border-radius: var(--r-full);
+    }
+
+    .fill-orange {
+      background: linear-gradient(to right, var(--primary), #f5a040);
+    }
+
+    .fill-pink {
+      background: linear-gradient(to right, var(--accent), #e0608e);
+    }
+
+    .fill-green {
+      background: linear-gradient(to right, #22c55e, #16a34a);
+    }
+
+    .bar-row .val {
+      width: 70px;
+      text-align: right;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.7rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.88rem;
+    }
+
+    .summary-row:last-child {
+      border-bottom: none;
+    }
+
+    .summary-row .lbl {
+      color: var(--text-muted);
+    }
+
+    .summary-row .val {
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="admin-shell">
+
+    <aside class="sidebar">
+      <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close menu">&times;</button>
+      <div class="sidebar-logo">
+        <img src="../assets/logo.svg" alt="Nishant Logo" style="height:48px; filter:brightness(0) invert(1);">
+        <small>Admin Panel</small>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="admin-dashboard.html"><svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+          </svg> Dashboard</a>
+        <a href="admin-bookings.html"><svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+          </svg> Bookings</a>
+        <a href="custom-menu-requests.html"><svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+          </svg> Custom Requests</a>
+        <a href="manage-packages.html"><svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+          </svg> Packages</a>
+        <a href="admin-invoice.html"><svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg> Invoices</a>
+        <a href="reports.html" class="active"><svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg> Reports</a>
+        <a href="admin-contacts.html"><svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+          </svg> Contacts</a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="#" onclick="event.preventDefault(); window.adminLogout();"><svg class="icon" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg> Logout</a>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <div class="admin-topbar">
+        <button class="admin-menu-toggle" id="adminMenuToggle" aria-label="Toggle menu">☰</button>
+        <h1>Reports &amp; Analytics</h1>
+        <span style="font-size:0.82rem;color:var(--text-muted)" id="genDate"></span>
+      </div>
+
+      <div class="admin-content">
+
+        <!-- KPI Row -->
+        <div class="kpi-grid" style="margin-bottom:1.5rem">
+          <div class="kpi-card">
+            <div class="kpi-icon" style="background:var(--primary-light)">📋</div>
+            <span class="kpi-num" id="rTotal">0</span>
+            <span class="kpi-label">Total Bookings</span>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon" style="background:var(--success-bg)">💰</div>
+            <span class="kpi-num" id="rRevenue">₹0</span>
+            <span class="kpi-label">Total Revenue (Approved)</span>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon" style="background:var(--warning-bg)">📊</div>
+            <span class="kpi-num" id="rAvg">₹0</span>
+            <span class="kpi-label">Avg. Booking Value</span>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon" style="background:var(--accent-light)">🏆</div>
+            <span class="kpi-num" id="rConvRate">0%</span>
+            <span class="kpi-label">Approval Rate</span>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+
+          <!-- Status Breakdown -->
+          <div class="card card-pad">
+            <h3 style="font-size:1rem;margin-bottom:1.5rem">📊 Status Breakdown</h3>
+            <div class="bar-chart" id="statusChart"></div>
+          </div>
+
+          <!-- Package Revenue -->
+          <div class="card card-pad">
+            <h3 style="font-size:1rem;margin-bottom:1.5rem">🍽️ Revenue by Package Type</h3>
+            <div class="bar-chart" id="pkgRevChart"></div>
+          </div>
+
+          <!-- Event Type Breakdown -->
+          <div class="card card-pad">
+            <h3 style="font-size:1rem;margin-bottom:1.5rem">🎊 Bookings by Event Type</h3>
+            <div id="eventTypeChart" class="bar-chart"></div>
+          </div>
+
+          <!-- Financial Summary -->
+          <div class="card card-pad">
+            <h3 style="font-size:1rem;margin-bottom:1.5rem">💵 Financial Summary</h3>
+            <div id="finSummary"></div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">
+    import { initAuthListener, logoutUser } from '../js/auth.js';
+    import { fetchBookings } from '../js/database.js';
+
+    initAuthListener({ requireAuth: true, requireAdmin: true });
+    window.adminLogout = async function () { await logoutUser(); };
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      document.getElementById('genDate').textContent = 'Generated: ' + new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+
+      const { bookings, error } = await fetchBookings();
+      if (error) return console.error(error);
+
+      const approved = bookings.filter(b => b.status === 'approved');
+      const revenue = approved.reduce((s, b) => s + Number(b.grandTotal || 0), 0);
+      const totalRev = bookings.reduce((s, b) => s + Number(b.grandTotal || 0), 0);
+      const avg = bookings.length ? Math.round(totalRev / bookings.length) : 0;
+      const convRate = bookings.length ? Math.round(approved.length / bookings.length * 100) : 0;
+      const fmt = n => '₹' + Number(n).toLocaleString('en-IN');
+
+      document.getElementById('rTotal').textContent = bookings.length;
+      document.getElementById('rRevenue').textContent = fmt(revenue);
+      if (document.getElementById('aTax')) document.getElementById('aTax').textContent = '₹0';
+      document.getElementById('rConvRate').textContent = convRate + '%';
+
+      // Status chart
+      const pending = bookings.filter(b => b.status === 'pending').length;
+      const rejected = bookings.filter(b => b.status === 'rejected').length;
+      const maxSt = Math.max(approved.length, pending, rejected, 1);
+      document.getElementById('statusChart').innerHTML = [
+        ['Approved', approved.length, 'fill-green'],
+        ['Pending', pending, 'fill-orange'],
+        ['Rejected', rejected, 'fill-pink']
+      ].map(([l, v, c]) => `
+      <div class="bar-row">
+        <span class="lbl">${l}</span>
+        <div class="track"><div class="fill ${c}" style="width:${Math.round(v / maxSt * 100)}%"></div></div>
+        <span class="val">${v}</span>
+      </div>`).join('');
+
+      // Package revenue chart
+      const pkgRev = { veg: 0, nonveg: 0, premium: 0 };
+      approved.forEach(b => { if (pkgRev[b.pkg] !== undefined) pkgRev[b.pkg] += Number(b.grandTotal || 0); });
+      const maxPR = Math.max(...Object.values(pkgRev), 1);
+      const pkgLabelsMap = { veg: '🌿 Veg', nonveg: '🍗 Non-Veg', premium: '👑 Premium' };
+      document.getElementById('pkgRevChart').innerHTML = Object.entries(pkgRev).map(([k, v]) => `
+      <div class="bar-row">
+        <span class="lbl">${pkgLabelsMap[k]}</span>
+        <div class="track"><div class="fill fill-orange" style="width:${Math.round(v / maxPR * 100)}%"></div></div>
+        <span class="val" style="font-size:0.75rem">${fmt(v)}</span>
+      </div>`).join('');
+
+      // Event type chart
+      const evCount = {};
+      bookings.forEach(b => { evCount[b.eventType] = (evCount[b.eventType] || 0) + 1; });
+      const maxEv = Math.max(...Object.values(evCount), 1);
+      const evLabels = { wedding: '💍 Wedding', corporate: '🏢 Corporate', birthday: '🎂 Birthday', graduation: '🎓 Graduation', festival: '🎊 Festival', other: '📅 Other' };
+      document.getElementById('eventTypeChart').innerHTML = Object.entries(evCount).map(([k, v]) => `
+      <div class="bar-row">
+        <span class="lbl" style="font-size:0.72rem;width:90px">${evLabels[k] || k}</span>
+        <div class="track"><div class="fill fill-pink" style="width:${Math.round(v / maxEv * 100)}%"></div></div>
+        <span class="val">${v}</span>
+      </div>`).join('') || '<p style="color:var(--text-muted);font-size:0.88rem">No data.</p>';
+
+      // Financial summary
+      const subtotalSum = approved.reduce((s, b) => s + Number(b.subtotal || 0), 0);
+      const grandSum = approved.reduce((s, b) => s + Number(b.grandTotal || 0), 0);
+      document.getElementById('finSummary').innerHTML = `
+      <div class="summary-row"><span class="lbl">Total Subtotal (approved)</span><span class="val">${fmt(subtotalSum)}</span></div>
+      <div class="summary-row"><span class="lbl">Total Revenue</span><span class="val" style="color:var(--accent)">${fmt(grandSum)}</span></div>
+      <div class="summary-row"><span class="lbl">Pending Value</span><span class="val" style="color:var(--warning)">${fmt(bookings.filter(b => b.status === 'pending').reduce((s, b) => s + Number(b.grandTotal || 0), 0))}</span></div>
+      <div class="summary-row"><span class="lbl">Total Approved Guests</span><span class="val">${approved.reduce((s, b) => s + Number(b.guests || 0), 0).toLocaleString('en-IN')}</span></div>
+      `;
+    });
+  </script>
+  <script src="../js/main.js"></script>
+</body>
+
+</html>

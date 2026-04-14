@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Invoices – Nishant Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <style>
+    .inv-preview {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      box-shadow: var(--shadow-md);
+      display: none;
+      margin-top: 1.5rem;
+    }
+
+    .inv-preview.show {
+      display: block;
+      animation: fadeInUp 0.4s ease both;
+    }
+
+    .inv-top {
+      background: linear-gradient(135deg, #18120e, #2d1020);
+      border-radius: var(--r-xl) var(--r-xl) 0 0;
+      padding: 2rem;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .inv-body {
+      padding: 2rem;
+    }
+
+    .inv-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .inv-table th {
+      font-size: 0.72rem;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 0.6rem 0.75rem;
+      border-bottom: 2px solid var(--border);
+      text-align: left;
+    }
+
+    .inv-table td {
+      padding: 0.8rem 0.75rem;
+      font-size: 0.9rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tot-wrap {
+      max-width: 260px;
+      margin-left: auto;
+      margin-top: 1.5rem;
+    }
+
+    .tot-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.88rem;
+      padding: 0.38rem 0;
+      color: var(--text-muted);
+    }
+
+    .tot-row.grand {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--accent);
+      border-top: 2px solid var(--border);
+      padding-top: 0.7rem;
+      margin-top: 0.4rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="admin-shell">
+
+    <aside class="sidebar">
+      <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close menu">&times;</button>
+      <div class="sidebar-logo">
+        <img src="../assets/logo.svg" alt="Nishant Logo" style="height:48px; filter:brightness(0) invert(1);">
+        <small>Admin Panel</small>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="admin-dashboard.html"><svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+          </svg> Dashboard</a>
+        <a href="admin-bookings.html"><svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+          </svg> Bookings</a>
+        <a href="custom-menu-requests.html"><svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+          </svg> Custom Requests</a>
+        <a href="manage-packages.html"><svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+          </svg> Packages</a>
+        <a href="admin-invoice.html" class="active"><svg class="icon" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg> Invoices</a>
+        <a href="reports.html"><svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg> Reports</a>
+        <a href="admin-contacts.html"><svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+          </svg> Contacts</a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="#" onclick="event.preventDefault(); window.adminLogout();"><svg class="icon" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg> Logout</a>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <div class="admin-topbar">
+        <button class="admin-menu-toggle" id="adminMenuToggle" aria-label="Toggle menu">☰</button>
+        <h1>Invoices</h1>
+      </div>
+      <div class="admin-content">
+
+        <!-- Approved bookings list -->
+        <div class="card">
+          <div class="card-header">
+            <h3>Approved Bookings with Invoices</h3>
+          </div>
+          <div class="table-wrap" style="border:none;border-radius:0">
+            <table>
+              <thead>
+                <tr>
+                  <th>Invoice ID</th>
+                  <th>Booking ID</th>
+                  <th>Client</th>
+                  <th>Date</th>
+                  <th>Total</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="invTable"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Invoice Preview -->
+        <div class="inv-preview" id="invPreview">
+          <div class="inv-top">
+            <div>
+              <div style="font-family:var(--font-head);font-size:1.8rem">
+                <img src="../assets/logo.svg" alt="Nishant Logo" style="height:40px; filter:brightness(0) invert(1);">
+              </div>
+              <div style="font-size:0.78rem;color:rgba(255,255,255,0.45);margin-top:0.2rem">Premium Event Catering</div>
+            </div>
+            <div style="text-align:right">
+              <div
+                style="font-size:0.7rem;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:0.25rem">
+                Invoice</div>
+              <div style="font-family:var(--font-head);font-size:1.3rem;font-weight:700;color:#fff" id="pvInvId">—</div>
+              <div style="margin-top:0.75rem;font-size:0.82rem;color:rgba(255,255,255,0.5)">
+                <span id="pvDate">—</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="inv-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:1.5rem">
+              <div>
+                <div
+                  style="font-size:0.7rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.5rem">
+                  Billed To</div>
+                <p style="font-size:0.88rem;line-height:1.8" id="pvClient">—</p>
+              </div>
+              <div>
+                <div
+                  style="font-size:0.7rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.5rem">
+                  Event Details</div>
+                <p style="font-size:0.88rem;line-height:1.8" id="pvEvent">—</p>
+              </div>
+            </div>
+
+            <table class="inv-table">
+              <thead>
+                <tr>
+                  <th>Description</th>
+                  <th>Category</th>
+                  <th style="text-align:right">Amount</th>
+                </tr>
+              </thead>
+              <tbody id="pvInvItems">
+                <!-- Injected by JS -->
+              </tbody>
+            </table>
+
+            <div class="tot-wrap">
+              <div class="tot-row"><span>Subtotal</span><span id="pvSubT">—</span></div>
+              <!-- GST Row Removed -->
+              <div class="tot-row grand"><span>Total</span><span id="pvGrand">—</span></div>
+            </div>
+
+            <div style="margin-top:1.5rem;display:flex;gap:0.75rem;justify-content:flex-end">
+              <button class="btn btn-outline btn-sm" onclick="window.print()">🖨️ Print</button>
+              <a class="btn btn-ghost btn-sm" id="pvLink" href="#">Open Full →</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script type="module">
+    import { initAuthListener, logoutUser } from '../js/auth.js';
+    import { fetchBookings } from '../js/database.js';
+
+    initAuthListener({ requireAuth: true, requireAdmin: true });
+    window.adminLogout = async function () { await logoutUser(); };
+
+    const fmt = n => n ? '₹' + Number(n).toLocaleString('en-IN') : '—';
+    const EVENT_LABELS = { wedding: '💍 Wedding', corporate: '🏢 Corporate', birthday: '🎂 Birthday', graduation: '🎓 Graduation', festival: '🎊 Festival', other: '📅 Other' };
+    const PKG_LABELS = { veg: '🌿 Vegetarian', nonveg: '🍗 Non-Vegetarian', premium: '👑 Premium' };
+
+    let allBookings = [];
+
+    window.previewInv = function (b) {
+      const preview = document.getElementById('invPreview');
+      const today = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+      document.getElementById('pvInvId').textContent = b.invoiceId || ('INV-' + b.id.substring(0, 8).toUpperCase());
+      document.getElementById('pvDate').textContent = today;
+      document.getElementById('pvClient').innerHTML = `<strong>${b.userName || b.name || '—'}</strong><br>${b.phone || ''}<br>${b.email || ''}`;
+      document.getElementById('pvEvent').innerHTML = `${(EVENT_LABELS && EVENT_LABELS[b.eventType]) || b.eventType || '—'}<br>📅 ${b.eventDate || b.date || '—'}<br>📍 ${b.address ? b.address.city : '—'}`;
+
+      const tbody = document.getElementById('pvInvItems');
+      let subtotal = 0;
+
+      if (b.packages && b.packages.length > 0) {
+        tbody.innerHTML = b.packages.map(p => {
+          let amt = 0;
+          if (p.category === 'catering') {
+            amt = (p.price || 0) * (b.guestCount || b.guests || 0);
+          } else {
+            amt = p.price || 0;
+          }
+          subtotal += amt;
+          return `
+            <tr>
+              <td>${p.name} ${p.category === 'catering' ? `(${fmt(p.price)} × ${b.guestCount || b.guests || 0} guests)` : '(Base)'}</td>
+              <td style="text-transform:capitalize">${p.category}</td>
+              <td style="text-align:right">${fmt(amt)}</td>
+            </tr>`;
+        }).join('');
+      } else {
+        // Legacy support
+        subtotal = b.subtotal || b.estimatedSubtotal || 0;
+        tbody.innerHTML = `
+          <tr>
+            <td>${b.pkgName || b.pkg || 'Catering Services'}</td>
+            <td>Catering</td>
+            <td style="text-align:right">${fmt(subtotal)}</td>
+          </tr>`;
+      }
+
+      document.getElementById('pvSubT').textContent = fmt(subtotal);
+      if (document.getElementById('pvTax')) document.getElementById('pvTax').textContent = '₹0';
+      document.getElementById('pvGrand').textContent = fmt(b.grandTotal || b.estimatedTotal || subtotal);
+      document.getElementById('pvLink').href = `../invoice.html?id=${b.id}`;
+
+      localStorage.setItem('nis_invoice_booking', JSON.stringify(b));
+      preview.classList.add('show');
+      preview.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      const { bookings, error } = await fetchBookings();
+      if (error) return console.error(error);
+      allBookings = bookings;
+
+      const approved = allBookings.filter(b => b.status === 'approved');
+
+      document.getElementById('invTable').innerHTML = approved.length === 0
+        ? `<tr><td colspan="6" style="text-align:center;padding:3rem;color:var(--text-muted)">No approved bookings yet.</td></tr>`
+        : approved.map(b => `
+          <tr>
+            <td style="font-weight:600;font-size:0.85rem">${b.invoiceId || 'INV-' + b.id.substring(0, 8).toUpperCase()}</td>
+            <td><a href="booking-details.html?id=${b.id}" style="color:var(--accent)">${b.id.substring(0, 8)}</a></td>
+            <td>${b.name || '—'}</td>
+            <td>${b.date || '—'}</td>
+            <td>${fmt(b.grandTotal)}</td>
+            <td><button class="btn btn-outline btn-sm" onclick='window.previewInv(${JSON.stringify(b).replace(/'/g, "&apos;")})'>Preview</button></td>
+          </tr>`).join('');
+
+      // Auto-open if id param present
+      const id = new URLSearchParams(location.search).get('id');
+      if (id) { const b = allBookings.find(x => x.id === id); if (b) window.previewInv(b); }
+    });
+  </script>
+  <script src="../js/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Booking Confirmed – Nishant Events & Catering</title>
+  <meta name="description" content="Your catering booking has been confirmed. Track status and view your invoice." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    body {
+      background: var(--bg-section);
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.7rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+
+    .detail-row .lbl {
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .detail-row .val {
+      font-weight: 600;
+    }
+
+    .total-highlight {
+      background: var(--primary-light);
+      border-radius: var(--r-md);
+      padding: 1rem 1.2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.5rem;
+    }
+
+    .total-highlight .lbl {
+      font-weight: 600;
+    }
+
+    .total-highlight .val {
+      font-family: var(--font-head);
+      font-size: 1.6rem;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .cta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    @media(max-width:500px) {
+      .cta-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="index.html" class="nav-logo">
+        <img src="assets/logo.svg" alt="Nishant Logo">
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <button class="nav-close-btn" id="navCloseBtn" aria-label="Close menu">&times;</button>
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="packages.html" class="nav-link">Packages</a></li>
+        <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+        <li><a href="track-booking.html" class="nav-link">Track Booking</a></li>
+        <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+        <li class="nav-mobile-ctas">
+          <a href="login.html" class="nav-cta mobile-only" id="loginBtnMobile" data-auth="login">Login</a>
+          <button class="nav-cta mobile-only" id="logoutBtnMobile" data-auth="logout" style="display:none"
+            onclick="window.userLogout()">Logout</button>
+          <a href="booking.html" class="nav-cta mobile-only">Book Now</a>
+        </li>
+      </ul>
+      <div class="nav-right">
+        <a href="booking.html" class="nav-cta">Book Now</a>
+        <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- CONFIRMATION -->
+  <div class="confirm-wrap">
+
+    <div class="check-anim">✓</div>
+
+    <h1 style="font-size:2.2rem;margin-bottom:0.5rem;">Booking Submitted!</h1>
+    <p style="color:var(--text-muted);margin-bottom:1.5rem">Your request has been received. We'll reach out within 24
+      hours to confirm your event.</p>
+
+    <div class="booking-id-chip" id="bookingIdChip">
+      📋 NIS-2026-000
+    </div>
+
+    <!-- Booking Details -->
+    <div class="card card-pad" style="text-align:left;margin-bottom:1.5rem">
+      <h3 style="font-size:1.1rem;margin-bottom:1.2rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border)">
+        Booking Summary</h3>
+      <div class="detail-row"><span class="lbl">👤 Name</span><span class="val" id="dName">—</span></div>
+      <div class="detail-row"><span class="lbl">📞 Phone</span><span class="val" id="dPhone">—</span></div>
+      <div class="detail-row"><span class="lbl">📅 Event Date</span><span class="val" id="dDate">—</span></div>
+      <div class="detail-row"><span class="lbl">🎊 Event Type</span><span class="val" id="dType">—</span></div>
+      <div class="detail-row"><span class="lbl">🍽️ Package</span><span class="val" id="dPkg">—</span></div>
+      <div class="detail-row"><span class="lbl">👥 Guests</span><span class="val" id="dGuests">—</span></div>
+      <div class="detail-row"><span class="lbl">📍 Venue</span><span class="val" id="dVenue">—</span></div>
+      <div class="total-highlight">
+        <span class="lbl">💰 Estimated Total</span>
+        <span class="val" id="dTotal">₹0</span>
+      </div>
+    </div>
+
+    <!-- Status Timeline -->
+    <div class="card card-pad" style="text-align:left;margin-bottom:1.5rem">
+      <h3 style="font-size:1.05rem;margin-bottom:1.5rem">📌 Booking Status</h3>
+      <div class="timeline">
+        <div class="tl-step">
+          <div class="tl-left">
+            <div class="tl-dot done">✓</div>
+            <div class="tl-line"></div>
+          </div>
+          <div class="tl-content"><strong>Booking Submitted</strong><span id="submittedAt">Just now</span></div>
+        </div>
+        <div class="tl-step">
+          <div class="tl-left">
+            <div class="tl-dot current">⏳</div>
+            <div class="tl-line"></div>
+          </div>
+          <div class="tl-content"><strong>Under Review</strong><span>Admin will verify your requirements</span></div>
+        </div>
+        <div class="tl-step">
+          <div class="tl-left">
+            <div class="tl-dot future">📞</div>
+            <div class="tl-line"></div>
+          </div>
+          <div class="tl-content"><strong>Confirmation Call</strong><span>We'll call to confirm within 24 hours</span>
+          </div>
+        </div>
+        <div class="tl-step">
+          <div class="tl-left">
+            <div class="tl-dot future">🎉</div>
+          </div>
+          <div class="tl-content"><strong>Invoice Generated</strong><span>Once approved, your invoice is ready</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTAs -->
+    <div class="cta-grid">
+      <a href="track-booking.html" class="btn btn-accent">Track My Booking</a>
+      <a href="index.html" class="btn btn-outline">← Back to Home</a>
+    </div>
+
+    <p style="margin-top:1.5rem;font-size:0.82rem;color:var(--text-muted)">
+      Save your Booking ID: <strong id="saveId">NIS-2026-000</strong> to track status and access your invoice.
+    </p>
+
+  </div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <span>© 2026 Nishant Events & Catering Service's. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+  <script type="module" src="js/auth-ui.js"></script>
+  <script>
+    const booking = JSON.parse(localStorage.getItem('nis_last_booking') || '{}');
+
+    if (booking.id) {
+      document.getElementById('bookingIdChip').textContent = '📋 ' + booking.id;
+      document.getElementById('saveId').textContent        = booking.id;
+      document.getElementById('dName').textContent    = booking.name  || '—';
+      document.getElementById('dPhone').textContent   = booking.phone || '—';
+      document.getElementById('dDate').textContent    = booking.date  || '—';
+      document.getElementById('dType').textContent    = (EVENT_LABELS && EVENT_LABELS[booking.eventType]) || booking.eventType || '—';
+      document.getElementById('dPkg').textContent     = (PKG_LABELS  && PKG_LABELS[booking.pkg]) || booking.pkg || '—';
+      document.getElementById('dGuests').textContent  = (booking.guests || '—') + ' guests';
+      document.getElementById('dVenue').textContent   = booking.venue || 'Not specified';
+      document.getElementById('dTotal').textContent   = booking.grandTotal ? '₹' + Number(booking.grandTotal).toLocaleString('en-IN') : '—';
+      document.getElementById('submittedAt').textContent = 'Today at ' + new Date().toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' });
+    }
+  </script>
+</body>
+
+</html>

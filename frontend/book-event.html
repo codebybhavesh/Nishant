@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book an Event – Nishant Events &amp; Catering</title>
+  <meta name="description"
+    content="Book a custom catering event with Nishant Events & Catering. Fill in your requirements and our team will contact you." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    .form-grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media(max-width:700px) {
+      .form-grid-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="index.html" class="nav-logo">
+        <img src="assets/logo.svg" alt="Nishant Logo">
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <button class="nav-close-btn" id="navCloseBtn" aria-label="Close menu">&times;</button>
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="packages.html" class="nav-link">Packages</a></li>
+        <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+        <li><a href="track-booking.html" class="nav-link">Track Booking</a></li>
+        <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+        <li class="nav-mobile-ctas">
+          <a href="login.html" class="nav-cta mobile-only" id="loginBtnMobile" data-auth="login">Login</a>
+          <button class="nav-cta mobile-only" id="logoutBtnMobile" data-auth="logout" style="display:none"
+            onclick="window.userLogout()">Logout</button>
+          <a href="booking.html" class="nav-cta mobile-only">Book Package</a>
+        </li>
+      </ul>
+      <div class="nav-right">
+        <a href="booking.html" class="nav-cta">Book Package</a>
+        <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="container">
+      <div class="breadcrumb"><a href="index.html">Home</a><span class="sep">›</span> Book an Event</div>
+      <h1>Book a <span style="color:var(--accent)">Custom Event</span></h1>
+      <p>Tell us about your event and our team will customise the perfect catering solution for you.</p>
+    </div>
+  </div>
+
+  <!-- FORM -->
+  <section class="section">
+    <div class="container">
+      <div class="booking-layout">
+        <div class="booking-form-wrap">
+          <form id="eventForm" class="booking-form" novalidate>
+
+            <p class="form-section-title">Event Details</p>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label for="eventType">Event Type *</label>
+                <select id="eventType" class="form-control" required>
+                  <option value="">— Select Event Type —</option>
+                  <option value="wedding">💍 Wedding</option>
+                  <option value="reception">🎊 Reception</option>
+                  <option value="engagement">💝 Engagement</option>
+                  <option value="birthday">🎂 Birthday Party</option>
+                  <option value="corporate">💼 Corporate Event</option>
+                  <option value="pooja">🪔 Pooja / Religious Function</option>
+                  <option value="anniversary">🥂 Anniversary</option>
+                  <option value="other">📌 Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="guestsCount">Number of Guests *</label>
+                <div class="counter-wrap">
+                  <button type="button" class="counter-btn" onclick="adjustGuests(-10)">−</button>
+                  <input type="number" id="guestsCount" class="form-control" value="50" min="10" max="10000" />
+                  <button type="button" class="counter-btn" onclick="adjustGuests(10)">+</button>
+                </div>
+              </div>
+            </div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label for="eventDate">Event Date *</label>
+                <input type="date" id="eventDate" class="form-control" required />
+              </div>
+              <div class="form-group">
+                <label for="eventTime">Preferred Time</label>
+                <select id="eventTime" class="form-control">
+                  <option value="morning">🌅 Morning (7 AM – 12 PM)</option>
+                  <option value="afternoon">☀️ Afternoon (12 PM – 5 PM)</option>
+                  <option value="evening" selected>🌇 Evening (5 PM – 10 PM)</option>
+                  <option value="fullday">🗓️ Full Day</option>
+                </select>
+              </div>
+            </div>
+
+            <p class="form-section-title">Event Address</p>
+            <div class="form-group">
+              <label>Street Address *</label>
+              <input type="text" id="addrStreet" class="form-control" placeholder="123 Example Street" required>
+            </div>
+            <div class="form-grid-3">
+              <div class="form-group"><label>City *</label><input type="text" id="addrCity" class="form-control"
+                  placeholder="New Delhi" required></div>
+              <div class="form-group"><label>State *</label><input type="text" id="addrState" class="form-control"
+                  placeholder="Delhi" required></div>
+              <div class="form-group"><label>Pincode *</label><input type="text" id="addrPin" class="form-control"
+                  placeholder="110001" required></div>
+            </div>
+
+            <p class="form-section-title">Your Details</p>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label for="contactName">Full Name *</label>
+                <input type="text" id="contactName" class="form-control" placeholder="Your name" required />
+              </div>
+              <div class="form-group">
+                <label for="contactPhone">Phone Number *</label>
+                <input type="tel" id="contactPhone" class="form-control" placeholder="+91 98765 43210" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="contactEmail">Email Address *</label>
+              <input type="email" id="contactEmail" class="form-control" placeholder="you@example.com" required />
+            </div>
+            <div class="form-group">
+              <label for="specialReq">Special Requirements / Notes</label>
+              <textarea id="specialReq" class="form-control" rows="4"
+                placeholder="Describe your theme, dietary requirements, specific dishes, or any special instructions…"></textarea>
+            </div>
+
+            <div id="formError" class="alert alert-danger" style="display:none"></div>
+
+            <button type="submit" class="btn btn-accent btn-block btn-lg" style="margin-top:0.5rem">
+              Submit Event Request →
+            </button>
+          </form>
+        </div>
+
+        <!-- SIDEBAR -->
+        <div class="booking-sidebar">
+          <div class="card">
+            <div class="card-header">
+              <h3>🗓️ Custom Event</h3>
+            </div>
+            <div class="card-body">
+              <p style="font-size:0.9rem;color:var(--text-gray);line-height:1.6;margin-bottom:1.2rem">
+                This form is for <strong>custom event inquiries without a pre-defined package</strong>. Our team will
+                review your requirements and reach out with a tailored quote.
+              </p>
+              <div
+                style="background:var(--light-gray);padding:1rem;border-radius:var(--r-sm);text-align:center;margin-bottom:1.2rem">
+                <p style="font-size:0.95rem;color:var(--text);margin-bottom:0.3rem"><strong>Pricing On Request</strong>
+                </p>
+                <p style="font-size:0.82rem;color:var(--text-gray)">Final quote calculated by admin after reviewing your
+                  details.</p>
+              </div>
+              <div class="incl-list">
+                <span>✅ Staff, setup &amp; cleanup included</span>
+                <span>✅ Free consultation call</span>
+                <span>✅ Custom menu planning</span>
+                <span>✅ Cancellable up to 7 days before</span>
+              </div>
+
+              <div style="margin-top:1.5rem;border-top:1px dashed var(--border);padding-top:1.2rem">
+                <p style="font-size:0.85rem;color:var(--text-gray);margin-bottom:0.5rem">Want a predefined package?</p>
+                <a href="packages.html" class="btn btn-outline btn-block">Browse Packages</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer" id="contact">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo"><img src="assets/logo.svg" alt="Nishant Logo"></div>
+          <p>Premium catering services for every occasion. Excellence, elegance, and exceptional taste — guaranteed.</p>
+          <div class="social-links"><a href="#">Fb</a><a href="#">Ig</a><a href="#">X</a></div>
+        </div>
+        <div class="footer-col">
+          <h4>Navigate</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="packages.html">Packages</a></li>
+            <li><a href="booking.html">Book Package</a></li>
+            <li><a href="book-event.html">Book Event</a></li>
+            <li><a href="track-booking.html">Track Booking</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact Us</h4>
+          <ul class="contact-info">
+            <li><i>📞</i> +91 9970774436</li>
+            <li><i>✉️</i> nishantevents97@gmail.com</li>
+            <li><i>📍</i> Lane No. 3, near Hanuman Temple, Santoshi Nagar, Vilas Nagar, Amravati, Maharashtra 444601
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Nishant Events &amp; Catering Service's. All rights reserved.</span>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="admin/admin-login.html" style="margin-left:auto">Admin Login</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script type="module" src="js/auth-ui.js"></script>
+  <script type="module">
+    import { apiFetch } from './js/api.js';
+    import { initAuthListener, fetchCurrentUser } from './js/auth.js';
+
+    initAuthListener({ requireAuth: true });
+
+    document.getElementById('eventDate').min = new Date().toISOString().split('T')[0];
+
+    window.adjustGuests = function (delta) {
+      const inp = document.getElementById('guestsCount');
+      inp.value = Math.max(10, (parseInt(inp.value) || 50) + delta);
+    };
+
+    let activeUser = null;
+
+    (async () => {
+      activeUser = await fetchCurrentUser();
+      if (activeUser) {
+        const n = document.getElementById('contactName');
+        const e = document.getElementById('contactEmail');
+        const p = document.getElementById('contactPhone');
+        if (n && !n.value) n.value = activeUser.name || '';
+        if (e && !e.value) e.value = activeUser.email || '';
+        if (p && !p.value) p.value = activeUser.phone || '';
+      }
+    })();
+
+    document.getElementById('eventForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const err = document.getElementById('formError');
+      err.style.display = 'none';
+
+      const name = document.getElementById('contactName').value.trim();
+      const phone = document.getElementById('contactPhone').value.trim();
+      const email = document.getElementById('contactEmail').value.trim();
+      const date = document.getElementById('eventDate').value;
+      const type = document.getElementById('eventType').value;
+      const guests = parseInt(document.getElementById('guestsCount').value) || 0;
+      const street = document.getElementById('addrStreet').value.trim();
+      const city = document.getElementById('addrCity').value.trim();
+      const state = document.getElementById('addrState').value.trim();
+      const pincode = document.getElementById('addrPin').value.trim();
+
+      if (!name || !phone || !email || !date || !type || guests < 10 || !street || !city || !state || !pincode) {
+        err.textContent = 'Please fill in all required fields.';
+        err.style.display = 'block';
+        err.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+
+      const btn = this.querySelector('button[type="submit"]');
+      btn.textContent = 'Submitting...'; btn.disabled = true;
+
+      try {
+        const payload = {
+          userName: name,
+          email, phone,
+          packageId: null,
+          pkgName: 'Custom Event',
+          guestCount: guests,
+          selectedMenu: {},
+          status: 'pending',
+          eventDate: date,
+          time: document.getElementById('eventTime').value,
+          eventType: type,
+          address: { street, city, state, pincode },
+          specialReq: document.getElementById('specialReq').value.trim()
+        };
+
+        const result = await apiFetch('/bookings', {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
+
+        localStorage.setItem('nis_last_booking', JSON.stringify({ ...payload, id: result._id || result.id }));
+        window.location.href = 'confirmation.html';
+      } catch (ex) {
+        btn.textContent = 'Submit Event Request →'; btn.disabled = false;
+        err.textContent = 'Error: ' + ex.message;
+        err.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+
+</html>

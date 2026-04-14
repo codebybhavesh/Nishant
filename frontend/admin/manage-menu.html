@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Menu – Nishant Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="../css/styles.css" />
+    <style>
+        .pkg-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .pkg-row:last-child {
+            border-bottom: none;
+        }
+
+        .pkg-thumb {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--r-md);
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .pkg-row-info {
+            flex: 1;
+        }
+
+        .pkg-row-info h4 {
+            font-size: 0.95rem;
+        }
+
+        .pkg-row-info p {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 900;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--surface);
+            border-radius: var(--r-xl);
+            padding: 2rem;
+            width: 100%;
+            max-width: 520px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal h3 {
+            margin-bottom: 1.5rem;
+        }
+
+        .upload-status {
+            font-size: 0.8rem;
+            margin-top: 0.4rem;
+            display: none;
+        }
+
+        .upload-status.uploading {
+            color: var(--primary);
+        }
+
+        .upload-status.success {
+            color: #22c55e;
+        }
+
+        .upload-status.error {
+            color: var(--danger);
+        }
+
+        .preview-img {
+            width: 100%;
+            height: 110px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-shell">
+
+        <aside class="sidebar">
+            <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close menu">&times;</button>
+            <div class="sidebar-logo">
+                <img src="../assets/logo.svg" alt="Nishant Logo" style="height:48px; filter:brightness(0) invert(1);">
+                <small>Admin Panel</small>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="admin-dashboard.html"><svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg> Dashboard</a>
+                <a href="admin-bookings.html"><svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg> Bookings</a>
+                <a href="custom-menu-requests.html"><svg class="icon" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                    </svg> Custom Requests</a>
+                <a href="manage-packages.html"><svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                    </svg> Packages</a>
+                <a href="manage-menu.html" class="active"><svg class="icon" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg> Menus</a>
+                <a href="admin-invoice.html"><svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg> Invoices</a>
+                <a href="reports.html"><svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg> Reports</a>
+                <a href="admin-contacts.html"><svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                    </svg> Contacts</a>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" onclick="event.preventDefault(); window.adminLogout();"><svg class="icon" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg> Logout</a>
+            </div>
+        </aside>
+
+        <main class="admin-main">
+            <div class="admin-topbar">
+                <button class="admin-menu-toggle" id="adminMenuToggle" aria-label="Toggle menu">☰</button>
+                <h1>Manage Menu Items</h1>
+                <button class="btn btn-accent btn-sm" onclick="window.openModal()">+ Add Menu Item</button>
+            </div>
+
+            <div class="admin-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 id="itemCount">Menu Items</h3>
+                    </div>
+                    <div id="itemList"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <h3 id="modalTitle">Add Menu Item</h3>
+            <input type="hidden" id="editId" />
+            <div class="form-group"><label>Menu Item Name *</label><input type="text" id="fName" class="form-control"
+                    placeholder="Paneer Tikka" /></div>
+            <div class="form-grid-2">
+                <div class="form-group">
+                    <label>Category *</label>
+                    <select id="fCategory" class="form-control">
+                        <option value="drink">🍹 Welcome Drink</option>
+                        <option value="starter">🥟 Starter</option>
+                        <option value="veg_dish">🥘 Vegetable Dish</option>
+                        <option value="dal">🥣 Dal</option>
+                        <option value="rice">🍚 Rice</option>
+                        <option value="bread">🫓 Bread</option>
+                        <option value="sweet">🍮 Sweet</option>
+                        <option value="dessert">🍨 Dessert</option>
+                        <option value="extras">🥗 Extras</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Price (₹) *</label><input type="number" id="fPrice" class="form-control"
+                        placeholder="250" /></div>
+            </div>
+            <div class="form-group">
+                <label>Image</label>
+                <input type="file" id="fImgFile" class="form-control" accept="image/*" />
+                <input type="hidden" id="fImg" />
+                <div id="imgUploadStatus" class="upload-status"></div>
+                <img id="fImgPreview" class="preview-img" alt="Preview" />
+            </div>
+            <div class="form-group"><label>Description</label><textarea id="fDesc" class="form-control"
+                    rows="3"></textarea>
+            </div>
+            <div id="modalErr" class="alert alert-danger" style="display:none"></div>
+            <div style="display:flex;gap:1rem;margin-top:1rem">
+                <button class="btn btn-accent" style="flex:1" onclick="window.saveItem()">Save Item</button>
+                <button class="btn btn-outline" onclick="window.closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initAuthListener, logoutUser } from '../js/auth.js';
+        import { fetchMenus, addMenu, updateMenu, deleteMenu } from '../js/database.js';
+        import { uploadToCloudinary } from '../js/cloudinary.js';
+
+        initAuthListener({ requireAuth: true, requireAdmin: true });
+        window.adminLogout = async function () { await logoutUser(); };
+
+        window.render = async function () {
+            const { menus, error } = await fetchMenus();
+            if (error) return alert("Error fetching menus: " + error);
+
+            document.getElementById('itemCount').textContent = `${menus.length} Item${menus.length !== 1 ? 's' : ''}`;
+            const catBadge = { drink: '🍹 Drink', starter: '🥟 Starter', veg_dish: '🥘 Veg Dish', dal: '🥣 Dal', rice: '🍚 Rice', bread: '🫓 Bread', sweet: '🍮 Sweet', dessert: '🍨 Dessert', extras: '🥗 Extras' };
+
+            document.getElementById('itemList').innerHTML = menus.map(m => `
+      <div class="pkg-row">
+        <img class="pkg-thumb" src="${m.imageURL || 'https://via.placeholder.com/60'}" alt="${m.name}" onerror="this.src='https://placehold.co/60x60?text=Food'" />
+        <div class="pkg-row-info">
+          <h4>${m.name} <span class="badge" style="font-size:0.7rem;background:var(--primary-light);color:var(--primary)">${catBadge[m.category] || m.category}</span></h4>
+          <p>₹${Number(m.price).toLocaleString('en-IN')} · ${m.description || 'No description'}</p>
+        </div>
+        <div style="display:flex;gap:0.5rem;flex-shrink:0">
+          <button class="btn btn-outline btn-sm" onclick='window.editItem(${JSON.stringify(m).replace(/'/g, "&apos;")})'>Edit</button>
+          <button class="btn btn-sm" style="background:var(--danger-bg);color:var(--danger)" onclick="window.deleteItem('${m.id}')">Delete</button>
+        </div>
+      </div>`).join('') || `<div class="empty-state"><p>No menu items. Add one above.</p></div>`;
+        };
+
+        window.openModal = function (item = null) {
+            document.getElementById('modal').classList.add('open');
+            document.getElementById('modalErr').style.display = 'none';
+            if (!item) {
+                document.getElementById('modalTitle').textContent = 'Add Menu Item';
+                document.getElementById('editId').value = '';
+                ['fName', 'fImg', 'fDesc'].forEach(id => document.getElementById(id).value = '');
+                document.getElementById('fPrice').value = '';
+                document.getElementById('fImgFile').value = '';
+                document.getElementById('fImgPreview').style.display = 'none';
+                document.getElementById('imgUploadStatus').style.display = 'none';
+            }
+        };
+
+        window.editItem = function (m) {
+            window.openModal(m);
+            document.getElementById('modalTitle').textContent = 'Edit Menu Item';
+            document.getElementById('editId').value = m.id;
+            document.getElementById('fName').value = m.name;
+            document.getElementById('fCategory').value = m.category;
+            document.getElementById('fPrice').value = m.price;
+            document.getElementById('fImg').value = m.imageURL || '';
+            document.getElementById('fDesc').value = m.description || '';
+            if (m.imageURL) {
+                document.getElementById('fImgPreview').src = m.imageURL;
+                document.getElementById('fImgPreview').style.display = 'block';
+            } else {
+                document.getElementById('fImgPreview').style.display = 'none';
+            }
+            document.getElementById('imgUploadStatus').style.display = 'none';
+        };
+
+        window.closeModal = function () { document.getElementById('modal').classList.remove('open'); };
+
+        // ── Cloudinary upload on file pick ──
+        document.getElementById('fImgFile').addEventListener('change', async function (e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const status = document.getElementById('imgUploadStatus');
+            status.className = 'upload-status uploading';
+            status.textContent = 'Uploading image… 0%';
+            status.style.display = 'block';
+            document.getElementById('fImgPreview').style.display = 'none';
+            try {
+                const url = await uploadToCloudinary(file, (pct) => {
+                    status.textContent = `Uploading image… ${pct}%`;
+                });
+                document.getElementById('fImg').value = url;
+                document.getElementById('fImgPreview').src = url;
+                document.getElementById('fImgPreview').style.display = 'block';
+                status.className = 'upload-status success';
+                status.textContent = '✓ Image uploaded successfully';
+            } catch (err) {
+                status.className = 'upload-status error';
+                status.textContent = '✗ Upload failed: ' + err.message;
+            }
+        });
+
+        window.saveItem = async function () {
+            const name = document.getElementById('fName').value.trim();
+            const price = parseInt(document.getElementById('fPrice').value);
+            if (!name || isNaN(price)) {
+                document.getElementById('modalErr').textContent = 'Name and Price are required.';
+                document.getElementById('modalErr').style.display = 'block';
+                return;
+            }
+
+            const editId = document.getElementById('editId').value;
+            const item = {
+                name,
+                price,
+                category: document.getElementById('fCategory').value,
+                imageURL: document.getElementById('fImg').value.trim(),
+                description: document.getElementById('fDesc').value.trim()
+            };
+
+            const btnObj = document.querySelector('#modal .btn-accent');
+            btnObj.textContent = "Saving...";
+
+            if (editId) {
+                await updateMenu(editId, item);
+            } else {
+                await addMenu(item);
+            }
+
+            btnObj.textContent = "Save Item";
+            window.closeModal();
+            window.render();
+        };
+
+        window.deleteItem = async function (id) {
+            if (!confirm('Delete this menu item?')) return;
+            await deleteMenu(id);
+            window.render();
+        };
+
+        window.render();
+    </script>
+    <script src="../js/main.js"></script>
+</body>
+
+</html>

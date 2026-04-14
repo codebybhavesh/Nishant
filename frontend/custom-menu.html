@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Custom Menu Selection – Nishant Events & Catering</title>
+    <meta name="description" content="Build your own pure-vegetarian custom catering menu." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <style>
+        body {
+            background: var(--bg-section);
+        }
+
+        .menu-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            align-items: start;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 1rem;
+        }
+
+        @media (max-width: 900px) {
+            .menu-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .category-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .category-title {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 1rem;
+        }
+
+        .menu-item-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r-md);
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            transition: var(--ease);
+        }
+
+        .menu-item-card:hover {
+            box-shadow: var(--shadow-sm);
+            border-color: var(--accent);
+        }
+
+        .menu-item-card h4 {
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        .menu-item-card p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin: 0;
+            flex: 1;
+        }
+
+        .sticky-sidebar {
+            position: sticky;
+            top: 100px;
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: var(--r-xl);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+
+        .toast-notification {
+            position: fixed;
+            top: 80px;
+            right: -400px;
+            background: var(--success);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: var(--r-md);
+            box-shadow: var(--shadow-lg);
+            font-weight: 500;
+            transition: right 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .toast-notification.show {
+            right: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <a href="index.html" class="nav-logo">
+                <img src="assets/logo.svg" alt="Nishant Logo">
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <button class="nav-close-btn" id="navCloseBtn" aria-label="Close menu">&times;</button>
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="services.html" class="nav-link">Services</a></li>
+                <li><a href="packages.html" class="nav-link">Packages</a></li>
+                <li><a href="custom-menu.html" class="nav-link active">Custom Menu</a></li>
+                <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+                <li><a href="track-booking.html" class="nav-link">Track Booking</a></li>
+                <li><a href="index.html#contact-form" class="nav-link">Contact</a></li>
+                <li class="nav-mobile-ctas">
+                    <a href="login.html" class="nav-cta mobile-only" id="loginBtnMobile" data-auth="login">Login</a>
+                    <button class="nav-cta mobile-only" id="logoutBtnMobile" data-auth="logout" style="display:none"
+                        onclick="window.userLogout()">Logout</button>
+                    <a href="booking.html" class="nav-cta mobile-only">Book Now</a>
+                </li>
+            </ul>
+            <div class="nav-right" >
+                <a href="login.html" id="loginBtn" class="nav-cta">Login</a>
+                <button id="logoutBtn" onclick="window.userLogout()" class="nav-cta"
+                    style="display:none;">Logout</button>
+                <a href="booking.html" class="nav-cta">Book Now</a>
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
+        </div>
+    </nav>
+
+    <!-- PAGE HEADER -->
+    <div class="page-header" style="padding-top:8rem">
+        <div class="container">
+            <div class="breadcrumb"><a href="index.html">Home</a><span class="sep">›</span> Custom Menu</div>
+            <h1>Build Your <span style="color:var(--accent)">Custom Menu</span></h1>
+            <p>Select your favorite dishes to create a personalized pure-veg catering experience. No prices are shown
+                here—our team will assess your selections and contact you with a tailored quote.</p>
+        </div>
+    </div>
+
+    <div class="menu-layout">
+        <!-- MENU BROWSER -->
+        <div id="menuBrowser">
+            <div style="text-align:center; padding: 4rem; color:var(--text-muted);" id="menuLoading">
+                Loading menu items...
+            </div>
+            <!-- Rendered by JS -->
+        </div>
+
+        <!-- SIDEBAR FORM & CART -->
+        <div class="sticky-sidebar">
+            <h3 style="margin-bottom:1rem; font-family:var(--font-heading);">Your Selections</h3>
+
+            <!-- Cart Items -->
+            <div id="cartContainer"
+                style="margin-bottom: 2rem; max-height: 250px; overflow-y: auto; padding-right:0.5rem;">
+                <!-- Rendered by cart.js -->
+            </div>
+
+            <hr style="border:none; border-bottom:1px solid var(--border); margin: 1.5rem 0;" />
+
+            <h3 style="margin-bottom:1rem; font-size:1.1rem">Event Details</h3>
+            <form id="customMenuForm">
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label>Event Date *</label>
+                        <input type="date" id="cDate" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Guests *</label>
+                        <input type="number" id="cGuests" class="form-control" min="20" placeholder="e.g. 100"
+                            required />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Address / Venue *</label>
+                    <input type="text" id="cStreet" class="form-control" placeholder="Street Address"
+                        style="margin-bottom:0.5em" required />
+                    <div class="form-grid-2" style="margin-bottom:0.5em">
+                        <input type="text" id="cCity" class="form-control" placeholder="City" required />
+                        <input type="text" id="cState" class="form-control" placeholder="State" required />
+                    </div>
+                    <input type="text" id="cPincode" class="form-control" placeholder="Pincode" required />
+                </div>
+
+                <div class="form-group">
+                    <label>Special Notes (Optional)</label>
+                    <textarea id="cNotes" class="form-control" rows="2"
+                        placeholder="Any allergic requirements, timing, etc."></textarea>
+                </div>
+
+                <div id="formReqErr" style="color:var(--danger); font-size:0.85rem; margin-bottom:1rem; display:none;">
+                </div>
+
+                <button type="submit" class="btn btn-accent btn-block" id="submitBtn">Send Request</button>
+                <p style="font-size:0.75rem; color:var(--text-muted); text-align:center; margin-top:0.75rem;">
+                    You must be logged in to send a request. We will use your account details (Name, Phone, Email) for
+                    communication.
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast" class="toast-notification">
+        <span style="font-size:1.5rem">✨</span>
+        <div>
+            <div style="font-weight:700">Request Sent!</div>
+            <div style="font-size:0.85rem; opacity:0.9">Our team will contact you shortly.</div>
+        </div>
+    </div>
+
+    <footer class="site-footer" style="margin-top:2rem">
+        <div class="container text-center">
+            <p style="color:var(--text-muted); font-size:0.9rem">© 2026 Nishant Events & Catering Service's. All rights
+                reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script type="module" src="js/auth-ui.js"></script>
+    <script type="module" src="js/custom-menu.js"></script>
+    <script type="module">
+        import { logoutUser, initAuthListener, fetchCurrentUser } from './js/auth.js';
+
+        initAuthListener({ requireAuth: true });
+
+        window.userLogout = async function () {
+            await logoutUser();
+        };
+
+        // UI update for logout button
+        (async () => {
+            const user = await fetchCurrentUser();
+            const logoutBtn = document.getElementById('logoutBtn');
+            const loginBtn = document.getElementById('loginBtn');
+            if (user) {
+                if (logoutBtn) logoutBtn.style.display = 'inline-block';
+                if (loginBtn) loginBtn.style.display = 'none';
+            } else {
+                if (logoutBtn) logoutBtn.style.display = 'none';
+                if (loginBtn) loginBtn.style.display = 'inline-block';
+            }
+        })();
+    </script>
+</body>
+
+</html>

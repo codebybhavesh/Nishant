@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Complete Your Booking – Nishant Events & Catering</title>
+    <meta name="description" content="Complete your event booking with date, address and personal details." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <style>
+        .form-grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media(max-width:600px) {
+            .form-grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Step indicator */
+        .step-bar {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            margin-bottom: 2.5rem;
+            justify-content: center;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .step-item.active {
+            color: var(--accent);
+        }
+
+        .step-item.done {
+            color: var(--success);
+        }
+
+        .step-num {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            background: var(--surface);
+        }
+
+        .step-item.active .step-num {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+
+        .step-item.done .step-num {
+            background: var(--success);
+            border-color: var(--success);
+            color: #fff;
+        }
+
+        .step-line {
+            width: 60px;
+            height: 2px;
+            background: var(--border);
+            margin: 0 0.5rem;
+        }
+
+        /* Summary sidebar */
+        .menu-summary-block {
+            margin-bottom: 1rem;
+        }
+
+        .menu-summary-block h5 {
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .menu-summary-block p {
+            font-size: 0.88rem;
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        .menu-tag {
+            display: inline-block;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: var(--r-sm);
+            padding: 0.18rem 0.55rem;
+            font-size: 0.78rem;
+            font-weight: 500;
+            margin: 0.15rem 0.15rem 0 0;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <a href="index.html" class="nav-logo"><img src="assets/logo.svg" alt="Nishant Logo"></a>
+            <ul class="nav-links" id="navLinks">
+                <button class="nav-close-btn" id="navCloseBtn" aria-label="Close menu">&times;</button>
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="packages.html" class="nav-link">Packages</a></li>
+                <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+                <li><a href="track-booking.html" class="nav-link">Track Booking</a></li>
+                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+                <li class="nav-mobile-ctas">
+                    <a href="login.html" class="nav-cta mobile-only" id="loginBtnMobile" data-auth="login">Login</a>
+                    <button class="nav-cta mobile-only" id="logoutBtnMobile" data-auth="logout" style="display:none"
+                        onclick="window.userLogout()">Logout</button>
+                    <a href="booking.html" class="nav-cta mobile-only">Book Now</a>
+                </li>
+            </ul>
+            <div class="nav-right" >
+                <a href="login.html" id="loginBtn" class="nav-cta">Login</a>
+                <button id="logoutBtn" onclick="window.userLogout()" class="nav-cta"
+                    style="display:none;">Logout</button>
+                <a href="booking.html" class="nav-cta">Book Now</a>
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
+        </div>
+    </nav>
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="index.html">Home</a><span class="sep">›</span>
+                <a href="booking.html">Select Package</a><span class="sep">›</span>
+                Complete Booking
+            </div>
+            <h1>Complete Your <span style="color:var(--accent)">Booking</span></h1>
+            <p>Fill in your event details to confirm the request</p>
+        </div>
+    </div>
+
+    <section class="section">
+        <div class="container">
+
+            <!-- Step indicator -->
+            <div class="step-bar" style="margin-bottom:2rem">
+                <div class="step-item done">
+                    <div class="step-num">✓</div>
+                    <span>Package & Menu</span>
+                </div>
+                <div class="step-line"></div>
+                <div class="step-item active">
+                    <div class="step-num">2</div>
+                    <span>Event Details & Confirm</span>
+                </div>
+            </div>
+
+            <!-- No session guard -->
+            <div id="noSession"
+                style="display:none;text-align:center;padding:3rem;background:var(--surface);border-radius:var(--r-xl);border:1px dashed var(--border)">
+                <div style="font-size:2.5rem;margin-bottom:0.75rem">⚠️</div>
+                <p style="color:var(--text-muted)">No package selected. Please go back and choose a package first.</p>
+                <a href="booking.html" class="btn btn-accent" style="margin-top:1rem">← Select a Package</a>
+            </div>
+
+            <div class="booking-layout" id="mainContent" style="display:none">
+
+                <!-- FORM -->
+                <div class="booking-form-wrap">
+                    <form id="bookingForm" class="booking-form" novalidate>
+
+                        <p class="form-section-title">Event Details</p>
+                        <div class="form-grid-2">
+                            <div class="form-group">
+                                <label for="eventType">Event Type *</label>
+                                <select id="eventType" class="form-control" required>
+                                    <option value="">— Select Event Type —</option>
+                                    <option value="wedding">💍 Wedding</option>
+                                    <option value="reception">🎊 Reception</option>
+                                    <option value="engagement">💝 Engagement</option>
+                                    <option value="birthday">🎂 Birthday Party</option>
+                                    <option value="corporate">💼 Corporate Event</option>
+                                    <option value="pooja">🪔 Pooja / Religious Function</option>
+                                    <option value="anniversary">🥂 Anniversary</option>
+                                    <option value="other">📌 Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Number of Guests *</label>
+                                <div class="counter-wrap">
+                                    <button type="button" class="counter-btn" onclick="adj(-10)">−</button>
+                                    <input type="number" id="guestsCount" class="form-control" value="100" min="10"
+                                        max="10000" />
+                                    <button type="button" class="counter-btn" onclick="adj(10)">+</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-grid-2">
+                            <div class="form-group">
+                                <label for="eventDate">Event Date *</label>
+                                <input type="date" id="eventDate" class="form-control" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="eventTime">Preferred Time</label>
+                                <select id="eventTime" class="form-control">
+                                    <option value="morning">🌅 Morning (7 AM – 12 PM)</option>
+                                    <option value="afternoon">☀️ Afternoon (12 PM – 5 PM)</option>
+                                    <option value="evening" selected>🌇 Evening (5 PM – 10 PM)</option>
+                                    <option value="fullday">🗓️ Full Day</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <p class="form-section-title">Event Address</p>
+                        <div class="form-group">
+                            <label>Street Address *</label>
+                            <input type="text" id="addrStreet" class="form-control" placeholder="123 Example Street"
+                                required>
+                        </div>
+                        <div class="form-grid-3">
+                            <div class="form-group"><label>City *</label><input type="text" id="addrCity"
+                                    class="form-control" placeholder="New Delhi" required></div>
+                            <div class="form-group"><label>State *</label><input type="text" id="addrState"
+                                    class="form-control" placeholder="Delhi" required></div>
+                            <div class="form-group"><label>Pincode *</label><input type="text" id="addrPin"
+                                    class="form-control" placeholder="110001" required></div>
+                        </div>
+
+                        <p class="form-section-title">Your Details</p>
+                        <div class="form-grid-2">
+                            <div class="form-group">
+                                <label for="contactName">Full Name *</label>
+                                <input type="text" id="contactName" class="form-control" placeholder="Your name"
+                                    required />
+                            </div>
+                            <div class="form-group">
+                                <label for="contactPhone">Phone Number *</label>
+                                <input type="tel" id="contactPhone" class="form-control" placeholder="+91 98765 43210"
+                                    required />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactEmail">Email Address *</label>
+                            <input type="email" id="contactEmail" class="form-control" placeholder="you@example.com"
+                                required />
+                        </div>
+                        <div class="form-group">
+                            <label for="specialReq">Special Requirements / Notes</label>
+                            <textarea id="specialReq" class="form-control" rows="3"
+                                placeholder="Any dietary restrictions, theme or additional instructions…"></textarea>
+                        </div>
+
+                        <div id="formError" class="alert alert-danger" style="display:none"></div>
+
+                        <button type="submit" class="btn btn-accent btn-block btn-lg" style="margin-top:0.5rem">
+                            Confirm Booking Request →
+                        </button>
+
+                        <p style="text-align:center;font-size:0.8rem;color:var(--text-muted);margin-top:0.75rem">
+                            ← <a href="booking.html" style="color:var(--primary)">Go back and change package / menu</a>
+                        </p>
+                    </form>
+                </div>
+
+                <!-- SIDEBAR -->
+                <div class="booking-sidebar">
+                    <!-- Package summary -->
+                    <div class="card" style="margin-bottom:1rem">
+                        <div class="card-header">
+                            <h3>📦 Selected Packages</h3>
+                        </div>
+                        <div class="card-body" style="padding:1.25rem" id="selectedPkgsList">
+                            <!-- Injected by JS -->
+                        </div>
+                        <div class="card-body" style="padding:1.25rem; border-top:1px solid var(--border)">
+                            <!-- Live price estimate -->
+                            <div id="priceEstimate"
+                                style="background:var(--bg-section);border:1px solid var(--border);border-radius:var(--r-md);padding:0.9rem 1rem;margin-bottom:1rem;font-size:0.88rem">
+                                <div id="priceBreakdown"></div>
+                                <div
+                                    style="display:flex;justify-content:space-between;padding-top:0.5rem;border-top:1px solid var(--border)">
+                                    <span style="font-weight:700">Est. Total</span>
+                                    <span style="font-weight:700;color:var(--primary);font-size:1.05rem"
+                                        id="estTotal">—</span>
+                                </div>
+                                <p style="font-size:0.75rem;color:var(--text-muted);margin-top:0.5rem;margin-bottom:0">*
+                                    Estimate only. Final price confirmed by admin.</p>
+                            </div>
+                            <div class="incl-list">
+                                <span>✅ Staff, setup &amp; cleanup included</span>
+                                <span>✅ Free consultation call</span>
+                                <span>✅ Cancellable up to 7 days before</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Selected Menu summary -->
+                    <div class="card" id="menuSummaryCard" style="display:none">
+                        <div class="card-header">
+                            <h3>🍽️ Your Menu Selections</h3>
+                        </div>
+                        <div class="card-body" style="padding:1.25rem">
+                            <div id="menuSummaryBody"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="site-footer" id="contact" style="margin-top:2rem">
+        <div class="container">
+            <div class="footer-bottom">
+                <span>© 2026 Nishant Events &amp; Catering Service's. All rights reserved.</span>
+                <div class="footer-bottom-links">
+                    <a href="admin/admin-login.html" style="margin-left:auto">Admin Login</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script type="module" src="js/auth-ui.js"></script>
+    <script type="module">
+        import { apiFetch } from './js/api.js';
+        import { addBooking } from './js/database.js';
+        import { fetchCurrentUser, initAuthListener } from './js/auth.js';
+
+        initAuthListener({ requireAuth: true });
+
+        // Load selected packages
+        const rawPackages = localStorage.getItem('selectedPackages');
+        const legacyRaw = sessionStorage.getItem('nis_booking_step1');
+
+        let selectedPackages = [];
+        if (rawPackages) {
+            selectedPackages = JSON.parse(rawPackages);
+        } else if (legacyRaw) {
+            const step1 = JSON.parse(legacyRaw);
+            selectedPackages = [{
+                id: step1.packageId,
+                name: step1.pkgName,
+                category: 'catering',
+                price: step1.pricePerPlate,
+                pricePerPlate: step1.pricePerPlate,
+                selectedMenu: step1.selectedMenu
+            }];
+        }
+
+        if (selectedPackages.length === 0) {
+            document.getElementById('noSession').style.display = 'block';
+        } else {
+            document.getElementById('mainContent').style.display = 'grid';
+
+            // Populate selected packages in sidebar
+            const listEl = document.getElementById('selectedPkgsList');
+            listEl.innerHTML = selectedPackages.map(p => `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem">
+                    <div style="font-weight:600; font-size:0.9rem">${p.name}</div>
+                    <div style="font-size:0.8rem; color:var(--primary)">${p.category === 'catering' ? '₹' + p.price + '/p' : '₹' + p.price}</div>
+                </div>
+            `).join('');
+
+            // Set min date
+            document.getElementById('eventDate').min = new Date().toISOString().split('T')[0];
+
+            // Auto-fill user details
+            async function prefillUser() {
+                const user = await fetchCurrentUser();
+                if (user) {
+                    const n = document.getElementById('contactName');
+                    const e = document.getElementById('contactEmail');
+                    const p = document.getElementById('contactPhone');
+                    if (n && !n.value) n.value = user.name || '';
+                    if (e && !e.value) e.value = user.email || '';
+                    if (p && !p.value) p.value = user.phone || '';
+                }
+            }
+            prefillUser();
+
+            // ---- Live price estimator ----
+            function calcPrice() {
+                const guests = parseInt(document.getElementById('guestsCount').value) || 0;
+                let subtotal = 0;
+                let breakdownHTML = '';
+
+                selectedPackages.forEach(p => {
+                    let cost = 0;
+                    if (p.category === 'catering') {
+                        cost = p.price * guests;
+                        breakdownHTML += `<div style="display:flex;justify-content:space-between;margin-bottom:0.35rem">
+                            <span style="color:var(--text-muted)">${p.name} (₹${p.price} × ${guests})</span>
+                            <span style="font-weight:600">₹${cost.toLocaleString()}</span>
+                        </div>`;
+                    } else {
+                        cost = p.price;
+                        breakdownHTML += `<div style="display:flex;justify-content:space-between;margin-bottom:0.35rem">
+                            <span style="color:var(--text-muted)">${p.name} (Base)</span>
+                            <span style="font-weight:600">₹${cost.toLocaleString()}</span>
+                        </div>`;
+                    }
+                    subtotal += cost;
+                });
+
+                const tax = 0;
+                const grand = subtotal;
+                return { subtotal, tax, grand, breakdownHTML };
+            }
+
+            function updatePriceDisplay() {
+                const p = calcPrice();
+                const fmt = n => '₹' + Number(n).toLocaleString('en-IN');
+                document.getElementById('priceBreakdown').innerHTML = p.breakdownHTML;
+                document.getElementById('estTotal').textContent = fmt(p.grand);
+            }
+
+            document.getElementById('guestsCount').addEventListener('input', updatePriceDisplay);
+            updatePriceDisplay(); // initial render
+
+            window.adj = function (delta) {
+                const inp = document.getElementById('guestsCount');
+                inp.value = Math.max(10, (parseInt(inp.value) || 100) + delta);
+                updatePriceDisplay();
+            };
+
+            document.getElementById('bookingForm').addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const errEl = document.getElementById('formError');
+                errEl.style.display = 'none';
+
+                const name = document.getElementById('contactName').value.trim();
+                const phone = document.getElementById('contactPhone').value.trim();
+                const email = document.getElementById('contactEmail').value.trim();
+                const date = document.getElementById('eventDate').value;
+                const type = document.getElementById('eventType').value;
+                const guests = parseInt(document.getElementById('guestsCount').value) || 0;
+                const street = document.getElementById('addrStreet').value.trim();
+                const city = document.getElementById('addrCity').value.trim();
+                const state = document.getElementById('addrState').value.trim();
+                const pincode = document.getElementById('addrPin').value.trim();
+
+                if (!name || !phone || !email || !date || !type || guests < 10 || !street || !city || !state || !pincode) {
+                    errEl.textContent = 'Please fill in all required fields.';
+                    errEl.style.display = 'block';
+                    errEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    return;
+                }
+
+                const btn = this.querySelector('button[type="submit"]');
+                const oldT = btn.textContent;
+                btn.textContent = 'Submitting…'; btn.disabled = true;
+
+                try {
+                    const priceEst = calcPrice();
+                    const payload = {
+                        userName: name,
+                        email, phone,
+                        packages: selectedPackages.map(sp => ({
+                            packageId: sp.id,
+                            name: sp.name,
+                            category: sp.category,
+                            price: sp.price,
+                            pricePerPlate: sp.pricePerPlate,
+                            selectedMenu: sp.selectedMenu || {}
+                        })),
+                        guestCount: guests,
+                        subtotal: priceEst.subtotal,
+                        tax: priceEst.tax,
+                        grandTotal: priceEst.grand,
+                        status: 'pending',
+                        eventDate: date,
+                        eventTime: document.getElementById('eventTime').value,
+                        eventType: type,
+                        address: { street, city, state, pincode },
+                        specialReq: document.getElementById('specialReq').value.trim()
+                    };
+
+                    const { id, error } = await addBooking(payload);
+                    if (error) throw new Error(error);
+
+                    localStorage.removeItem('selectedPackages');
+                    sessionStorage.removeItem('nis_booking_step1');
+                    localStorage.setItem('nis_last_booking', JSON.stringify({ ...payload, id }));
+                    window.location.href = 'confirmation.html';
+                } catch (ex) {
+                    btn.textContent = oldT; btn.disabled = false;
+                    errEl.textContent = 'Error: ' + ex.message;
+                    errEl.style.display = 'block';
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

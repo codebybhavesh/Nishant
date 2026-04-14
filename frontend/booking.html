@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Select Package & Menu – Nishant Events & Catering</title>
+  <meta name="description" content="Select your catering package and customize your menu before booking." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    body {
+      background: var(--bg-section);
+    }
+
+    .wizard-wrap {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1rem 5rem;
+    }
+
+    /* Step indicator */
+    .step-bar {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 2.5rem;
+      justify-content: center;
+    }
+
+    .step-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .step-item.active {
+      color: var(--accent);
+    }
+
+    .step-num {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      background: var(--surface);
+    }
+
+    .step-item.active .step-num {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .step-line {
+      width: 60px;
+      height: 2px;
+      background: var(--border);
+      margin: 0 0.5rem;
+    }
+
+    /* Package cards */
+    .pkg-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .pkg-card-sel {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      cursor: pointer;
+      transition: var(--ease);
+      position: relative;
+    }
+
+    .pkg-card-sel:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .pkg-card-sel.selected {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(190, 24, 93, 0.15);
+    }
+
+    .pkg-card-sel .check-mark {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      width: 26px;
+      height: 26px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .pkg-card-sel.selected .check-mark {
+      display: flex;
+    }
+
+    .pkg-card-sel img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+
+    .pkg-card-body {
+      padding: 1rem;
+    }
+
+    .pkg-card-body h4 {
+      font-size: 1rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .pkg-card-body .pkg-type {
+      font-size: 0.75rem;
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .pkg-card-body .pkg-range {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
+
+    /* Menu section */
+    .menu-section {
+      display: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: 2rem;
+      margin-top: 1.5rem;
+    }
+
+    .menu-section.show {
+      display: block;
+    }
+
+    .menu-section-title {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .menu-section-sub {
+      font-size: 0.87rem;
+      color: var(--text-muted);
+      margin-bottom: 1.8rem;
+    }
+
+    .menu-cats {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .menu-cat {
+      background: var(--bg-section);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 1rem;
+    }
+
+    .menu-cat label.cat-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.6rem;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+
+    .menu-cat label.cat-label span {
+      font-size: 0.72rem;
+      color: var(--accent);
+      font-weight: 600;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    .menu-cat select {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-md);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.88rem;
+    }
+
+    .menu-cat select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .checkbox-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .checkbox-list label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.88rem;
+      font-weight: 400;
+      cursor: pointer;
+      color: var(--text);
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    .checkbox-list input[type=checkbox] {
+      width: 15px;
+      height: 15px;
+      cursor: pointer;
+    }
+
+    .proceed-bar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 1.2rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .proceed-bar .sel-summary {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .proceed-bar .sel-summary strong {
+      color: var(--text);
+    }
+
+    #menuErr {
+      background: var(--danger-bg);
+      color: var(--danger);
+      border-radius: var(--r-md);
+      padding: 0.75rem 1rem;
+      font-size: 0.88rem;
+      margin-top: 1rem;
+      display: none;
+    }
+
+    @media(max-width:640px) {
+      .menu-cats {
+        grid-template-columns: 1fr;
+      }
+
+      .pkg-cards {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="index.html" class="nav-logo"><img src="assets/logo.svg" alt="Nishant Logo"></a>
+      <ul class="nav-links" id="navLinks">
+        <button class="nav-close-btn" id="navCloseBtn" aria-label="Close menu">&times;</button>
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="services.html" class="nav-link">Services</a></li>
+        <li><a href="packages.html" class="nav-link">Packages</a></li>
+        <li><a href="custom-menu.html" class="nav-link">Custom Menu</a></li>
+        <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+        <li><a href="track-booking.html" class="nav-link">Track Booking</a></li>
+        <li><a href="index.html#contact-form" class="nav-link">Contact</a></li>
+        <li class="nav-mobile-ctas">
+          <a href="login.html" class="nav-cta mobile-only" id="loginBtnMobile" data-auth="login">Login</a>
+          <button class="nav-cta mobile-only" id="logoutBtnMobile" data-auth="logout" style="display:none"
+            onclick="window.userLogout()">Logout</button>
+          <a href="booking.html" class="nav-cta mobile-only">Book Now</a>
+        </li>
+      </ul>
+      <div class="nav-right" >
+        <a href="login.html" id="loginBtn" class="nav-cta">Login</a>
+        <button id="logoutBtn" onclick="window.userLogout()" class="nav-cta" style="display:none;">Logout</button>
+        <a href="booking.html" class="nav-cta active">Book Now</a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
+    </div>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="container">
+      <div class="breadcrumb"><a href="index.html">Home</a><span class="sep">›</span> Book Package</div>
+      <h1>Select Your <span style="color:var(--accent)">Package & Menu</span></h1>
+      <p>Choose a package, customise your menu, then complete your booking</p>
+    </div>
+  </div>
+
+  <div style="padding: 2.5rem 1rem 0">
+    <div class="wizard-wrap">
+
+      <!-- Step indicator -->
+      <div class="step-bar">
+        <div class="step-item active">
+          <div class="step-num">1</div>
+          <span>Select Package & Menu</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <span>Event Details & Confirm</span>
+        </div>
+      </div>
+
+      <!-- Package cards -->
+      <h3 style="font-size:1.1rem;margin-bottom:1rem;color:var(--text-muted)">Step 1 — Choose a Package</h3>
+      <div class="pkg-cards" id="pkgCards">
+        <div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--text-muted)">Loading packages…</div>
+      </div>
+
+      <!-- Menu selection (shown after package selected) -->
+      <div class="menu-section" id="menuSection">
+        <div style="display:flex;align-items:flex-start;gap:1.2rem;flex-wrap:wrap;margin-bottom:1.5rem">
+          <div style="flex:1">
+            <div class="menu-section-title" id="menuPkgName">Package Menu</div>
+            <div class="menu-section-sub" id="menuPkgDesc">Select your preferred items for each category.</div>
+          </div>
+          <img id="menuPkgImg" src="" alt=""
+            style="width:90px;height:70px;object-fit:cover;border-radius:var(--r-md);display:none">
+        </div>
+        <div class="menu-cats" id="menuCats"></div>
+        <div id="menuErr">Please make a selection for all required categories.</div>
+      </div>
+
+      <!-- Proceed bar -->
+      <div class="proceed-bar" id="proceedBar" style="display:none">
+        <div class="sel-summary">
+          Package: <strong id="proceedPkgName">—</strong>
+        </div>
+        <button class="btn btn-accent btn-lg" onclick="window.proceedToBooking()">
+          Proceed to Booking →
+        </button>
+      </div>
+
+      <!-- No packages state -->
+      <div id="noPkgs"
+        style="display:none;text-align:center;padding:3rem;background:var(--surface);border-radius:var(--r-xl);border:1px dashed var(--border);margin-top:1rem">
+        <div style="font-size:2.5rem;margin-bottom:0.75rem">📦</div>
+        <p style="color:var(--text-muted)">No packages available yet. Please check back soon.</p>
+        <a href="book-event.html" class="btn btn-outline" style="margin-top:1rem">Book a Custom Event Instead</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer" id="contact" style="margin-top:4rem">
+    <div class="container">
+      <div class="footer-bottom">
+        <span>© 2026 Nishant Events &amp; Catering Service's. All rights reserved.</span>
+        <div class="footer-bottom-links">
+          <a href="admin/admin-login.html" style="margin-left:auto">Admin Login</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script type="module" src="js/auth-ui.js"></script>
+  <script type="module">
+    import { fetchPackages } from './js/packages.js';
+    import { initAuthListener } from './js/auth.js';
+
+    initAuthListener({ requireAuth: true });
+
+    const baseCatSpecs = {
+      drinks: { label: 'Welcome Drink', id: 'drink' },
+      starters: { label: 'Starter', id: 'starters' },
+      vegetables: { label: 'Vegetable Dish', id: 'vegetables' },
+      dal: { label: 'Dal', id: 'dal' },
+      rice: { label: 'Rice', id: 'rice' },
+      breads: { label: 'Bread', id: 'bread' },
+      sweets: { label: 'Sweet', id: 'sweet' },
+      desserts: { label: 'Dessert', id: 'dessert' },
+      extras: { label: 'Extras', id: 'extras' },
+    };
+
+    let catSpecs = [];
+
+    let allPkgs = [];
+    let selectedPkg = null;
+
+    // Load packages
+    const { packages, error } = await fetchPackages();
+    allPkgs = packages || [];
+
+    if (allPkgs.length === 0) {
+      document.getElementById('pkgCards').innerHTML = '';
+      document.getElementById('noPkgs').style.display = 'block';
+    } else {
+      renderPkgCards();
+      // Auto-select from URL param
+      const preId = new URLSearchParams(location.search).get('pkgId');
+      if (preId) {
+        const preEl = document.querySelector(`.pkg-card-sel[data-id="${preId}"]`);
+        if (preEl) preEl.click();
+      }
+    }
+
+    function renderPkgCards() {
+      document.getElementById('pkgCards').innerHTML = allPkgs.map(p => {
+        const badge = p.type === 'premium' ? '👑 Premium' : '🌿 Pure Veg';
+        return `
+          <div class="pkg-card-sel" data-id="${p.id}" onclick="window.selectPkg('${p.id}')">
+            <div class="check-mark">✓</div>
+            <img src="${p.imageURL || 'https://placehold.co/400x200?text=Package'}" onerror="this.src='https://placehold.co/400x200?text=Package'" alt="${p.name}">
+            <div class="pkg-card-body">
+              <h4>${p.name}</h4>
+              <div class="pkg-type">${badge}</div>
+              <div class="pkg-range">👥 ${p.minGuests}–${p.maxGuests || '∞'} Guests</div>
+              <div class="pkg-range" style="margin-top:0.2rem;color:var(--primary);font-weight:600">₹${Number(p.pricePerPlate || 0).toLocaleString('en-IN')}/plate (base)</div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    window.selectPkg = function (pkgId) {
+      selectedPkg = allPkgs.find(p => p.id === pkgId);
+      if (!selectedPkg) return;
+
+      // Highlight card
+      document.querySelectorAll('.pkg-card-sel').forEach(c => c.classList.remove('selected'));
+      document.querySelector(`.pkg-card-sel[data-id="${pkgId}"]`).classList.add('selected');
+
+      // Populate menu section
+      // Dynamically build catSpecs for this package
+      catSpecs = [];
+      if (selectedPkg.menu) {
+        Object.keys(selectedPkg.menu).forEach(key => {
+          const items = selectedPkg.menu[key] || [];
+          if (items.length > 0) {
+            const base = baseCatSpecs[key];
+            const limit = (selectedPkg.menuLimits && selectedPkg.menuLimits[key]) || (base && (key === 'starters' || key === 'vegetables' || key === 'breads' || key === 'extras') ? 50 : 1);
+            catSpecs.push({
+              id: base ? base.id : key,
+              key: key,
+              label: base ? base.label : (key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ')),
+              mode: limit === 1 ? 'single' : 'multi',
+              limit: limit
+            });
+          }
+        });
+      }
+
+      const hasItems = catSpecs.length > 0;
+
+      const ms = document.getElementById('menuSection');
+      document.getElementById('menuPkgName').textContent = selectedPkg.name + ' — Menu Selection';
+      document.getElementById('menuPkgDesc').textContent = selectedPkg.description || 'Select your preferred items from each category below.';
+
+      const img = document.getElementById('menuPkgImg');
+      if (selectedPkg.imageURL) { img.src = selectedPkg.imageURL; img.style.display = 'block'; }
+      else { img.style.display = 'none'; }
+
+      if (hasItems) {
+        document.getElementById('menuCats').innerHTML = catSpecs.map(cat => {
+          const items = (selectedPkg.menu && selectedPkg.menu[cat.key]) || [];
+          if (!items.length) return '';
+          const limit = (selectedPkg.menuLimits && selectedPkg.menuLimits[cat.key]) || (cat.mode === 'single' ? 1 : 99);
+
+          let input = '';
+          if (limit === 1) {
+            input = `<select id="msel_${cat.id}" class="form-control" style="margin-top:0.3rem">
+                       <option value="">— Select ${cat.label} —</option>
+                       ${items.map(i => `<option value="${i}">${i}</option>`).join('')}
+                     </select>`;
+          } else {
+            const hint = limit < 99 ? `Choose up to ${limit}` : 'Select all that apply';
+            input = `<div class="checkbox-list" id="msel_${cat.id}" style="margin-top:0.3rem">
+                       ${items.map(i => `
+                         <label>
+                           <input type="checkbox" value="${i}" onchange="window.capCheck('${cat.id}', ${limit})"> ${i}
+                         </label>`).join('')}
+                     </div>`;
+          }
+
+          return `
+            <div class="menu-cat">
+              <label class="cat-label">
+                ${cat.label}
+                ${limit < 99 ? `<span>Choose ${limit === 1 ? '1' : 'up to ' + limit}</span>` : ''}
+              </label>
+              ${input}
+            </div>`;
+        }).join('');
+
+        ms.classList.add('show');
+      } else {
+        document.getElementById('menuCats').innerHTML = '<p style="color:var(--text-muted);font-size:0.9rem">No menu items configured for this package. You can proceed directly.</p>';
+        ms.classList.add('show');
+      }
+
+      document.getElementById('menuErr').style.display = 'none';
+      document.getElementById('proceedPkgName').textContent = selectedPkg.name;
+      document.getElementById('proceedBar').style.display = 'flex';
+    };
+
+    window.capCheck = function (catId, limit) {
+      const checks = document.querySelectorAll(`#msel_${catId} input[type=checkbox]:checked`);
+      if (checks.length > limit) {
+        event.target.checked = false;
+        alert(`You can only choose up to ${limit} items here.`);
+      }
+    };
+
+    window.proceedToBooking = function () {
+      if (!selectedPkg) return;
+      document.getElementById('menuErr').style.display = 'none';
+
+      // Gather menu selections
+      const selectedMenu = {};
+      let valid = true;
+
+      catSpecs.forEach(cat => {
+        const items = (selectedPkg.menu && selectedPkg.menu[cat.key]) || [];
+        if (!items.length) return;
+        const limit = (selectedPkg.menuLimits && selectedPkg.menuLimits[cat.key]) || (cat.mode === 'single' ? 1 : 99);
+
+        if (limit === 1) {
+          const val = document.getElementById('msel_' + cat.id)?.value;
+          selectedMenu[cat.id] = val || '';
+        } else {
+          const checks = document.querySelectorAll(`#msel_${cat.id} input[type=checkbox]:checked`);
+          selectedMenu[cat.id] = Array.from(checks).map(c => c.value);
+        }
+      });
+
+      // Save to sessionStorage and redirect
+      const bookingData = {
+        packageId: selectedPkg.id,
+        pkgName: selectedPkg.name,
+        pkgType: selectedPkg.type,
+        pkgImage: selectedPkg.imageURL || '',
+        pricePerPlate: selectedPkg.pricePerPlate || 0,
+        tiers: selectedPkg.tiers || [],
+        minGuests: selectedPkg.minGuests || 10,
+        maxGuests: selectedPkg.maxGuests || null,
+        selectedMenu
+      };
+
+      sessionStorage.setItem('nis_booking_step1', JSON.stringify(bookingData));
+      window.location.href = 'final-booking.html';
+    };
+  </script>
+</body>
+
+</html>

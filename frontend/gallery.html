@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Our Gallery — Nishant Events & Catering Service's</title>
+    <meta name="description"
+        content="Explore our events, food creations, and memorable celebrations through our gallery." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/gallery.css" />
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <a href="index.html" class="nav-logo">
+                <img src="assets/logo.svg" alt="Nishant Logo">
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <button class="nav-close-btn" id="navCloseBtn" aria-label="Close menu">&times;</button>
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="services.html" class="nav-link">Services</a></li>
+                <li><a href="packages.html" class="nav-link">Packages</a></li>
+                <li><a href="custom-menu.html" class="nav-link">Custom Menu</a></li>
+                <li><a href="gallery.html" class="nav-link active">Gallery</a></li>
+                <li><a href="track-booking.html" class="nav-link">Track Booking</a></li>
+                <li><a href="index.html#contact-form" class="nav-link">Contact</a></li>
+                <li class="nav-mobile-ctas">
+                    <a href="login.html" class="nav-cta mobile-only" id="loginBtnMobile" data-auth="login">Login</a>
+                    <button class="nav-cta mobile-only" id="logoutBtnMobile" data-auth="logout" style="display:none"
+                        onclick="window.userLogout()">Logout</button>
+                    <a href="booking.html" class="nav-cta mobile-only">Book Now</a>
+                </li>
+            </ul>
+            <div class="nav-right">
+                <a href="login.html" id="loginBtn" class="nav-cta">Login</a>
+                <button id="logoutBtn" onclick="window.userLogout()" class="nav-cta"
+                    style="display:none;">Logout</button>
+                <a href="booking.html" class="nav-cta">Book Now</a>
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="gallery-hero">
+        <video class="gallery-hero-bg" src="assets/gallery/hero-background.mp4" autoplay loop muted playsinline></video>
+        <div class="gallery-hero-overlay"></div>
+        <div class="container gallery-hero-content">
+            <span class="gallery-hero-label">Unforgettable Moments</span>
+            <h1 class="gallery-hero-title">Our <em>Gallery</em></h1>
+            <p class="gallery-hero-subtitle">Explore our events, food creations, and memorable celebrations crafted with
+                passion and elegance.</p>
+        </div>
+    </section>
+
+    <!-- GALLERY MAIN CONTENT -->
+    <main class="section" style="background-color: var(--bg);">
+        <div class="container">
+
+            <!-- Category Filters -->
+            <div class="gallery-filters text-center reveal">
+                <button class="gallery-filter-btn active" data-filter="all">All</button>
+                <button class="gallery-filter-btn" data-filter="food">Food</button>
+                <button class="gallery-filter-btn" data-filter="events">Events</button>
+                <button class="gallery-filter-btn" data-filter="decorations">Decorations</button>
+            </div>
+
+            <!-- Dynamic Gallery Grid -->
+            <div class="gallery-grid" id="galleryGrid">
+                <!-- Javascript will populate this grid -->
+            </div>
+
+        </div>
+    </main>
+
+    <!-- LIGHTBOX MODAL -->
+    <div class="lightbox-modal" id="lightboxModal">
+        <button class="lightbox-close" id="lightboxClose" aria-label="Close lightbox">&times;</button>
+        <button class="lightbox-nav prev" id="lightboxPrev" aria-label="Previous image">‹</button>
+
+        <div class="lightbox-content-wrapper">
+            <div id="lightboxMedia" class="lightbox-media-container"></div>
+            <div class="lightbox-caption" id="lightboxCaption"></div>
+        </div>
+
+        <button class="lightbox-nav next" id="lightboxNext" aria-label="Next image">›</button>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="site-footer" id="contact">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="logo">
+                        <img src="assets/logo.svg" alt="Nishant Logo">
+                    </div>
+                    <p>Premium catering services for every occasion. Excellence, elegance, and exceptional taste —
+                        guaranteed.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Navigate</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="packages.html">Packages</a></li>
+                        <li><a href="gallery.html">Gallery</a></li>
+                        <li><a href="booking.html">Book Event</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact Us</h4>
+                    <ul class="contact-info">
+                        <li><i>📞</i> +91 9970774436</li>
+                        <li><i>✉️</i> nishantevents97@gmail.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>© 2026 Nishant Events & Catering Service's. All rights reserved.</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script src="js/main.js"></script>
+    <script type="module" src="js/auth-ui.js"></script>
+    <script src="js/gallery.js"></script>
+</body>
+
+</html>
