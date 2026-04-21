@@ -22,7 +22,7 @@ function initCarousel(trackId) {
             if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 10) {
                 track.scrollTo({ left: 0, behavior: 'smooth' });
             }
-        }, 3000);
+        }, 1000);
     };
 
     const stopAutoSlide = () => {
