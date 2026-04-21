@@ -629,7 +629,7 @@
             const pkgInfo = {
                 name,
                 category,
-                type: document.getElementById('fType').value,
+                type: category === 'catering' ? document.getElementById('fType').value : 'event',
                 eventType: document.getElementById('fEventCat').value,
                 price: category === 'event' ? price : 0,
                 pricePerPlate: category === 'catering' ? price : 0,

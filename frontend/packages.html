@@ -320,22 +320,24 @@
 
       grid.innerHTML = pkgs.map((p, i) => {
         const isSelected = selectedPkgs.find(s => s.id === p.id);
-        const badgeClass = p.type === 'premium' ? 'premium' : 'veg';
-        const categoryLabel = (p.category || 'catering') === 'catering' ? '🥘 Catering' : '🎊 Event';
-        const price = p.price || p.pricePerPlate || 0;
-        const priceUnit = (p.category || 'catering') === 'catering' ? '/ person' : 'base';
+        const isEvent = (p.category || 'catering') === 'event';
+        const badgeClass = isEvent ? 'catering' : (p.type === 'premium' ? 'premium' : 'veg');
+        const categoryLabel = isEvent ? '🎊 Event' : '🥘 Catering';
+        const price = isEvent ? (p.price || 0) : (p.pricePerPlate || 0);
+        const priceUnit = isEvent ? 'base' : '/ person';
+        const badgeText = isEvent ? categoryLabel : (p.type === 'premium' ? '👑 Premium' : '🌿 Veg');
 
         return `
           <div class="package-card ${isSelected ? 'selected' : ''}" data-category="${p.category || 'catering'}" style="display:flex;animation:scaleIn 0.4s ease ${i * 0.06}s both">
             <div class="pkg-img">
               <img src="${p.imageURL || p.image || 'https://via.placeholder.com/600'}" alt="${p.name}" onerror="this.src='https://placehold.co/600x400?text=Catering'" />
-              <span class="pkg-badge ${badgeClass}">${categoryLabel}</span>
+              <span class="pkg-badge ${badgeClass}">${badgeText}</span>
             </div>
             <div class="pkg-body">
               <h3>${p.name}</h3>
               <p class="pkg-price">₹${price.toLocaleString('en-IN')} <span>${priceUnit}</span></p>
               <p class="pkg-desc">${p.desc || p.description || ''}</p>
-              <div class="pkg-tags">${(p.features || [`Min. ${p.minGuests} Guests`, `₹${price}/head`]).map(f => `<span class="pkg-tag">${f}</span>`).join('')}</div>
+              <div class="pkg-tags">${(p.features && p.features.length ? p.features : [`Min. ${p.minGuests} Guests`, isEvent ? `₹${price.toLocaleString()} base` : `₹${price}/head`]).map(f => `<span class="pkg-tag">${f}</span>`).join('')}</div>
               <div class="pkg-actions">
                 <button class="btn btn-outline" onclick='window.openPkgModal(${JSON.stringify(p).replace(/'/g, "&apos;")})'>Details</button>
                 <button class="btn ${isSelected ? 'btn-selected' : 'btn-accent'}" onclick='window.toggleSelectPackage(${JSON.stringify(p).replace(/'/g, "&apos;")})'>
@@ -349,6 +351,7 @@
 
     window.toggleSelectPackage = function (p) {
       const idx = selectedPkgs.findIndex(s => s.id === p.id);
+      const isEvent = (p.category || 'catering') === 'event';
       if (idx > -1) {
         selectedPkgs.splice(idx, 1);
       } else {
@@ -356,7 +359,7 @@
           id: p.id,
           name: p.name,
           category: p.category || 'catering',
-          price: p.price || p.pricePerPlate || 0,
+          price: isEvent ? (p.price || 0) : (p.pricePerPlate || 0),
           pricePerPlate: p.pricePerPlate || 0
         });
       }
@@ -382,9 +385,11 @@
     };
 
     window.openPkgModal = function (p) {
-      const badgeClass = p.type === 'premium' ? 'premium' : 'veg';
-      const badgeText = p.type === 'premium' ? '👑 Premium' : '🌿 Veg';
-      const price = p.pricePerPlate || p.price || 0;
+      const isEvent = (p.category || 'catering') === 'event';
+      const badgeClass = isEvent ? 'catering' : (p.type === 'premium' ? 'premium' : 'veg');
+      const badgeText = isEvent ? '🎊 Event' : (p.type === 'premium' ? '👑 Premium' : '🌿 Veg');
+      const price = isEvent ? (p.price || 0) : (p.pricePerPlate || 0);
+      const priceUnit = isEvent ? 'base' : '/ plate';
 
       let menuHtml = '';
       const baseCatLabels = {
@@ -399,29 +404,48 @@
         extras: 'Extras'
       };
 
-      if (p.menu) {
-        Object.keys(p.menu).forEach(key => {
-          const items = p.menu[key];
-          if (items && items.length > 0) {
-            const label = baseCatLabels[key] || (key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' '));
-            const limit = (p.menuLimits && p.menuLimits[key]) ? p.menuLimits[key] : null;
-            const limitText = limit ? ` <span style="font-size:0.75rem;color:var(--text-gray);font-weight:400;float:right;margin-top:2px">(Choose ${limit})</span>` : '';
+      if (!isEvent) {
+        if (p.menu && Object.keys(p.menu).length > 0) {
+          Object.keys(p.menu).forEach(key => {
+            const items = p.menu[key];
+            if (items && items.length > 0) {
+              const label = baseCatLabels[key] || (key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' '));
+              const limit = (p.menuLimits && p.menuLimits[key]) ? p.menuLimits[key] : null;
+              const limitText = limit ? ` <span style="font-size:0.75rem;color:var(--text-gray);font-weight:400;float:right;margin-top:2px">(Choose ${limit})</span>` : '';
 
-            menuHtml += `<div class="menu-cat-block">
-                      <h4>${label}${limitText}</h4>
-                      <p>${items.join(', ')}</p>
-                   </div>`;
-          }
-        });
+              menuHtml += `<div class="menu-cat-block">
+                        <h4>${label}${limitText}</h4>
+                        <p>${items.join(', ')}</p>
+                     </div>`;
+            }
+          });
+        }
+        if (!menuHtml) {
+          menuHtml = '<p style="color:var(--text-gray)">Menu currently being updated.</p>';
+        }
       } else {
-        menuHtml = '<p style="color:var(--text-gray)">Menu currently being updated.</p>';
+        // Event Management Specific details
+        if (p.services && p.services.length > 0) {
+          menuHtml = `<div class="menu-cat-block">
+                      <h4>Included Services</h4>
+                      <ul style="padding-left:1.2rem; font-size:0.85rem; color:var(--text); line-height:1.6">
+                        ${p.services.map(s => `<li>${s.name} ${s.price ? `(₹${s.price.toLocaleString()})` : ''}</li>`).join('')}
+                      </ul>
+                    </div>`;
+        }
+        if (p.eventType) {
+          menuHtml = `<div class="menu-cat-block"><h4>Event Type</h4><p>${p.eventType}</p></div>` + menuHtml;
+        }
+        if (!menuHtml) {
+          menuHtml = '<p style="color:var(--text-gray)">Details for this event package are being updated.</p>';
+        }
       }
 
       let tiersHtml = '';
       if (p.tiers && p.tiers.length > 0) {
         tiersHtml = `<div style="margin-top:0.8rem;text-align:left;font-size:0.85rem;background:#fff;padding:0.5rem;border-radius:4px;border:1px dashed var(--border)">
                 <strong style="color:var(--text);">Discount Tiers:</strong><br>` +
-          p.tiers.map(t => `${t.min}-${t.max} Guests &nbsp;&nbsp;&nbsp; ₹${t.price}/plate`).join('<br>') +
+          p.tiers.map(t => `${t.min}-${t.max} Guests &nbsp;&nbsp;&nbsp; ₹${t.price}/${isEvent ? 'package' : 'plate'}`).join('<br>') +
           `</div>`;
       }
 
@@ -434,14 +458,14 @@
                <p style="color:var(--text-gray);font-size:0.95rem;line-height:1.5">${p.description || ''}</p>
                
                <div class="price-block">
-                   <h2 style="margin:0.2rem 0">₹${Number(price).toLocaleString('en-IN')} <small style="font-size:1rem;color:var(--text-gray);font-weight:400">/ plate</small></h2>
+                   <h2 style="margin:0.2rem 0">₹${Number(price).toLocaleString('en-IN')} <small style="font-size:1rem;color:var(--text-gray);font-weight:400">/ ${priceUnit}</small></h2>
                    <p style="font-size:0.85rem;color:var(--text-gray);font-weight:600">Guests: ${p.minGuests} to ${p.maxGuests || 'Any'}</p>
                    ${tiersHtml}
                    <a href="booking.html?pkgId=${p.id}" class="btn btn-accent btn-block btn-lg" style="margin-top:1.5rem">Proceed to Book Now</a>
                </div>
             </div>
             <div>
-               <h3 style="margin-bottom:1.5rem;font-size:1.4rem;font-family:var(--font-heading);color:var(--text);border-bottom:2px solid var(--accent);padding-bottom:0.4rem;display:inline-block">Full Menu Assortment</h3>
+               <h3 style="margin-bottom:1.5rem;font-size:1.4rem;font-family:var(--font-heading);color:var(--text);border-bottom:2px solid var(--accent);padding-bottom:0.4rem;display:inline-block">${isEvent ? 'Package Inclusion' : 'Full Menu Assortment'}</h3>
                <div style="max-height: 400px; overflow-y: auto; padding-right: 0.5rem;">
                    ${menuHtml}
                </div>

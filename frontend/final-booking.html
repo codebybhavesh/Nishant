@@ -361,13 +361,14 @@
             selectedPackages = JSON.parse(rawPackages);
         } else if (legacyRaw) {
             const step1 = JSON.parse(legacyRaw);
+            const isEvent = step1.pkgCategory === 'event';
             selectedPackages = [{
                 id: step1.packageId,
                 name: step1.pkgName,
-                category: 'catering',
-                price: step1.pricePerPlate,
-                pricePerPlate: step1.pricePerPlate,
-                selectedMenu: step1.selectedMenu
+                category: step1.pkgCategory || 'catering',
+                price: isEvent ? (step1.price || 0) : (step1.pricePerPlate || 0),
+                pricePerPlate: step1.pricePerPlate || 0,
+                selectedMenu: step1.selectedMenu || {}
             }];
         }
 
@@ -381,7 +382,7 @@
             listEl.innerHTML = selectedPackages.map(p => `
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem">
                     <div style="font-weight:600; font-size:0.9rem">${p.name}</div>
-                    <div style="font-size:0.8rem; color:var(--primary)">${p.category === 'catering' ? '₹' + p.price + '/p' : '₹' + p.price}</div>
+                    <div style="font-size:0.8rem; color:var(--primary)">${p.category === 'event' ? '₹' + (p.price || 0).toLocaleString() : '₹' + (p.price || 0).toLocaleString() + '/p'}</div>
                 </div>
             `).join('');
 
@@ -409,17 +410,19 @@
                 let breakdownHTML = '';
 
                 selectedPackages.forEach(p => {
+                    const isEvent = (p.category === 'event');
                     let cost = 0;
-                    if (p.category === 'catering') {
-                        cost = p.price * guests;
+                    if (!isEvent) {
+                        const platePrice = p.price || p.pricePerPlate || 0;
+                        cost = platePrice * guests;
                         breakdownHTML += `<div style="display:flex;justify-content:space-between;margin-bottom:0.35rem">
-                            <span style="color:var(--text-muted)">${p.name} (₹${p.price} × ${guests})</span>
+                            <span style="color:var(--text-muted)">${p.name} (₹${platePrice.toLocaleString()} × ${guests})</span>
                             <span style="font-weight:600">₹${cost.toLocaleString()}</span>
                         </div>`;
                     } else {
-                        cost = p.price;
+                        cost = p.price || 0;
                         breakdownHTML += `<div style="display:flex;justify-content:space-between;margin-bottom:0.35rem">
-                            <span style="color:var(--text-muted)">${p.name} (Base)</span>
+                            <span style="color:var(--text-muted)">${p.name} (Base Cost)</span>
                             <span style="font-weight:600">₹${cost.toLocaleString()}</span>
                         </div>`;
                     }

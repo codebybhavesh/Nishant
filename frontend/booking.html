@@ -443,7 +443,11 @@
 
     function renderPkgCards() {
       document.getElementById('pkgCards').innerHTML = allPkgs.map(p => {
-        const badge = p.type === 'premium' ? '👑 Premium' : '🌿 Pure Veg';
+        const isEvent = (p.category || 'catering') === 'event';
+        const badge = isEvent ? '🎊 Event' : (p.type === 'premium' ? '👑 Premium' : '🌿 Pure Veg');
+        const price = isEvent ? (p.price || 0) : (p.pricePerPlate || 0);
+        const unit = isEvent ? 'base' : 'plate';
+
         return `
           <div class="pkg-card-sel" data-id="${p.id}" onclick="window.selectPkg('${p.id}')">
             <div class="check-mark">✓</div>
@@ -452,7 +456,7 @@
               <h4>${p.name}</h4>
               <div class="pkg-type">${badge}</div>
               <div class="pkg-range">👥 ${p.minGuests}–${p.maxGuests || '∞'} Guests</div>
-              <div class="pkg-range" style="margin-top:0.2rem;color:var(--primary);font-weight:600">₹${Number(p.pricePerPlate || 0).toLocaleString('en-IN')}/plate (base)</div>
+              <div class="pkg-range" style="margin-top:0.2rem;color:var(--primary);font-weight:600">₹${Number(price).toLocaleString('en-IN')}/${unit} (base)</div>
             </div>
           </div>`;
       }).join('');
@@ -462,76 +466,104 @@
       selectedPkg = allPkgs.find(p => p.id === pkgId);
       if (!selectedPkg) return;
 
+      const isEvent = (selectedPkg.category || 'catering') === 'event';
+
       // Highlight card
       document.querySelectorAll('.pkg-card-sel').forEach(c => c.classList.remove('selected'));
       document.querySelector(`.pkg-card-sel[data-id="${pkgId}"]`).classList.add('selected');
 
-      // Populate menu section
-      // Dynamically build catSpecs for this package
-      catSpecs = [];
-      if (selectedPkg.menu) {
-        Object.keys(selectedPkg.menu).forEach(key => {
-          const items = selectedPkg.menu[key] || [];
-          if (items.length > 0) {
-            const base = baseCatSpecs[key];
-            const limit = (selectedPkg.menuLimits && selectedPkg.menuLimits[key]) || (base && (key === 'starters' || key === 'vegetables' || key === 'breads' || key === 'extras') ? 50 : 1);
-            catSpecs.push({
-              id: base ? base.id : key,
-              key: key,
-              label: base ? base.label : (key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ')),
-              mode: limit === 1 ? 'single' : 'multi',
-              limit: limit
-            });
-          }
-        });
-      }
-
-      const hasItems = catSpecs.length > 0;
-
       const ms = document.getElementById('menuSection');
-      document.getElementById('menuPkgName').textContent = selectedPkg.name + ' — Menu Selection';
-      document.getElementById('menuPkgDesc').textContent = selectedPkg.description || 'Select your preferred items from each category below.';
 
-      const img = document.getElementById('menuPkgImg');
-      if (selectedPkg.imageURL) { img.src = selectedPkg.imageURL; img.style.display = 'block'; }
-      else { img.style.display = 'none'; }
+      if (!isEvent) {
+        // Populate menu section for catering
+        catSpecs = [];
+        if (selectedPkg.menu) {
+          Object.keys(selectedPkg.menu).forEach(key => {
+            const items = selectedPkg.menu[key] || [];
+            if (items.length > 0) {
+              const base = baseCatSpecs[key];
+              const limit = (selectedPkg.menuLimits && selectedPkg.menuLimits[key]) || (base && (key === 'starters' || key === 'vegetables' || key === 'breads' || key === 'extras') ? 50 : 1);
+              catSpecs.push({
+                id: base ? base.id : key,
+                key: key,
+                label: base ? base.label : (key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ')),
+                mode: limit === 1 ? 'single' : 'multi',
+                limit: limit
+              });
+            }
+          });
+        }
 
-      if (hasItems) {
-        document.getElementById('menuCats').innerHTML = catSpecs.map(cat => {
-          const items = (selectedPkg.menu && selectedPkg.menu[cat.key]) || [];
-          if (!items.length) return '';
-          const limit = (selectedPkg.menuLimits && selectedPkg.menuLimits[cat.key]) || (cat.mode === 'single' ? 1 : 99);
+        const hasItems = catSpecs.length > 0;
+        document.getElementById('menuPkgName').textContent = selectedPkg.name + ' — Menu Selection';
+        document.getElementById('menuPkgDesc').textContent = selectedPkg.description || 'Select your preferred items from each category below.';
 
-          let input = '';
-          if (limit === 1) {
-            input = `<select id="msel_${cat.id}" class="form-control" style="margin-top:0.3rem">
-                       <option value="">— Select ${cat.label} —</option>
-                       ${items.map(i => `<option value="${i}">${i}</option>`).join('')}
-                     </select>`;
-          } else {
-            const hint = limit < 99 ? `Choose up to ${limit}` : 'Select all that apply';
-            input = `<div class="checkbox-list" id="msel_${cat.id}" style="margin-top:0.3rem">
-                       ${items.map(i => `
-                         <label>
-                           <input type="checkbox" value="${i}" onchange="window.capCheck('${cat.id}', ${limit})"> ${i}
-                         </label>`).join('')}
-                     </div>`;
-          }
+        const img = document.getElementById('menuPkgImg');
+        if (selectedPkg.imageURL) { img.src = selectedPkg.imageURL; img.style.display = 'block'; }
+        else { img.style.display = 'none'; }
 
-          return `
-            <div class="menu-cat">
-              <label class="cat-label">
-                ${cat.label}
-                ${limit < 99 ? `<span>Choose ${limit === 1 ? '1' : 'up to ' + limit}</span>` : ''}
-              </label>
-              ${input}
-            </div>`;
-        }).join('');
+        if (hasItems) {
+          document.getElementById('menuCats').innerHTML = catSpecs.map(cat => {
+            const items = (selectedPkg.menu && selectedPkg.menu[cat.key]) || [];
+            if (!items.length) return '';
+            const limit = (selectedPkg.menuLimits && selectedPkg.menuLimits[cat.key]) || (cat.mode === 'single' ? 1 : 99);
 
-        ms.classList.add('show');
+            let input = '';
+            if (limit === 1) {
+              input = `<select id="msel_${cat.id}" class="form-control" style="margin-top:0.3rem">
+                         <option value="">— Select ${cat.label} —</option>
+                         ${items.map(i => `<option value="${i}">${i}</option>`).join('')}
+                       </select>`;
+            } else {
+              const hint = limit < 99 ? `Choose up to ${limit}` : 'Select all that apply';
+              input = `<div class="checkbox-list" id="msel_${cat.id}" style="margin-top:0.3rem">
+                         ${items.map(i => `
+                           <label>
+                             <input type="checkbox" value="${i}" onchange="window.capCheck('${cat.id}', ${limit})"> ${i}
+                           </label>`).join('')}
+                       </div>`;
+            }
+
+            return `
+              <div class="menu-cat">
+                <label class="cat-label">
+                  ${cat.label}
+                  ${limit < 99 ? `<span>Choose ${limit === 1 ? '1' : 'up to ' + limit}</span>` : ''}
+                </label>
+                ${input}
+              </div>`;
+          }).join('');
+
+          ms.classList.add('show');
+        } else {
+          document.getElementById('menuCats').innerHTML = '<p style="color:var(--text-muted);font-size:0.9rem">No menu items configured for this package. You can proceed directly.</p>';
+          ms.classList.add('show');
+        }
       } else {
-        document.getElementById('menuCats').innerHTML = '<p style="color:var(--text-muted);font-size:0.9rem">No menu items configured for this package. You can proceed directly.</p>';
+        // Event Management: Show inclusion instead of menu selection
+        document.getElementById('menuPkgName').textContent = selectedPkg.name + ' — Inclusions';
+        document.getElementById('menuPkgDesc').textContent = selectedPkg.description || 'Review the services included in this event package.';
+
+        const img = document.getElementById('menuPkgImg');
+        if (selectedPkg.imageURL) { img.src = selectedPkg.imageURL; img.style.display = 'block'; }
+        else { img.style.display = 'none'; }
+
+        let inclusionHtml = '';
+        if (selectedPkg.services && selectedPkg.services.length > 0) {
+          inclusionHtml = `
+            <div style="background:var(--bg-section); padding:1.5rem; border-radius:var(--r-md); border:1px solid var(--border); width:100%">
+              <h4 style="margin-bottom:1rem; color:var(--primary)">Included Services</h4>
+              <ul style="padding-left:1.5rem; color:var(--text); line-height:1.8">
+                ${selectedPkg.services.map(s => `<li>${s.name} ${s.price ? `(₹${s.price.toLocaleString()})` : ''}</li>`).join('')}
+              </ul>
+            </div>`;
+        } else {
+          inclusionHtml = '<p style="color:var(--text-muted)">No specific services listed. Contact us for details.</p>';
+        }
+
+        document.getElementById('menuCats').innerHTML = inclusionHtml;
         ms.classList.add('show');
+        catSpecs = []; // Important: no catering menu categories to validate
       }
 
       document.getElementById('menuErr').style.display = 'none';
@@ -555,28 +587,34 @@
       const selectedMenu = {};
       let valid = true;
 
-      catSpecs.forEach(cat => {
-        const items = (selectedPkg.menu && selectedPkg.menu[cat.key]) || [];
-        if (!items.length) return;
-        const limit = (selectedPkg.menuLimits && selectedPkg.menuLimits[cat.key]) || (cat.mode === 'single' ? 1 : 99);
+      // Only catering packages have selectable menus
+      if ((selectedPkg.category || 'catering') === 'catering') {
+        catSpecs.forEach(cat => {
+          const items = (selectedPkg.menu && selectedPkg.menu[cat.key]) || [];
+          if (!items.length) return;
+          const limit = (selectedPkg.menuLimits && selectedPkg.menuLimits[cat.key]) || (cat.mode === 'single' ? 1 : 99);
 
-        if (limit === 1) {
-          const val = document.getElementById('msel_' + cat.id)?.value;
-          selectedMenu[cat.id] = val || '';
-        } else {
-          const checks = document.querySelectorAll(`#msel_${cat.id} input[type=checkbox]:checked`);
-          selectedMenu[cat.id] = Array.from(checks).map(c => c.value);
-        }
-      });
+          if (limit === 1) {
+            const val = document.getElementById('msel_' + cat.id)?.value;
+            selectedMenu[cat.id] = val || '';
+          } else {
+            const checks = document.querySelectorAll(`#msel_${cat.id} input[type=checkbox]:checked`);
+            selectedMenu[cat.id] = Array.from(checks).map(c => c.value);
+          }
+        });
+      }
 
       // Save to sessionStorage and redirect
       const bookingData = {
         packageId: selectedPkg.id,
         pkgName: selectedPkg.name,
         pkgType: selectedPkg.type,
+        pkgCategory: selectedPkg.category || 'catering',
         pkgImage: selectedPkg.imageURL || '',
         pricePerPlate: selectedPkg.pricePerPlate || 0,
+        price: selectedPkg.price || 0,
         tiers: selectedPkg.tiers || [],
+        services: selectedPkg.services || [],
         minGuests: selectedPkg.minGuests || 10,
         maxGuests: selectedPkg.maxGuests || null,
         selectedMenu
