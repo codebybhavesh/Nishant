@@ -1,7 +1,6 @@
 /**
  * admin-bookings.js
  * Handles fetching, approving, and rejecting bookings from the Admin Panel.
- * Replaces Firebase/Firestore with REST API calls.
  */
 import { apiFetch } from './api.js';
 import { fetchPackages } from './packages.js';

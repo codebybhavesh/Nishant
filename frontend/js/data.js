@@ -1,7 +1,7 @@
-/* ============================================================
+/* 
    DATA.JS — Booking ID System + localStorage Helpers
    Nishant Events & Catering System
-   ============================================================ */
+*/
 
 const DB_KEY = 'nis_bookings';
 const PACKAGES_KEY = 'nis_packages';

@@ -1,7 +1,6 @@
 /**
  * custom-menu.js
  * Handles custom menu request page logic.
- * Replaces Firebase Auth + Firestore with REST API calls.
  */
 import { apiFetch } from './api.js';
 import { fetchCurrentUser, getCurrentUser } from './auth.js';

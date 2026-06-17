@@ -1,14 +1,13 @@
 /**
  * database.js
  * REST API integration for Nishant Events & Catering.
- * Replaces Firestore — Menu, Bookings CRUD operations.
+ * Menu, Bookings CRUD operations.
  */
 
 import { apiFetch } from './api.js';
 
-// ==============================
 // MENUS OPERATIONS
-// ==============================
+
 export async function addMenu(menuData) {
     try {
         const data = await apiFetch('/menus', {
@@ -56,9 +55,7 @@ export async function deleteMenu(id) {
     }
 }
 
-// ==============================
 // BOOKINGS OPERATIONS
-// ==============================
 export async function addBooking(bookingData) {
     try {
         const data = await apiFetch('/bookings', {

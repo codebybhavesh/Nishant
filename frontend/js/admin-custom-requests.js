@@ -1,7 +1,6 @@
 /**
  * admin-custom-requests.js
  * Admin panel — fetch and manage custom menu requests.
- * Replaces Firebase/Firestore with REST API calls.
  */
 import { apiFetch } from './api.js';
 

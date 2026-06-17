@@ -1,6 +1,6 @@
-/* ============================================================
+/*
    MAIN.JS — Shared behaviour across all user pages
-   ============================================================ */
+*/
 document.addEventListener('DOMContentLoaded', () => {
 
   /* ---- 1. NAVBAR ---- */

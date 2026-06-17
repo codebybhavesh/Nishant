@@ -1,7 +1,6 @@
 /**
  * packages.js
  * Frontend client module for fetching packages from the REST API.
- * Replaces Firestore direct calls.
  */
 import { apiFetch } from './api.js';
 

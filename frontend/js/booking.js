@@ -2,7 +2,6 @@
  * booking.js
  * Frontend scripts to populate dynamic menus on booking.html 
  * and execute API booking payloads exclusively.
- * Replaces Firebase/Firestore calls with REST API.
  */
 import { fetchPackages } from './packages.js';
 import { addBooking } from './database.js';

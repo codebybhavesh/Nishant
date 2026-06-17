@@ -245,7 +245,7 @@
     <script type="module">
         import { logoutUser, initAuthListener, fetchCurrentUser } from './js/auth.js';
 
-        initAuthListener({ requireAuth: true });
+        initAuthListener({ requireAuth: false });
 
         window.userLogout = async function () {
             await logoutUser();

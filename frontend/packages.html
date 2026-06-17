@@ -303,8 +303,10 @@
   <script type="module" src="js/auth-ui.js"></script>
   <script type="module">
     import { fetchPackages } from './js/packages.js';
+    import { fetchCurrentUser } from './js/auth.js';
 
     let selectedPkgs = [];
+    let currentUser = null;
 
     window.renderPackages = function (filter = 'all') {
       const grid = document.getElementById('pkgGrid');
@@ -350,6 +352,11 @@
     };
 
     window.toggleSelectPackage = function (p) {
+      if (!currentUser) {
+        const currentPath = window.location.pathname + window.location.search;
+        window.location.href = `login.html?redirect=${encodeURIComponent(currentPath)}`;
+        return;
+      }
       const idx = selectedPkgs.findIndex(s => s.id === p.id);
       const isEvent = (p.category || 'catering') === 'event';
       if (idx > -1) {
@@ -488,6 +495,7 @@
     let allPkgs = [];
 
     async function init() {
+      currentUser = await fetchCurrentUser();
       const { packages, error } = await fetchPackages();
       if (!error && packages) {
         allPkgs = packages;

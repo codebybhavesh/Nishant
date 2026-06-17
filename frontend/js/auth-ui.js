@@ -1,13 +1,3 @@
-/**
- * auth-ui.js
- * Shared navbar auth UX for customer-facing pages.
- *
- * - Defines `window.userLogout()` used by existing markup.
- * - Toggles Login/Logout buttons based on session state.
- * - Keeps both desktop CTA area and mobile drawer CTAs in sync.
- * (Replaces Firebase onAuthStateChanged with localStorage session check)
- */
-
 import { getCurrentUser, logoutUser } from './auth.js';
 
 function setVisible(el, show) {

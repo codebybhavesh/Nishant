@@ -9,7 +9,7 @@ function getBearerToken(req) {
   if (type !== "Bearer" || !token) return null;
   return token;
 }
-
+// Checks authentication (valid JWT)
 export const requireAuth = asyncHandler(async (req, res, next) => {
   const token = getBearerToken(req);
   if (!token) return res.status(401).json({ error: "Missing Bearer token." });
@@ -31,7 +31,7 @@ export const requireAuth = asyncHandler(async (req, res, next) => {
   req.user = user;
   next();
 });
-
+// Checks admin role (requires requireAuth first)
 export const requireAdmin = (req, res, next) => {
   if (!req.user || req.user.role !== "admin") {
     return res.status(403).json({ error: "Access denied. Admin role required." });

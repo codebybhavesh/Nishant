@@ -1,7 +1,6 @@
 /**
  * menu.js
  * Fetches menu items from the REST API and groups them by category.
- * Replaces Firestore direct calls.
  */
 import { apiFetch } from './api.js';
 

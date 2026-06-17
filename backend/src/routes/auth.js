@@ -76,4 +76,3 @@ authRouter.patch(
     res.json({ user });
   })
 );
-

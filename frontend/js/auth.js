@@ -1,7 +1,7 @@
 /**
  * auth.js
  * Authentication logic for Nishant Events & Catering
- * Uses REST API + JWT (replaces Firebase Auth)
+ * Uses REST API + JWT 
  */
 
 import { apiFetch, saveSession, clearSession, getToken, getStoredUser } from './api.js';
@@ -75,7 +75,6 @@ export async function fetchCurrentUser() {
 
 /**
  * Initialize Auth Listener — protects pages based on route boundaries.
- * Replaces Firebase onAuthStateChanged.
  * @param {Object} options
  * @param {boolean} options.requireAuth
  * @param {boolean} options.requireAdmin

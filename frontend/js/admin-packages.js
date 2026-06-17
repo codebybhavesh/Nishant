@@ -1,7 +1,6 @@
 /**
  * admin-packages.js
  * Admin module for CRUD operations on the packages collection.
- * Replaces Firebase/Firestore with REST API calls.
  */
 import { apiFetch } from './api.js';
 
