@@ -1,6 +1,6 @@
 # Nishant Events & Catering – Booking Platform
 
-A full-stack catering management platform migrated from Firebase to a custom Node.js, Express, and MongoDB architecture. This project allows users to browse catering packages, customize menus, book events, and track their booking status, while providing a secure admin panel for management.
+A full-stack catering management platform migrated from Firebase to a custom Node.js, Express, and MongoDB architecture. This project allows users to browse catering packages, book events, and track their booking status, while providing a secure admin panel for management.
 
 ---
 
@@ -29,7 +29,6 @@ Contains the user interface and client-side logic.
     - `admin-bookings.html`: List of all customer bookings with status management.
     - `manage-packages.html`: CRUD interface for adding/editing catering packages.
     - `manage-menu.html`: Interface for managing the global menu repository.
-    - `custom-menu-requests.html`: Dashboard for special custom menu inquiries.
     - `admin-invoice.html`: Admin tool to generate and approve final prices.
 - **`js/`**:
     - `api.js`: Shared REST client (injects JWT headers).
