@@ -265,7 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.reveal, .stagger-ch').forEach(el => ro.observe(el));
 
   // Auto-add reveal to common elements
-  ['.section-title', '.section-subtitle', '.why-card', '.t-card', '.kpi-card', '.package-card'].forEach(sel => {
+  ['.section-title', '.section-subtitle', '.why-card', '.kpi-card', '.package-card'].forEach(sel => {
     document.querySelectorAll(sel).forEach((el, i) => {
       if (!el.classList.contains('reveal')) {
         el.classList.add('reveal');
