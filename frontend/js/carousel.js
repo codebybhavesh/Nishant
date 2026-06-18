@@ -83,5 +83,39 @@ function initCarousel(trackId) {
     startAutoSlide();
 }
 
+function initMarquee(trackId, speed = 40) {
+    const track = document.getElementById(trackId);
+    if (!track) return;
+
+    // Get all initial children (cards)
+    const cards = Array.from(track.children);
+    if (cards.length === 0) return;
+
+    // Clear track
+    track.innerHTML = '';
+
+    // Create first group
+    const group1 = document.createElement('div');
+    group1.className = 'marquee-group';
+    cards.forEach(card => group1.appendChild(card));
+
+    // Create second group (clone)
+    const group2 = group1.cloneNode(true);
+    group2.setAttribute('aria-hidden', 'true');
+
+    // Put them inside the track
+    track.appendChild(group1);
+    track.appendChild(group2);
+
+    // Apply animation styles
+    track.classList.add('marquee-active');
+    track.style.animationDuration = `${speed}s`;
+    
+    // Prevent default grab behaviors
+    track.style.cursor = 'default';
+}
+
 // Global exposure if needed, or initialized in main.js
 window.initCarousel = initCarousel;
+window.initMarquee = initMarquee;
+

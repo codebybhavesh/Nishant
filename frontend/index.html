@@ -133,54 +133,55 @@
         <h2 class="section-title">Wedding Planning, Event Management & Premium Catering</h2>
         <p class="section-subtitle">At Nishant Events, we create unforgettable celebrations with personalized planning, exquisite catering, and seamless execution.</p>
       </div>
-      <!-- EXPERTISE CARDS WITH ARROWS -->
-      <div class="expertise-container-wrap carousel-container">
-        <button class="expertise-nav-btn prev" id="expertisePrev" aria-label="Previous">❮</button>
-        <div class="expertise-scroll-container carousel-track" id="expertise-track">
-          <div class="expertise-card-item">
-            <div class="expertise-img" style="background-image: url('assets/Our- Expertise/Weddiing\ Event.jpg');"></div>
-            <div class="expertise-card-overlay"></div>
-            <h3 class="expertise-card-title">Wedding Event</h3>
-          </div>
-      
-          <div class="expertise-card-item">
-            <div class="expertise-img" style="background-image: url('assets/Our- Expertise/corporate.jpg');"></div>
-            <div class="expertise-card-overlay"></div>
-            <h3 class="expertise-card-title">Corporate Event</h3>
-          </div>
-          <div class="expertise-card-item">
-            <div class="expertise-img" style="background-image: url('assets/Our- Expertise/birthday.jpg');"></div>
-            <div class="expertise-card-overlay"></div>
-            <h3 class="expertise-card-title">Birthday Event</h3>
-          </div>
-          
-          <div class="expertise-card-item">
-            <div class="expertise-img" style="background-image: url('assets/Our- Expertise/Cultural.jpg');">
-            </div>
-            <div class="expertise-card-overlay"></div>
-            <h3 class="expertise-card-title">Cultural Event</h3>
-          </div>
-          <div class="expertise-card-item">
-            <div class="expertise-img" style="background-image: url('assets/Our- Expertise/Special\ event.jpg');"></div>
-            <div class="expertise-card-overlay"></div>
-            <h3 class="expertise-card-title">Special Events</h3>
-          </div>
-          <div class="expertise-card-item">
-            <div class="expertise-img" style="background-image: url('assets/Our- Expertise/Catering.jpg');"></div>
-            <div class="expertise-card-overlay"></div>
-            <h3 class="expertise-card-title">Catering Services</h3>
-          </div>
-        </div>
-        <button class="expertise-nav-btn next" id="expertiseNext" aria-label="Next">❯</button>
-      </div>
+    </div> <!-- Close container for full width -->
 
+    <!-- EXPERTISE CARDS MARQUEE - COVERING ENTIRE WIDTH -->
+    <div class="expertise-container-wrap carousel-container" style="width: 100%; max-width: 100% !important; padding: 0; margin-top: 3rem;">
+      <div class="carousel-track" id="expertise-track">
+        <div class="expertise-card-item">
+          <div class="expertise-img" style="background-image: url('assets/Our- Expertise/Weddiing\ Event.jpg');"></div>
+          <div class="expertise-card-overlay"></div>
+          <h3 class="expertise-card-title">Wedding Event</h3>
+        </div>
+    
+        <div class="expertise-card-item">
+          <div class="expertise-img" style="background-image: url('assets/Our- Expertise/corporate.jpg');"></div>
+          <div class="expertise-card-overlay"></div>
+          <h3 class="expertise-card-title">Corporate Event</h3>
+        </div>
+        <div class="expertise-card-item">
+          <div class="expertise-img" style="background-image: url('assets/Our- Expertise/birthday.jpg');"></div>
+          <div class="expertise-card-overlay"></div>
+          <h3 class="expertise-card-title">Birthday Event</h3>
+        </div>
+        
+        <div class="expertise-card-item">
+          <div class="expertise-img" style="background-image: url('assets/Our- Expertise/Cultural.jpg');">
+          </div>
+          <div class="expertise-card-overlay"></div>
+          <h3 class="expertise-card-title">Cultural Event</h3>
+        </div>
+        <div class="expertise-card-item">
+          <div class="expertise-img" style="background-image: url('assets/Our- Expertise/Special\ event.jpg');"></div>
+          <div class="expertise-card-overlay"></div>
+          <h3 class="expertise-card-title">Special Events</h3>
+        </div>
+        <div class="expertise-card-item">
+          <div class="expertise-img" style="background-image: url('assets/Our- Expertise/Catering.jpg');"></div>
+          <div class="expertise-card-overlay"></div>
+          <h3 class="expertise-card-title">Catering Services</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reopen container for button -->
+    <div class="container">
       <div class="text-center"
         style="margin-top: 3.5rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
         <a href="custom-menu.html" class="btn btn-primary btn-lg">Build Your Custom Menu</a>
         <a href="packages.html" class="btn btn-outline btn-lg"
           style="color:var(--text); border-color:var(--border);">View Packages</a>
       </div>
-
     </div>
   </section>
 
@@ -192,11 +193,12 @@
         <h2 class="section-title">What Our Clients <span>Say</span></h2>
         <p class="section-subtitle">Real experiences from real celebrations</p>
       </div>
-      <!-- DYNAMIC TESTIMONIALS -->
-      <div class="container carousel-container">
-        <div id="testimonial-track" class="testimonials-scroll-container carousel-track">
+      <!-- DYNAMIC TESTIMONIALS - COVERING ENTIRE WIDTH -->
+      <div class="carousel-container" style="width: 100%; max-width: 100% !important; padding: 0;">
+        <div id="testimonial-track" class="carousel-track">
           <!-- Shivani Karwa -->
           <div class="t-card">
+            <div class="t-stars" style="margin-bottom: 0.5rem; font-size: 1.2rem; color: #fff200;">⭐⭐⭐⭐⭐</div>
             <p>"Nishant and team are extremely professional and they understood very well how we wanted the decor to be
               and delivered perfectly. Also suggested good options from their side. Would highly recommend!"</p>
             <div class="t-author">
@@ -207,6 +209,7 @@
 
           <!-- Raunak Bisani -->
           <div class="t-card">
+            <div class="t-stars" style="margin-bottom: 0.5rem; font-size: 1.2rem; color: #fff200;">⭐⭐⭐⭐⭐</div>
             <p>"Outstanding wedding entry planning! Perfect coordination, beautiful execution, and amazing creativity.
               They turned our entry into the highlight of the wedding. Highly recommended!"</p>
             <div class="t-author">
@@ -217,6 +220,7 @@
 
           <!-- Rushikesh Deshmukh -->
           <div class="t-card">
+            <div class="t-stars" style="margin-bottom: 0.5rem; font-size: 1.2rem; color: #fff200;">⭐⭐⭐⭐⭐</div>
             <p>"Amazing decoration Ideas nice designs and hard working team doing a great job keep going Do contact them
               for all events a well and great arrangements for events Outstanding work by the team for all the events.
               Wish them all the very best!"</p>
@@ -228,6 +232,7 @@
 
           <!-- Akash Choudhari -->
           <div class="t-card">
+            <div class="t-stars" style="margin-bottom: 0.5rem; font-size: 1.2rem; color: #fff200;">⭐⭐⭐⭐⭐</div>
             <p>"The staff was incredibly helpful and professional. Impeccable service and amazing catering — the food
               was delicious and plentiful! Everything ran smoothly without any technical issues. A huge thank you to the
               entire team."</p>
@@ -239,6 +244,7 @@
 
           <!-- Yash Dharmale -->
           <div class="t-card">
+            <div class="t-stars" style="margin-bottom: 0.5rem; font-size: 1.2rem; color: #fff200;">⭐⭐⭐⭐⭐</div>
             <p>"Happy with the execution of my sister's wedding celebration. The team was well coordinated and and the
               backdrop, flowers, and anchor performance met all expectations. Unforgettable special day!"</p>
             <div class="t-author">
@@ -380,10 +386,11 @@
   <script src="js/main.js"></script>
   <script type="module" src="js/auth-ui.js"></script>
   <script>
-    // Initialize Carousels
+    // Initialize Marquees
     document.addEventListener('DOMContentLoaded', () => {
-      initCarousel("testimonial-track");
-      initCarousel("expertise-track");
+      if (window.initMarquee) {
+        window.initMarquee("expertise-track", 35);
+      }
     });
   </script>
   <script type="module">
@@ -439,6 +446,19 @@
     // Seed demo data on first visit
     if (typeof seedDemoBookings === 'function') seedDemoBookings();
   </script>
+
+  <!-- SVG FILTER FOR LIQUID GLASS EFFECT -->
+  <svg class="hidden" style="position: absolute; width: 0; height: 0;" aria-hidden="true">
+    <defs>
+      <filter id="container-glass" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
+        <feTurbulence type="fractalNoise" baseFrequency="0.02 0.02" numOctaves="1" seed="1" result="turbulence" />
+        <feGaussianBlur in="turbulence" stdDeviation="2" result="blurredNoise" />
+        <feDisplacementMap in="SourceGraphic" in2="blurredNoise" scale="120" xChannelSelector="R" yChannelSelector="B" result="displaced" />
+        <feGaussianBlur in="displaced" stdDeviation="4" result="finalBlur" />
+        <feComposite in="finalBlur" in2="finalBlur" operator="over" />
+      </filter>
+    </defs>
+  </svg>
 </body>
 
 </html>

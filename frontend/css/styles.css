@@ -2664,13 +2664,38 @@ tbody tr:hover {
 .t-card {
   flex: 0 0 380px;
   scroll-snap-align: center;
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: transparent !important;
+  backdrop-filter: url("#container-glass");
+  -webkit-backdrop-filter: url("#container-glass");
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
   border-radius: var(--r-xl);
   padding: 2.2rem;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 
+    0 0 6px rgba(0, 0, 0, 0.03), 
+    0 2px 6px rgba(0, 0, 0, 0.08), 
+    inset 3px 3px 0.5px -3px rgba(0, 0, 0, 0.9), 
+    inset -3px -3px 0.5px -3px rgba(0, 0, 0, 0.85), 
+    inset 1px 1px 1px -0.5px rgba(0, 0, 0, 0.6), 
+    inset -1px -1px 1px -0.5px rgba(0, 0, 0, 0.6), 
+    inset 0 0 6px 6px rgba(0, 0, 0, 0.12), 
+    inset 0 0 2px 2px rgba(0, 0, 0, 0.06), 
+    0 0 12px rgba(255, 255, 255, 0.15) !important;
   display: flex;
   flex-direction: column;
+  transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .t-card {
+  box-shadow: 
+    0 0 8px rgba(0, 0, 0, 0.03), 
+    0 2px 6px rgba(0, 0, 0, 0.08), 
+    inset 3px 3px 0.5px -3.5px rgba(255, 255, 255, 0.09), 
+    inset -3px -3px 0.5px -3.5px rgba(255, 255, 255, 0.85), 
+    inset 1px 1px 1px -0.5px rgba(255, 255, 255, 0.6), 
+    inset -1px -1px 1px -0.5px rgba(255, 255, 255, 0.6), 
+    inset 0 0 6px 6px rgba(255, 255, 255, 0.12), 
+    inset 0 0 2px 2px rgba(255, 255, 255, 0.06), 
+    0 0 12px rgba(0, 0, 0, 0.15) !important;
 }
 
 .t-card p {
@@ -3852,3 +3877,55 @@ img {
   right: 0;
   background: linear-gradient(to left, var(--bg), transparent);
 }
+
+/* ============================================================
+   CONTINUOUS MARQUEE STYLES
+   ============================================================ */
+.marquee-active {
+  display: flex !important;
+  width: max-content !important;
+  animation: marquee-scroll 40s linear infinite !important;
+  cursor: default !important;
+}
+
+.marquee-active:hover {
+  animation-play-state: paused !important;
+}
+
+.marquee-group {
+  display: flex !important;
+  align-items: stretch !important;
+  gap: 20px !important;
+  padding-right: 20px !important;
+  flex-shrink: 0 !important;
+}
+
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.t-stars {
+  color: #fff200;
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.marquee-group .expertise-card-item {
+  flex: 0 0 360px !important;
+  width: 360px !important;
+  min-width: 360px !important;
+}
+
+@media (max-width: 768px) {
+  .carousel-container::before,
+  .carousel-container::after {
+    display: none !important;
+  }
+}
+
+

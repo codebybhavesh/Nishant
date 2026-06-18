@@ -11,30 +11,32 @@ async function loadTestimonials() {
   try {
     const feedbacks = await apiFetch('/feedback/latest');
 
-    if (!feedbacks || feedbacks.length === 0) return;
-
-    const dynamicHTML = feedbacks.map(f => {
-      const userName = f.isManual ? f.name : (f.userId?.name || 'Anonymous User');
-      return `
-          <div class="t-card">
-            <div class="t-stars" style="margin-bottom: 0.5rem; font-size: 1.2rem;">${renderStars(f.rating)}</div>
-            <p><i>"${f.message}"</i></p>
-            <div class="t-author">
-              <div class="t-avatar">${userName.charAt(0)}</div>
-              <div>
-                <strong>${userName}</strong>
-                <span>${new Date(f.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
+    if (feedbacks && feedbacks.length > 0) {
+      const dynamicHTML = feedbacks.map(f => {
+        const userName = f.isManual ? f.name : (f.userId?.name || 'Anonymous User');
+        return `
+            <div class="t-card">
+              <div class="t-stars" style="margin-bottom: 0.5rem; font-size: 1.2rem;">${renderStars(f.rating)}</div>
+              <p><i>"${f.message}"</i></p>
+              <div class="t-author">
+                <div class="t-avatar">${userName.charAt(0)}</div>
+                <div>
+                  <strong>${userName}</strong>
+                  <span>${new Date(f.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
+                </div>
               </div>
             </div>
-          </div>
-        `;
-    }).join('');
+          `;
+      }).join('');
 
-    container.insertAdjacentHTML('afterbegin', dynamicHTML);
-
+      container.insertAdjacentHTML('afterbegin', dynamicHTML);
+    }
   } catch (err) {
     console.error('Failed to load testimonials:', err);
-    container.innerHTML = '<p class="text-center" style="width:100%; color:var(--danger);">Failed to load testimonials.</p>';
+  } finally {
+    if (window.initMarquee) {
+      window.initMarquee('testimonial-track', 50);
+    }
   }
 }
 
