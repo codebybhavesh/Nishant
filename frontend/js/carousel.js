@@ -208,19 +208,29 @@ function initMarquee(trackId, speed = 40) {
     isTransitioning = true;
     cancelAnimationFrame(rafId);
 
-    track.classList.add('has-transition');
-    track.style.animationPlayState = 'paused';
-
-    const STEP = getCardWidth();
     const startVal = getCurrentTranslate();
+    const STEP = getCardWidth();
     const target   = startVal + (direction * STEP);
 
+    // 1. Temporarily disable CSS animation and set start translate inline
+    track.style.animation = 'none';
+    applyTranslate(startVal);
+
+    // Force browser reflow to register the starting inline style
+    track.offsetHeight;
+
+    // 2. Enable transition and move to target
+    track.classList.add('has-transition');
     applyTranslate(target);
 
     function onTransitionEnd(e) {
       if (e.propertyName !== 'transform') return;
       track.removeEventListener('transitionend', onTransitionEnd);
       track.classList.remove('has-transition');
+
+      // Clear the inline animation override so stylesheet marquee rules apply again
+      track.style.animation = '';
+
       resumeAnimation(target);
       isTransitioning = false;
     }
