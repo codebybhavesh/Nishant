@@ -132,55 +132,67 @@
         <h2 class="section-title">Wedding Planning, Event Management & Premium Catering</h2>
         <p class="section-subtitle">At Nishant Events, we create unforgettable celebrations with personalized planning, exquisite catering, and seamless execution.</p>
       </div>
-    </div> <!-- Close container for     <!-- EXPERTISE CARDS MARQUEE - COVERING ENTIRE WIDTH -->
-    <div class="carousel-wrapper">
-      <button class="carousel-arrow left" id="expertise-arrow-left" aria-label="Previous">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-          <path fill-rule="evenodd" d="M11.854 3.646a.5.5 0 0 1 0 .708L8.207 8l3.647 3.646a.5.5 0 0 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 0 1 .708 0M4.5 1a.5.5 0 0 0-.5.5v13a.5.5 0 0 0 1 0v-13a.5.5 0 0 0-.5-.5"/>
-        </svg>
-      </button>
-      <div class="expertise-container-wrap carousel-container" style="width: 100%; max-width: 100% !important; padding: 0; margin-top: 3rem;">
-        <div class="carousel-track" id="expertise-track">
-          <div class="expertise-card-item">
-            <div class="expertise-img" style="background-image: url('assets/Our- Expertise/Weddiing\ Event.jpg');"></div>
-            <div class="expertise-card-overlay"></div>
-            <h3 class="expertise-card-title">Wedding Event</h3>
+    </div>
+    <!-- EXPERTISE CARDS 3D CAROUSEL - COVERING ENTIRE WIDTH -->
+    <div class="carousel-3d-section">
+      <div class="carousel-3d-wrapper">
+        <div class="carousel-3d-track" id="expertise-3d-track">
+          <div class="c3d-card">
+            <img class="c3d-card-image" src="assets/Our- Expertise/Weddiing Event.jpg" alt="Wedding Event" loading="lazy" />
+            <div class="c3d-card-body">
+              <h3 class="c3d-card-title">Wedding Event</h3>
+            </div>
           </div>
       
-          <div class="expertise-card-item">
-            <div class="expertise-img" style="background-image: url('assets/Our- Expertise/corporate.jpg');"></div>
-            <div class="expertise-card-overlay"></div>
-            <h3 class="expertise-card-title">Corporate Event</h3>
+          <div class="c3d-card">
+            <img class="c3d-card-image" src="assets/Our- Expertise/corporate.jpg" alt="Corporate Event" loading="lazy" />
+            <div class="c3d-card-body">
+              <h3 class="c3d-card-title">Corporate Event</h3>
+            </div>
           </div>
-          <div class="expertise-card-item">
-            <div class="expertise-img" style="background-image: url('assets/Our- Expertise/birthday.jpg');"></div>
-            <div class="expertise-card-overlay"></div>
-            <h3 class="expertise-card-title">Birthday Event</h3>
+
+          <div class="c3d-card">
+            <img class="c3d-card-image" src="assets/Our- Expertise/birthday.jpg" alt="Birthday Event" loading="lazy" />
+            <div class="c3d-card-body">
+              <h3 class="c3d-card-title">Birthday Event</h3>
+            </div>
           </div>
           
-          <div class="expertise-card-item">
-            <div class="expertise-img" style="background-image: url('assets/Our- Expertise/Cultural.jpg');">
+          <div class="c3d-card">
+            <img class="c3d-card-image" src="assets/Our- Expertise/Cultural.jpg" alt="Cultural Event" loading="lazy" />
+            <div class="c3d-card-body">
+              <h3 class="c3d-card-title">Cultural Event</h3>
             </div>
-            <div class="expertise-card-overlay"></div>
-            <h3 class="expertise-card-title">Cultural Event</h3>
           </div>
-          <div class="expertise-card-item">
-            <div class="expertise-img" style="background-image: url('assets/Our- Expertise/Special\ event.jpg');"></div>
-            <div class="expertise-card-overlay"></div>
-            <h3 class="expertise-card-title">Special Events</h3>
+
+          <div class="c3d-card">
+            <img class="c3d-card-image" src="assets/Our- Expertise/Special event.jpg" alt="Special Events" loading="lazy" />
+            <div class="c3d-card-body">
+              <h3 class="c3d-card-title">Special Events</h3>
+            </div>
           </div>
-          <div class="expertise-card-item">
-            <div class="expertise-img" style="background-image: url('assets/Our- Expertise/Catering.jpg');"></div>
-            <div class="expertise-card-overlay"></div>
-            <h3 class="expertise-card-title">Catering Services</h3>
+
+          <div class="c3d-card">
+            <img class="c3d-card-image" src="assets/Our- Expertise/Catering.jpg" alt="Catering Services" loading="lazy" />
+            <div class="c3d-card-body">
+              <h3 class="c3d-card-title">Catering Services</h3>
+            </div>
           </div>
         </div>
+
+        <button class="carousel-3d-btn left" id="expertise-3d-prev" aria-label="Previous">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+          </svg>
+        </button>
+        <button class="carousel-3d-btn right" id="expertise-3d-next" aria-label="Next">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+          </svg>
+        </button>
+
+        <div class="carousel-3d-dots" id="expertise-3d-dots"></div>
       </div>
-      <button class="carousel-arrow right" id="expertise-arrow-right" aria-label="Next">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="transform: scaleX(-1);">
-          <path fill-rule="evenodd" d="M11.854 3.646a.5.5 0 0 1 0 .708L8.207 8l3.647 3.646a.5.5 0 0 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 0 1 .708 0M4.5 1a.5.5 0 0 0-.5.5v13a.5.5 0 0 0 1 0v-13a.5.5 0 0 0-.5-.5"/>
-        </svg>
-      </button>
     </div>
 
     <!-- Reopen container for button -->
@@ -201,6 +213,7 @@
         <p class="section-subtitle">Real experiences from real celebrations</p>
       </div>
       <!-- DYNAMIC TESTIMONIALS - COVERING ENTIRE WIDTH -->
+      <!-- DYNAMIC TESTIMONIALS - COVERING ENTIRE WIDTH -->
       <div class="carousel-wrapper">
         <button class="carousel-arrow left" id="arrow-left" aria-label="Previous">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -212,8 +225,7 @@
             <!-- Shivani Karwa -->
             <div class="t-card">
               <div class="t-stars" style="margin-bottom: 0.5rem; font-size: 1.2rem; color: #fff200;">⭐⭐⭐⭐⭐</div>
-              <p>"Nishant and team are extremely professional and they understood very well how we wanted the decor to be
-                and delivered perfectly. Also suggested good options from their side. Would highly recommend!"</p>
+              <p>"Nishant and team are extremely professional and they understood very well how we wanted the decor to be and delivered perfectly. Also suggested good options from their side. Would highly recommend!"</p>
               <div class="t-author">
                 <div class="t-avatar">S</div>
                 <div><strong>Shivani Karwa</strong><span>11 Feb 2026</span></div>
@@ -223,8 +235,7 @@
             <!-- Raunak Bisani -->
             <div class="t-card">
               <div class="t-stars" style="margin-bottom: 0.5rem; font-size: 1.2rem; color: #fff200;">⭐⭐⭐⭐⭐</div>
-              <p>"Outstanding wedding entry planning! Perfect coordination, beautiful execution, and amazing creativity.
-                They turned our entry into the highlight of the wedding. Highly recommended!"</p>
+              <p>"Outstanding wedding entry planning! Perfect coordination, beautiful execution, and amazing creativity. They turned our entry into the highlight of the wedding. Highly recommended!"</p>
               <div class="t-author">
                 <div class="t-avatar">R</div>
                 <div><strong>Raunak Bisani</strong><span>23 Dec 2025</span></div>
@@ -234,9 +245,7 @@
             <!-- Rushikesh Deshmukh -->
             <div class="t-card">
               <div class="t-stars" style="margin-bottom: 0.5rem; font-size: 1.2rem; color: #fff200;">⭐⭐⭐⭐⭐</div>
-              <p>"Amazing decoration Ideas nice designs and hard working team doing a great job keep going Do contact them
-                for all events a well and great arrangements for events Outstanding work by the team for all the events.
-                Wish them all the very best!"</p>
+              <p>"Amazing decoration Ideas nice designs and hard working team doing a great job keep going Do contact them for all events a well and great arrangements for events Outstanding work by the team for all the events. Wish them all the very best!"</p>
               <div class="t-author">
                 <div class="t-avatar">R</div>
                 <div><strong>Rushikesh Deshmukh</strong><span>21 Jan 2026</span></div>
@@ -246,9 +255,7 @@
             <!-- Akash Choudhari -->
             <div class="t-card">
               <div class="t-stars" style="margin-bottom: 0.5rem; font-size: 1.2rem; color: #fff200;">⭐⭐⭐⭐⭐</div>
-              <p>"The staff was incredibly helpful and professional. Impeccable service and amazing catering — the food
-                was delicious and plentiful! Everything ran smoothly without any technical issues. A huge thank you to the
-                entire team."</p>
+              <p>"The staff was incredibly helpful and professional. Impeccable service and amazing catering — the food was delicious and plentiful! Everything ran smoothly without any technical issues. A huge thank you to the entire team."</p>
               <div class="t-author">
                 <div class="t-avatar">A</div>
                 <div><strong>Akash Choudhari</strong><span>Nagpur — 25 Dec 2025</span></div>
@@ -258,15 +265,12 @@
             <!-- Yash Dharmale -->
             <div class="t-card">
               <div class="t-stars" style="margin-bottom: 0.5rem; font-size: 1.2rem; color: #fff200;">⭐⭐⭐⭐⭐</div>
-              <p>"Happy with the execution of my sister's wedding celebration. The team was well coordinated and and the
-                backdrop, flowers, and anchor performance met all expectations. Unforgettable special day!"</p>
+              <p>"Happy with the execution of my sister's wedding celebration. The team was well coordinated and and the backdrop, flowers, and anchor performance met all expectations. Unforgettable special day!"</p>
               <div class="t-author">
                 <div class="t-avatar">Y</div>
                 <div><strong>Yash Dharmale</strong><span>Nagpur — 12 Feb 2026</span></div>
               </div>
             </div>
-
-            <!-- Dynamically populated by testimonial.js --><!-- slide -->
           </div>
         </div>
         <button class="carousel-arrow right" id="arrow-right" aria-label="Next">
@@ -407,10 +411,10 @@
   <script src="js/main.js"></script>
   <script type="module" src="js/auth-ui.js"></script>
   <script>
-    // Initialize Marquees
+    // Initialize 3D Carousels
     document.addEventListener('DOMContentLoaded', () => {
-      if (window.initMarquee) {
-        window.initMarquee("expertise-track", 35);
+      if (window.init3DCarousel) {
+        window.init3DCarousel('expertise-3d-track', 'expertise-3d-prev', 'expertise-3d-next', 'expertise-3d-dots', true, 1000);
       }
     });
   </script>
