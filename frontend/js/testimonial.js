@@ -15,28 +15,36 @@ async function loadTestimonials() {
       const dynamicHTML = feedbacks.map(f => {
         const userName = f.isManual ? f.name : (f.userId?.name || 'Anonymous User');
         return `
-            <div class="t-card">
-              <div class="t-stars" style="margin-bottom: 0.5rem; font-size: 1.2rem;">${renderStars(f.rating)}</div>
-              <p><i>"${f.message}"</i></p>
-              <div class="t-author">
-                <div class="t-avatar">${userName.charAt(0)}</div>
-                <div>
-                  <strong>${userName}</strong>
-                  <span>${new Date(f.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
-                </div>
+          <div class="t-card">
+            <div class="t-stars" style="margin-bottom: 0.5rem; font-size: 1.2rem;">${renderStars(f.rating)}</div>
+            <p><i>"${f.message}"</i></p>
+            <div class="t-author">
+              <div class="t-avatar">${userName.charAt(0)}</div>
+              <div>
+                <strong>${userName}</strong>
+                <span>${new Date(f.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
               </div>
             </div>
-          `;
+          </div>
+        `;
       }).join('');
 
-      container.insertAdjacentHTML('afterbegin', dynamicHTML);
+      // insert dynamic cards AFTER the fallback card
+      container.insertAdjacentHTML('beforeend', dynamicHTML);
     }
+
   } catch (err) {
     console.error('Failed to load testimonials:', err);
+
   } finally {
-    if (window.initMarquee) {
-      window.initMarquee('testimonial-track', 50);
-    }
+    // wait one frame so browser has reflowed card widths before initMarquee reads offsetWidth
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (window.initMarquee) {
+          window.initMarquee('testimonial-track', 50);
+        }
+      });
+    });
   }
 }
 
