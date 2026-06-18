@@ -84,36 +84,28 @@ function initCarousel(trackId) {
 }
 
 function initMarquee(trackId, speed = 40) {
-    const track = document.getElementById(trackId);
-    if (!track) return;
+  const track = document.getElementById(trackId);
+  if (!track) return;
 
-    // Get all initial children (cards)
-    const cards = Array.from(track.children);
-    if (cards.length === 0) return;
+  const cards = Array.from(track.children);
+  if (cards.length === 0) return;
 
-    // Clear track
-    track.innerHTML = '';
+  track.innerHTML = '';
 
-    // Create first group
-    const group1 = document.createElement('div');
-    group1.className = 'marquee-group';
-    cards.forEach(card => group1.appendChild(card));
+  const group1 = document.createElement('div');
+  group1.className = 'marquee-group';
+  cards.forEach(c => group1.appendChild(c));
+  track.appendChild(group1); // append BEFORE cloning
 
-    // Put 4 groups inside the track (original + 3 clones)
-    track.appendChild(group1);
-    
-    for (let i = 0; i < 3; i++) {
-        const clone = group1.cloneNode(true);
-        clone.setAttribute('aria-hidden', 'true');
-        track.appendChild(clone);
-    }
+  for (let i = 0; i < 3; i++) {
+    const clone = group1.cloneNode(true);
+    clone.setAttribute('aria-hidden', 'true');
+    track.appendChild(clone);
+  }
 
-    // Apply animation styles
-    track.classList.add('marquee-active');
-    track.style.animationDuration = `${speed}s`;
-    
-    // Prevent default grab behaviors
-    track.style.cursor = 'default';
+  // duration prop must match CSS animation-name
+  track.style.animationDuration = `${speed}s`;
+  track.classList.add('marquee-active');
 }
 
 // Global exposure if needed, or initialized in main.js

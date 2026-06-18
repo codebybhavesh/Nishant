@@ -3840,6 +3840,8 @@ img {
   -ms-overflow-style: none;
   cursor: grab;
   padding: 1rem 0;
+  width: max-content;
+  will-change: transform;
 }
 
 .carousel-track:active {
@@ -3860,10 +3862,10 @@ img {
 /* ============================================================
    CONTINUOUS MARQUEE STYLES
    ============================================================ */
-.marquee-active {
+.carousel-track.marquee-active {
   display: flex !important;
   width: max-content !important;
-  animation: marquee-scroll 40s linear infinite !important;
+  animation: marquee-scroll linear infinite;
   cursor: default !important;
 }
 
@@ -3880,10 +3882,10 @@ img {
 }
 
 @keyframes marquee-scroll {
-  0% {
+  from {
     transform: translateX(0);
   }
-  100% {
+  to {
     transform: translateX(-25%);
   }
 }
