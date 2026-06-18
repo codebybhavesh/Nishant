@@ -338,7 +338,7 @@
               <h3>${p.name}</h3>
               <p class="pkg-price">₹${price.toLocaleString('en-IN')} <span>${priceUnit}</span></p>
               <p class="pkg-desc">${p.desc || p.description || ''}</p>
-              <div class="pkg-tags">${(p.features && p.features.length ? p.features : [`Min. ${p.minGuests} Guests`, isEvent ? `₹${price.toLocaleString()} base` : `₹${price}/head`]).map(f => `<span class="pkg-tag">${f}</span>`).join('')}</div>
+              <div class="pkg-tags">${(p.features && p.features.length ? p.features.filter(f => !isEvent || !f.toLowerCase().includes('guest')) : (isEvent ? [`₹${price.toLocaleString()} base`] : [`Min. ${p.minGuests} Guests`, `₹${price}/head`])).map(f => `<span class="pkg-tag">${f}</span>`).join('')}</div>
               <div class="pkg-actions">
                 <button class="btn btn-outline" onclick='window.openPkgModal(${JSON.stringify(p).replace(/'/g, "&apos;")})'>Details</button>
                 <button class="btn ${isSelected ? 'btn-selected' : 'btn-accent'}" onclick='window.toggleSelectPackage(${JSON.stringify(p).replace(/'/g, "&apos;")})'>
@@ -465,7 +465,7 @@
                
                <div class="price-block">
                    <h2 style="margin:0.2rem 0">₹${Number(price).toLocaleString('en-IN')} <small style="font-size:1rem;color:var(--text-gray);font-weight:400">/ ${priceUnit}</small></h2>
-                   <p style="font-size:0.85rem;color:var(--text-gray);font-weight:600">Guests: ${p.minGuests} to ${p.maxGuests || 'Any'}</p>
+                   ${isEvent ? '' : `<p style="font-size:0.85rem;color:var(--text-gray);font-weight:600">Guests: ${p.minGuests} to ${p.maxGuests || 'Any'}</p>`}
                    ${tiersHtml}
                    <a href="booking.html?pkgId=${p.id}" class="btn btn-accent btn-block btn-lg" style="margin-top:1.5rem">Proceed to Book Now</a>
                </div>

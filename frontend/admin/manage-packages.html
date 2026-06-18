@@ -549,7 +549,7 @@
         <img class="pkg-thumb" src="${p.imageURL || 'https://via.placeholder.com/120'}" alt="${p.name}" />
         <div class="pkg-row-info">
           <h4>${p.name} <span class="badge" style="background:var(--primary-light);color:var(--primary);font-size:0.7rem">${p.category || 'catering'}</span></h4>
-          <p>${p.category === 'event' ? '₹' + Number(p.price).toLocaleString('en-IN') + ' base' : '₹' + Number(p.pricePerPlate).toLocaleString('en-IN') + ' / plate'} · Guests: ${p.minGuests} - ${p.maxGuests || 'Any'}</p>
+          <p>${p.category === 'event' ? '₹' + Number(p.price).toLocaleString('en-IN') + ' base' : '₹' + Number(p.pricePerPlate).toLocaleString('en-IN') + ' / plate · Guests: ' + p.minGuests + ' - ' + (p.maxGuests || 'Any')}</p>
         </div>
         <div style="display:flex;gap:0.5rem;flex-shrink:0">
           <button class="btn btn-outline btn-sm" onclick='window.editItem(${JSON.stringify(p).replace(/'/g, "&apos;")})'>Edit</button>

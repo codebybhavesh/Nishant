@@ -454,7 +454,7 @@
             <div class="pkg-card-body">
               <h4>${p.name}</h4>
               <div class="pkg-type">${badge}</div>
-              <div class="pkg-range">👥 ${p.minGuests}–${p.maxGuests || '∞'} Guests</div>
+              ${isEvent ? '' : `<div class="pkg-range">👥 ${p.minGuests}–${p.maxGuests || '∞'} Guests</div>`}
               <div class="pkg-range" style="margin-top:0.2rem;color:var(--primary);font-weight:600">₹${Number(price).toLocaleString('en-IN')}/${unit} (base)</div>
             </div>
           </div>`;
