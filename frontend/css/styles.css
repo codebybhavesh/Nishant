@@ -3822,30 +3822,70 @@ img {
 .s-cta:hover {
   gap: 0.75rem;
 }
-/* ============================================================
-   MODERN CAROUSEL STYLES
-   ============================================================ */
+.carousel-wrapper {
+  position: relative;
+}
+
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--text);
+  font-size: 1.2rem;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--ease);
+  user-select: none;
+}
+
+.carousel-arrow:hover {
+  background: rgba(255, 255, 255, 0.98);
+  border-color: var(--primary);
+  color: var(--primary);
+  transform: translateY(-50%) scale(1.05);
+  box-shadow: var(--shadow-md);
+}
+
+.carousel-arrow.left  { left:  12px; }
+.carousel-arrow.right { right: 12px; }
+
+@media (max-width: 600px) {
+  .carousel-arrow {
+    width: 34px;
+    height: 34px;
+    font-size: 1rem;
+  }
+}
+
 .carousel-container {
   overflow: hidden;
   position: relative;
   width: 100%;
+  cursor: grab;
+}
+
+.carousel-container:active {
+  cursor: grabbing;
 }
 
 .carousel-track {
   display: flex;
-  gap: 20px;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  cursor: grab;
-  padding: 1rem 0;
   width: max-content;
   will-change: transform;
-}
-
-.carousel-track:active {
-  cursor: grabbing;
+  user-select: none;
+  -webkit-user-select: none;
+  padding: 1rem 0;
 }
 
 .carousel-track::-webkit-scrollbar {
@@ -3855,9 +3895,7 @@ img {
 .carousel-track > * {
   min-width: 300px;
   flex-shrink: 0;
-  user-select: none;
 }
-
 
 /* ============================================================
    CONTINUOUS MARQUEE STYLES
@@ -3869,15 +3907,20 @@ img {
   cursor: default !important;
 }
 
-.marquee-active:hover {
+.carousel-track.is-dragging {
   animation-play-state: paused !important;
+  transition: none !important;
+}
+
+.carousel-track.has-transition {
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1) !important;
 }
 
 .marquee-group {
   display: flex !important;
   align-items: stretch !important;
-  gap: 20px !important;
-  padding-right: 20px !important;
+  gap: 1.5rem !important;
+  padding-right: 1.5rem !important;
   flex-shrink: 0 !important;
 }
 

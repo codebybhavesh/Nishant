@@ -87,15 +87,15 @@ function initMarquee(trackId, speed = 40) {
   const track = document.getElementById(trackId);
   if (!track) return;
 
+  const container = track.parentElement;
   const cards = Array.from(track.children);
   if (cards.length === 0) return;
 
   track.innerHTML = '';
-
   const group1 = document.createElement('div');
   group1.className = 'marquee-group';
   cards.forEach(c => group1.appendChild(c));
-  track.appendChild(group1); // append BEFORE cloning
+  track.appendChild(group1);
 
   for (let i = 0; i < 3; i++) {
     const clone = group1.cloneNode(true);
@@ -103,9 +103,132 @@ function initMarquee(trackId, speed = 40) {
     track.appendChild(clone);
   }
 
-  // duration prop must match CSS animation-name
   track.style.animationDuration = `${speed}s`;
   track.classList.add('marquee-active');
+
+  // --- helpers ---
+  const groupWidth = () => track.querySelector('.marquee-group').offsetWidth + 24;
+
+  function getCurrentTranslate() {
+    const style = window.getComputedStyle(track);
+    const matrix = new DOMMatrix(style.transform);
+    return matrix.m41;
+  }
+
+  function clampTranslate(x) {
+    const gw = groupWidth();
+    return ((x % gw) - gw) % gw;
+  }
+
+  function applyTranslate(x) {
+    track.style.transform = `translateX(${clampTranslate(x)}px)`;
+  }
+
+  function resumeAnimation(fromX) {
+    const gw = groupWidth();
+    const clamped = clampTranslate(fromX);
+    const progress = Math.abs(clamped) / gw;
+    track.style.transform = '';
+    track.style.animationDelay = `${-(progress * speed)}s`;
+    track.style.animationPlayState = 'running';
+    track.classList.remove('is-dragging');
+  }
+
+  // --- drag state ---
+  let isDragging = false;
+  let startX = 0, dragOffset = 0, baseTranslate = 0;
+  let velocity = 0, lastX = 0, lastTime = 0;
+  let rafId = null;
+
+  function onDragStart(clientX) {
+    isDragging = true;
+    startX = lastX = clientX;
+    lastTime = Date.now();
+    velocity = dragOffset = 0;
+    baseTranslate = getCurrentTranslate();
+    track.classList.add('is-dragging');
+    track.style.animationPlayState = 'paused';
+    cancelAnimationFrame(rafId);
+  }
+
+  function onDragMove(clientX) {
+    if (!isDragging) return;
+    const now = Date.now();
+    velocity = (clientX - lastX) / (now - lastTime || 1);
+    lastX = clientX;
+    lastTime = now;
+    dragOffset = clientX - startX;
+    applyTranslate(baseTranslate + dragOffset);
+  }
+
+  function onDragEnd() {
+    if (!isDragging) return;
+    isDragging = false;
+    let currentX = baseTranslate + dragOffset;
+    let vel = velocity * 12;
+
+    function coast() {
+      vel *= 0.92;
+      currentX += vel;
+      applyTranslate(currentX);
+      if (Math.abs(vel) > 0.5) {
+        rafId = requestAnimationFrame(coast);
+      } else {
+        resumeAnimation(currentX);
+      }
+    }
+    rafId = requestAnimationFrame(coast);
+  }
+
+  // Mouse
+  container.addEventListener('mousedown', e => { e.preventDefault(); onDragStart(e.clientX); });
+  window.addEventListener('mousemove',    e => { if (isDragging) onDragMove(e.clientX); });
+  window.addEventListener('mouseup',      ()  => { if (isDragging) onDragEnd(); });
+
+  // Touch
+  container.addEventListener('touchstart', e => onDragStart(e.touches[0].clientX), { passive: true });
+  container.addEventListener('touchmove',  e => onDragMove(e.touches[0].clientX),  { passive: true });
+  container.addEventListener('touchend',   onDragEnd);
+
+  // --- arrow buttons ---
+  const wrapper = container.parentElement;
+  const btnLeft  = wrapper ? wrapper.querySelector('.carousel-arrow.left') : null;
+  const btnRight = wrapper ? wrapper.querySelector('.carousel-arrow.right') : null;
+  let isTransitioning = false;
+
+  function getCardWidth() {
+    const card = track.querySelector('.t-card') || track.querySelector('.expertise-card-item') || track.querySelector('.marquee-group > *');
+    if (!card) return 400;
+    const gap = 24; // must match .marquee-group gap in px
+    return card.offsetWidth + gap;
+  }
+
+  function arrowScroll(direction) {
+    if (isTransitioning || isDragging) return;
+    isTransitioning = true;
+    cancelAnimationFrame(rafId);
+
+    track.classList.add('has-transition');
+    track.style.animationPlayState = 'paused';
+
+    const STEP = getCardWidth();
+    const startVal = getCurrentTranslate();
+    const target   = startVal + (direction * STEP);
+
+    applyTranslate(target);
+
+    function onTransitionEnd(e) {
+      if (e.propertyName !== 'transform') return;
+      track.removeEventListener('transitionend', onTransitionEnd);
+      track.classList.remove('has-transition');
+      resumeAnimation(target);
+      isTransitioning = false;
+    }
+    track.addEventListener('transitionend', onTransitionEnd);
+  }
+
+  if (btnLeft)  btnLeft.addEventListener('click',  () => arrowScroll(+1));
+  if (btnRight) btnRight.addEventListener('click', () => arrowScroll(-1));
 }
 
 // Global exposure if needed, or initialized in main.js
