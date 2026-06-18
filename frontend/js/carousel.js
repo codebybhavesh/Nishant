@@ -99,13 +99,14 @@ function initMarquee(trackId, speed = 40) {
     group1.className = 'marquee-group';
     cards.forEach(card => group1.appendChild(card));
 
-    // Create second group (clone)
-    const group2 = group1.cloneNode(true);
-    group2.setAttribute('aria-hidden', 'true');
-
-    // Put them inside the track
+    // Put 4 groups inside the track (original + 3 clones)
     track.appendChild(group1);
-    track.appendChild(group2);
+    
+    for (let i = 0; i < 3; i++) {
+        const clone = group1.cloneNode(true);
+        clone.setAttribute('aria-hidden', 'true');
+        track.appendChild(clone);
+    }
 
     // Apply animation styles
     track.classList.add('marquee-active');

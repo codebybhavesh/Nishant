@@ -3856,27 +3856,6 @@ img {
   user-select: none;
 }
 
-/* Optional: Gradient fade on edges */
-.carousel-container::before,
-.carousel-container::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  width: 50px;
-  height: 100%;
-  z-index: 2;
-  pointer-events: none;
-}
-
-.carousel-container::before {
-  left: 0;
-  background: linear-gradient(to right, var(--bg), transparent);
-}
-
-.carousel-container::after {
-  right: 0;
-  background: linear-gradient(to left, var(--bg), transparent);
-}
 
 /* ============================================================
    CONTINUOUS MARQUEE STYLES
@@ -3905,7 +3884,7 @@ img {
     transform: translateX(0);
   }
   100% {
-    transform: translateX(-50%);
+    transform: translateX(-25%);
   }
 }
 
@@ -3921,11 +3900,6 @@ img {
   min-width: 360px !important;
 }
 
-@media (max-width: 768px) {
-  .carousel-container::before,
-  .carousel-container::after {
-    display: none !important;
-  }
-}
+
 
 
