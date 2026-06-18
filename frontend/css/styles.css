@@ -3868,70 +3868,164 @@ img {
   }
 }
 
-.carousel-container {
-  overflow: hidden;
+/* ============================================================
+   STACKED SWIPE TESTIMONIAL CAROUSEL STYLES
+   ============================================================ */
+.testimonial-stack-wrapper {
   position: relative;
   width: 100%;
-  cursor: grab;
+  max-width: 600px;
+  margin: 2.5rem auto 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.carousel-container:active {
+.testimonial-stack-container {
+  position: relative;
+  width: 380px;
+  height: 320px;
+  overflow: visible;
+}
+
+.testimonial-stack-track {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  perspective: 1000px;
+}
+
+/* Base card styling inside stack */
+.testimonial-stack-track .t-card {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 380px;
+  height: 280px;
+  margin: 0;
+  box-sizing: border-box;
+  transform-origin: center bottom;
+  cursor: grab;
+  user-select: none;
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+              opacity 0.4s ease;
+  overflow: hidden;
+}
+
+.testimonial-stack-track .t-card:active {
   cursor: grabbing;
 }
 
-.carousel-track {
+.testimonial-stack-track .t-card p {
+  overflow-y: auto;
+  max-height: 120px;
+}
+
+/* Card states styling */
+.testimonial-stack-track .t-card.state-front {
+  transform: scale(1) translateY(0) rotate(0deg);
+  opacity: 1;
+  z-index: 30;
+  pointer-events: auto;
+}
+
+.testimonial-stack-track .t-card.state-behind-1 {
+  transform: scale(0.95) translateY(8px) rotate(-2deg);
+  opacity: 0.6;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.testimonial-stack-track .t-card.state-behind-2 {
+  transform: scale(0.90) translateY(16px) rotate(-4deg);
+  opacity: 0.3;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.testimonial-stack-track .t-card.state-hidden {
+  transform: scale(0.85) translateY(24px) rotate(-6deg);
+  opacity: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Exit state styles */
+.testimonial-stack-track .t-card.exiting-left {
+  transform: translateX(-150%) rotate(-15deg) !important;
+  opacity: 0 !important;
+  pointer-events: none;
+}
+
+.testimonial-stack-track .t-card.exiting-right {
+  transform: translateX(150%) rotate(15deg) !important;
+  opacity: 0 !important;
+  pointer-events: none;
+}
+
+/* Absolute Arrow Navigation buttons */
+.testimonial-stack-arrow {
+  position: absolute;
+  top: 45%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
   display: flex;
-  width: max-content;
-  will-change: transform;
-  user-select: none;
-  -webkit-user-select: none;
-  padding: 1rem 0;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 40;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-sm);
 }
 
-.carousel-track::-webkit-scrollbar {
-  display: none;
+.testimonial-stack-arrow:hover {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+  box-shadow: var(--shadow-md);
 }
 
-.carousel-track > * {
-  min-width: 300px;
-  flex-shrink: 0;
+.testimonial-stack-arrow.left {
+  left: -80px;
 }
 
-/* ============================================================
-   CONTINUOUS MARQUEE STYLES
-   ============================================================ */
-.carousel-track.marquee-active {
-  display: flex !important;
-  width: max-content !important;
-  animation: marquee-scroll linear infinite;
-  cursor: default !important;
+.testimonial-stack-arrow.right {
+  right: -80px;
 }
 
-.carousel-track.is-dragging {
-  animation-play-state: paused !important;
-  transition: none !important;
+/* Dot indicators */
+.testimonial-stack-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  width: 100%;
 }
 
-.carousel-track.has-transition {
-  animation: none !important;
-  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1) !important;
+.testimonial-stack-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--border);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.marquee-group {
-  display: flex !important;
-  align-items: stretch !important;
-  gap: 1.5rem !important;
-  padding-right: 1.5rem !important;
-  flex-shrink: 0 !important;
-}
-
-@keyframes marquee-scroll {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-25%);
-  }
+.testimonial-stack-dot.active {
+  width: 24px;
+  background: var(--primary);
 }
 
 .t-stars {
@@ -3940,10 +4034,27 @@ img {
   font-size: 1.2rem;
 }
 
-.marquee-group .expertise-card-item {
-  flex: 0 0 360px !important;
-  width: 360px !important;
-  min-width: 360px !important;
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+  .testimonial-stack-wrapper {
+    max-width: 100%;
+    padding: 0 1rem;
+  }
+  .testimonial-stack-container {
+    width: 300px;
+    height: 280px;
+  }
+  .testimonial-stack-track .t-card {
+    width: 300px;
+    height: 240px;
+    padding: 1.5rem;
+  }
+  .testimonial-stack-track .t-card p {
+    max-height: 90px;
+  }
+  .testimonial-stack-arrow {
+    display: none;
+  }
 }
 
 /* --- 3D Carousel styles --- */
@@ -4146,20 +4257,20 @@ img {
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  border: 1px solid rgba(255,255,255,0.25);
-  background: rgba(255,255,255,0.1);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  color: #fff;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s, transform 0.2s;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  transition: background 0.2s, transform 0.2s, color 0.2s, border-color 0.2s;
+  box-shadow: var(--shadow-sm);
 }
 .carousel-3d-btn:hover {
-  background: rgba(255,255,255,0.2);
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
   transform: translateY(-50%) scale(1.08);
 }
 .carousel-3d-btn.left  { left:  16px; }
