@@ -3,6 +3,6 @@
  * Central configuration for Nishant Events & Catering frontend.
  */
 
-export const BASE_URL = window.location.origin.startsWith("http") 
-    ? window.location.origin 
+export const BASE_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+    ? window.location.origin
     : "https://nishant-914m.onrender.com";
