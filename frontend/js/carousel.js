@@ -209,8 +209,28 @@ function initMarquee(trackId, speed = 40) {
     cancelAnimationFrame(rafId);
 
     const startVal = getCurrentTranslate();
-    const STEP = getCardWidth();
-    const target   = startVal + (direction * STEP);
+    const W = getCardWidth();
+
+    // Convert negative translate to positive scroll offset
+    const scrollOffset = -startVal;
+    const currentCardFloat = scrollOffset / W;
+    let targetCardIndex;
+
+    if (direction === -1) {
+      // Go right / forward (scrollOffset increases)
+      targetCardIndex = Math.floor(currentCardFloat) + 1;
+      if ((targetCardIndex * W) - scrollOffset < 0.3 * W) {
+        targetCardIndex += 1;
+      }
+    } else {
+      // Go left / backward (scrollOffset decreases)
+      targetCardIndex = Math.ceil(currentCardFloat) - 1;
+      if (scrollOffset - (targetCardIndex * W) < 0.3 * W) {
+        targetCardIndex -= 1;
+      }
+    }
+
+    const target = -(targetCardIndex * W);
 
     // 1. Temporarily disable CSS animation and set start translate inline
     track.style.animation = 'none';
