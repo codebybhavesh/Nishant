@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Gallery – Nishant Admin</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="shortcut icon" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="../css/styles.css" />
+    <style>
+        .gallery-grid-admin {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .gallery-card-admin {
+            background: var(--surface);
+            border-radius: var(--r-md);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            transition: var(--ease);
+        }
+
+        .gallery-card-admin:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .gallery-thumb-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4/3;
+            background: #eee;
+            overflow: hidden;
+        }
+
+        .gallery-thumb-admin {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-badge-admin {
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+            background: var(--primary);
+            color: #fff;
+            padding: 0.2rem 0.6rem;
+            border-radius: var(--r-full);
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .gallery-card-body-admin {
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            justify-content: space-between;
+        }
+
+        .gallery-card-body-admin h4 {
+            font-size: 0.95rem;
+            margin-bottom: 0.8rem;
+            color: var(--text);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .gallery-card-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .gallery-card-actions button {
+            flex: 1;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 900;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--surface);
+            border-radius: var(--r-xl);
+            padding: 2rem;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .preview-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+            display: none;
+            background: #eee;
+            border: 1px solid var(--border);
+        }
+
+        .upload-status {
+            font-size: 0.8rem;
+            margin-top: 0.4rem;
+            display: none;
+        }
+
+        .upload-status.uploading {
+            color: var(--primary);
+        }
+
+        .upload-status.success {
+            color: #22c55e;
+        }
+
+        .upload-status.error {
+            color: var(--danger);
+        }
+
+        .filter-search-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-search-bar input,
+        .filter-search-bar select {
+            min-width: 200px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-shell">
+        <aside class="sidebar">
+            <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close menu">&times;</button>
+            <div class="sidebar-logo">
+                <img src="../assets/logo.svg" alt="Nishant Events & Catering" style="height:48px; filter:brightness(0) invert(1);">
+                <small>Admin Panel</small>
+            </div>
+            <nav class="sidebar-nav">
+                <!-- Dynamically populated by admin-sidebar.js -->
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" onclick="event.preventDefault(); window.adminLogout();">Logout</a>
+            </div>
+        </aside>
+
+        <main class="admin-main">
+            <div class="admin-topbar">
+                <button class="admin-menu-toggle" id="adminMenuToggle" aria-label="Toggle menu">☰</button>
+                <h1>Manage Gallery System</h1>
+                <button class="btn btn-accent btn-sm" onclick="window.openModal()">+ Add Gallery Item</button>
+            </div>
+
+            <div class="admin-content">
+                <div class="card" style="padding: 1.5rem;">
+                    <div class="filter-search-bar">
+                        <input type="text" id="gallerySearch" class="form-control" placeholder="Search by title..." oninput="window.filterAndSearchGallery()" />
+                        <select id="galleryCategoryFilter" class="form-control" onchange="window.filterAndSearchGallery()">
+                            <option value="All">All Categories</option>
+                            <option value="Wedding">Wedding</option>
+                            <option value="Corporate">Corporate</option>
+                            <option value="Birthday">Birthday</option>
+                            <option value="Catering">Catering</option>
+                            <option value="Decoration">Decoration</option>
+                        </select>
+                    </div>
+
+                    <div id="galleryCount" style="font-weight: 600; color: var(--text-gray); margin-bottom: 1rem;">0 Items</div>
+
+                    <div id="galleryList" class="gallery-grid-admin"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <h3 id="modalTitle">Add Gallery Item</h3>
+            <input type="hidden" id="editId" />
+
+            <div class="form-group">
+                <label>Title *</label>
+                <input type="text" id="fTitle" class="form-control" placeholder="e.g. Royal Wedding Decor" />
+            </div>
+
+            <div class="form-group">
+                <label>Category *</label>
+                <select id="fCategory" class="form-control">
+                    <option value="Wedding">Wedding</option>
+                    <option value="Corporate">Corporate</option>
+                    <option value="Birthday">Birthday</option>
+                    <option value="Catering">Catering</option>
+                    <option value="Decoration">Decoration</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Image Upload *</label>
+                <input type="file" id="fFile" class="form-control" accept="image/*" />
+                <input type="hidden" id="fImgUrl" />
+                <input type="hidden" id="fPublicId" />
+                <div id="imgUploadStatus" class="upload-status"></div>
+                <img id="fImgPreview" class="preview-img" />
+            </div>
+
+            <div id="modalErr" class="alert alert-danger" style="display:none; margin-top:1rem;"></div>
+            <div style="display:flex;gap:1rem;margin-top:2rem;justify-content:flex-end">
+                <button class="btn btn-outline" onclick="window.closeModal()">Cancel</button>
+                <button class="btn btn-accent px-5" onclick="window.saveGalleryItem()">Save Item</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="../js/admin-gallery.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/admin-sidebar.js"></script>
+</body>
+
+</html>

@@ -28,7 +28,6 @@ Contains the user interface and client-side logic.
     - `admin-dashboard.html`: Overview of system statistics.
     - `admin-bookings.html`: List of all customer bookings with status management.
     - `manage-packages.html`: CRUD interface for adding/editing catering packages.
-    - `manage-menu.html`: Interface for managing the global menu repository.
     - `admin-invoice.html`: Admin tool to generate and approve final prices.
 - **`js/`**:
     - `api.js`: Shared REST client (injects JWT headers).

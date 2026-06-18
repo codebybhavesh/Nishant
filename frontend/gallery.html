@@ -71,14 +71,21 @@
             <!-- Category Filters -->
             <div class="gallery-filters text-center reveal">
                 <button class="gallery-filter-btn active" data-filter="all">All</button>
-                <button class="gallery-filter-btn" data-filter="food">Food</button>
-                <button class="gallery-filter-btn" data-filter="events">Events</button>
-                <button class="gallery-filter-btn" data-filter="decorations">Decorations</button>
+                <button class="gallery-filter-btn" data-filter="Wedding">Wedding</button>
+                <button class="gallery-filter-btn" data-filter="Corporate">Corporate</button>
+                <button class="gallery-filter-btn" data-filter="Birthday">Birthday</button>
+                <button class="gallery-filter-btn" data-filter="Catering">Catering</button>
+                <button class="gallery-filter-btn" data-filter="Decoration">Decoration</button>
             </div>
 
             <!-- Dynamic Gallery Grid -->
             <div class="gallery-grid" id="galleryGrid">
                 <!-- Javascript will populate this grid -->
+            </div>
+
+            <!-- Load More Button -->
+            <div id="loadMoreContainer" style="text-align:center; margin-top:3rem; display:none">
+                <button class="btn btn-outline btn-lg" id="loadMoreBtn">Load More</button>
             </div>
 
         </div>
@@ -134,7 +141,7 @@
     <!-- SCRIPTS -->
     <script src="js/main.js"></script>
     <script type="module" src="js/auth-ui.js"></script>
-    <script src="js/gallery.js"></script>
+    <script type="module" src="js/gallery.js"></script>
 </body>
 
 </html>

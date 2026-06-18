@@ -1,20 +1,19 @@
+import { BASE_URL } from './config.js';
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Gallery Assets Definition
-    // The hero video is separate but also included in the gallery under 'videos'
-    const galleryItems = [
-        { id: 2, src: 'assets/gallery/img1.webp', type: 'image', category: 'food', title: 'Gourmet Appetizers' },
-        { id: 3, src: 'assets/gallery/img2.webp', type: 'image', category: 'events', title: 'Outdoor Reception' },
-        { id: 4, src: 'assets/gallery/img3.webp', type: 'image', category: 'decorations', title: 'Floral Mandap' },
-        { id: 5, src: 'assets/gallery/img4.webp', type: 'image', category: 'food', title: 'Dessert Platter' },
-        { id: 6, src: 'assets/gallery/img5.webp', type: 'image', category: 'events', title: 'Corporate Gala' },
-        { id: 7, src: 'assets/gallery/img6.webp', type: 'image', category: 'decorations', title: 'Elegant Table Setting' },
-        { id: 8, src: 'assets/gallery/img7.webp', type: 'image', category: 'food', title: 'Main Course Buffet' },
-        { id: 9, src: 'assets/gallery/img8.webp', type: 'image', category: 'events', title: 'Birthday Celebration' },
-        { id: 10, src: 'assets/gallery/img9.webp', type: 'image', category: 'decorations', title: 'Ambient Lighting Setup' }
-    ];
+    let allGalleryItems = [];
+    let currentFilteredItems = [];
+    
+    // Pagination state
+    const ITEMS_PER_PAGE = 8;
+    let visibleCount = ITEMS_PER_PAGE;
+    let currentFilter = 'all';
+    let lightboxCurrentIndex = 0;
 
     const galleryGrid = document.getElementById('galleryGrid');
     const filterBtns = document.querySelectorAll('.gallery-filter-btn');
+    const loadMoreContainer = document.getElementById('loadMoreContainer');
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
 
     // Lightbox elements
     const lightbox = document.getElementById('lightboxModal');
@@ -24,50 +23,64 @@ document.addEventListener('DOMContentLoaded', () => {
     const lightboxPrev = document.getElementById('lightboxPrev');
     const lightboxCaption = document.getElementById('lightboxCaption');
 
-    let currentFilter = 'all';
-    let currentFilteredItems = [...galleryItems];
-    let lightboxCurrentIndex = 0;
+    /** ---- FETCH GALLERY ---- */
+    async function fetchGallery() {
+        try {
+            const response = await fetch(`${BASE_URL}/api/gallery`);
+            if (!response.ok) throw new Error('Failed to fetch gallery items');
+            const data = await response.json();
+            allGalleryItems = data.items || [];
+            applyFilter('all');
+        } catch (error) {
+            console.error('Error fetching gallery:', error);
+            galleryGrid.innerHTML = '<p style="text-align:center; grid-column:1/-1; color:var(--danger); padding:3rem 0;">Failed to load gallery images. Please try again later.</p>';
+        }
+    }
 
-    /** ---- RENDER GALLERY ---- */
-    function renderGallery(filter) {
-        // Filter items
+    /** ---- APPLY FILTER ---- */
+    function applyFilter(filter) {
+        currentFilter = filter;
+        visibleCount = ITEMS_PER_PAGE;
+
         if (filter === 'all') {
-            currentFilteredItems = [...galleryItems];
+            currentFilteredItems = [...allGalleryItems];
         } else {
-            currentFilteredItems = galleryItems.filter(item => item.category === filter);
+            currentFilteredItems = allGalleryItems.filter(item => item.category === filter);
         }
 
-        // Clear grid
-        galleryGrid.innerHTML = '';
+        renderGallery();
+    }
 
-        if (currentFilteredItems.length === 0) {
+    /** ---- RENDER GALLERY ---- */
+    function renderGallery() {
+        galleryGrid.innerHTML = '';
+        
+        const itemsToDisplay = currentFilteredItems.slice(0, visibleCount);
+
+        if (itemsToDisplay.length === 0) {
             galleryGrid.innerHTML = '<p style="text-align:center; grid-column:1/-1; color:var(--text-muted); padding:3rem 0;">No items found in this category.</p>';
+            loadMoreContainer.style.display = 'none';
             return;
         }
 
-        // Render items
-        currentFilteredItems.forEach((item, index) => {
+        // Show/hide Load More button
+        if (currentFilteredItems.length > visibleCount) {
+            loadMoreContainer.style.display = 'block';
+        } else {
+            loadMoreContainer.style.display = 'none';
+        }
+
+        // Render cards
+        itemsToDisplay.forEach((item, index) => {
             const card = document.createElement('div');
             card.className = 'gallery-card reveal';
-            // Slight staggered animation
             card.style.transitionDelay = `${(index % 8) * 0.05}s`;
 
-            // Thumbnail content
-            let mediaHtml = '';
-            if (item.type === 'video') {
-                // For video thumbnail we can use a generic poster or rely on the browser's first frame if we mute it
-                mediaHtml = `
-                    <video src="${item.src}" muted playsinline class="gallery-media-thumb"></video>
-                    <div class="gallery-play-icon">▶</div>
-                `;
-            } else {
-                mediaHtml = `<img src="${item.src}" alt="${item.title}" loading="lazy" class="gallery-media-thumb">`;
-            }
-
             card.innerHTML = `
-                ${mediaHtml}
+                <img src="${item.imageUrl}" alt="${item.title}" loading="lazy" class="gallery-media-thumb">
+                <span class="gallery-cat-badge">${item.category}</span>
                 <div class="gallery-hover-overlay">
-                    <span class="gallery-view-text">View</span>
+                    <span class="gallery-view-text">View Details</span>
                     <h4 class="gallery-item-title">${item.title}</h4>
                 </div>
             `;
@@ -78,31 +91,36 @@ document.addEventListener('DOMContentLoaded', () => {
             galleryGrid.appendChild(card);
         });
 
-        // Trigger reveal animations for newly added items
+        // Trigger reveal animations
         setTimeout(() => {
             const newCards = document.querySelectorAll('.gallery-card');
             newCards.forEach(c => c.classList.add('visible'));
         }, 50);
     }
 
+    /** ---- LOAD MORE LOGIC ---- */
+    loadMoreBtn.addEventListener('click', () => {
+        visibleCount += ITEMS_PER_PAGE;
+        renderGallery();
+    });
+
     /** ---- FILTER LOGIC ---- */
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-            // Update active state
             filterBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
 
-            currentFilter = btn.dataset.filter;
+            const filterValue = btn.dataset.filter;
 
-            // Animate grid out slightly before rendering
+            // Fade grid out
             galleryGrid.style.opacity = '0';
             galleryGrid.style.transform = 'translateY(10px)';
 
             setTimeout(() => {
-                renderGallery(currentFilter);
+                applyFilter(filterValue);
                 galleryGrid.style.opacity = '1';
                 galleryGrid.style.transform = 'translateY(0)';
-            }, 300);
+            }, 250);
         });
     });
 
@@ -118,7 +136,6 @@ document.addEventListener('DOMContentLoaded', () => {
         lightbox.classList.remove('show');
         document.body.style.overflow = '';
         setTimeout(() => {
-            // Remove src to stop video playing in background
             lightboxMediaContainer.innerHTML = '';
         }, 300);
     }
@@ -127,20 +144,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const item = currentFilteredItems[lightboxCurrentIndex];
         if (!item) return;
 
-        // Clear current content fading it out
         lightboxMediaContainer.style.opacity = '0';
 
         setTimeout(() => {
-            if (item.type === 'video') {
-                lightboxMediaContainer.innerHTML = `<video src="${item.src}" controls autoplay playsinline class="lightbox-hero-media"></video>`;
-            } else {
-                lightboxMediaContainer.innerHTML = `<img src="${item.src}" alt="${item.title}" class="lightbox-hero-media">`;
-            }
+            lightboxMediaContainer.innerHTML = `
+                <div style="position:relative; width:100%; height:100%; display:flex; align-items:center; justify-content:center;">
+                    <img src="${item.imageUrl}" alt="${item.title}" class="lightbox-hero-media">
+                    <span class="gallery-cat-badge" style="top: 1rem; left: 1rem; position: absolute;">${item.category}</span>
+                </div>
+            `;
             lightboxCaption.textContent = item.title;
             lightboxMediaContainer.style.opacity = '1';
         }, 200);
 
-        // Update nav buttons visibility based on array bounds
+        // Navigation visibility
         lightboxPrev.style.visibility = lightboxCurrentIndex > 0 ? 'visible' : 'hidden';
         lightboxNext.style.visibility = lightboxCurrentIndex < currentFilteredItems.length - 1 ? 'visible' : 'hidden';
     }
@@ -158,14 +175,12 @@ document.addEventListener('DOMContentLoaded', () => {
     lightboxPrev.addEventListener('click', () => navLightbox(-1));
     lightboxNext.addEventListener('click', () => navLightbox(1));
 
-    // Close on overlay click (outside the media)
     lightbox.addEventListener('click', (e) => {
-        if (e.target === lightbox) {
+        if (e.target === lightbox || e.target.classList.contains('lightbox-content-wrapper')) {
             closeLightbox();
         }
     });
 
-    // Keyboard support
     document.addEventListener('keydown', (e) => {
         if (!lightbox.classList.contains('show')) return;
 
@@ -175,5 +190,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Initialize
-    renderGallery('all');
+    fetchGallery();
 });
