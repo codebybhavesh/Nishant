@@ -445,9 +445,9 @@ textarea {
   }
 
   .navbar.hero-top {
-    background: rgba(253, 250, 247, 0.98) !important;
-    border-bottom: 1px solid var(--border);
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.07);
+    background: transparent !important;
+    border-bottom: 1px solid transparent !important;
+    box-shadow: none !important;
   }
 
   .navbar.hero-top .nav-logo {
@@ -593,7 +593,7 @@ textarea {
   justify-content: center;
   border: 1.5px solid var(--border);
   border-radius: var(--r-md);
-  background: transparent;
+  background: var(--surface);
   color: var(--text);
   font-size: 1.4rem;
   cursor: pointer;
