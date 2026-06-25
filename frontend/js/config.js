@@ -5,4 +5,4 @@
 
 export const BASE_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
     ? window.location.origin
-    : "https://nishant-914m.onrender.com";
+    : "https://nishant-nquv.onrender.com";
